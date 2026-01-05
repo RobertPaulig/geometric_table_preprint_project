@@ -7,7 +7,7 @@ import math
 import os
 import hashlib
 from dataclasses import dataclass
-from typing import Dict, List, Tuple, Literal, Any
+from typing import Dict, List, Tuple, Literal, Any, Iterable
 
 import numpy as np
 
@@ -100,9 +100,9 @@ def build_row_projection_adjacency(
     return A
 
 
-def connected_components_count(A: np.ndarray, eps: float) -> int:
+def connected_components(A: np.ndarray, eps: float) -> List[List[int]]:
     """
-    Count connected components in an undirected weighted adjacency matrix.
+    Return connected components in an undirected weighted adjacency matrix.
     Edge exists if A[i,j] > eps.
     """
     n = A.shape[0]
@@ -110,43 +110,33 @@ def connected_components_count(A: np.ndarray, eps: float) -> int:
 
     neighbors: List[np.ndarray] = [np.flatnonzero(A[i] > eps) for i in range(n)]
 
-    comps = 0
+    comps: List[List[int]] = []
     for start in range(n):
         if visited[start]:
             continue
-        comps += 1
         stack = [start]
         visited[start] = True
+        comp = [start]
         while stack:
             v = stack.pop()
             for u in neighbors[v]:
                 if not visited[u]:
                     visited[u] = True
                     stack.append(int(u))
+                    comp.append(int(u))
+        comps.append(comp)
     return comps
 
 
-def normalized_laplacian(A: np.ndarray, eps: float) -> np.ndarray:
-    """
-    L_norm = I - D^{-1/2} A D^{-1/2}, with convention:
-    if degree is 0, row/col stays 0 (diagonal set to 0).
-    """
-    m = A.shape[0]
-    d = A.sum(axis=1)
-    inv_sqrt = np.zeros_like(d)
-    mask = d > eps
-    inv_sqrt[mask] = 1.0 / np.sqrt(d[mask])
+def largest_component_indices(A: np.ndarray, eps: float) -> List[int]:
+    comps = connected_components(A, eps=eps)
+    if not comps:
+        return []
+    return max(comps, key=len)
 
-    # core: I - inv_sqrt * A * inv_sqrt
-    L = np.eye(m, dtype=float) - (inv_sqrt[:, None] * A * inv_sqrt[None, :])
 
-    # isolated nodes: set diagonal to 0 instead of 1
-    iso = ~mask
-    L[iso, iso] = 0.0
-
-    # numerical clip
-    L[np.abs(L) < eps] = 0.0
-    return L
+def count_edges(A: np.ndarray, eps: float) -> int:
+    return int(np.sum(np.triu(A, 1) > eps))
 
 
 def spectral_metrics(evals: np.ndarray, eps: float) -> Dict[str, float]:
@@ -184,6 +174,126 @@ def spectral_metrics(evals: np.ndarray, eps: float) -> Dict[str, float]:
         "spectral_gap": spectral_gap,
         "spectral_entropy": H,
     }
+    return comps
+
+
+def normalized_laplacian(A: np.ndarray, eps: float) -> np.ndarray:
+    """
+    L_norm = I - D^{-1/2} A D^{-1/2}, with convention:
+    if degree is 0, row/col stays 0 (diagonal set to 0).
+    """
+    m = A.shape[0]
+    d = A.sum(axis=1)
+    inv_sqrt = np.zeros_like(d)
+    mask = d > eps
+    inv_sqrt[mask] = 1.0 / np.sqrt(d[mask])
+
+    # core: I - inv_sqrt * A * inv_sqrt
+    L = np.eye(m, dtype=float) - (inv_sqrt[:, None] * A * inv_sqrt[None, :])
+
+    # isolated nodes: set diagonal to 0 instead of 1
+    iso = ~mask
+    L[iso, iso] = 0.0
+
+    # numerical clip
+    L[np.abs(L) < eps] = 0.0
+    return L
+
+
+def spectral_summary_with_head_tail(
+    evals: np.ndarray, eps: float, head: int, tail: int
+) -> Tuple[Dict[str, float], List[float], List[float]]:
+    metrics = spectral_metrics(evals, eps=eps)
+    e = np.array(evals, dtype=float)
+    e[e < 0] = 0.0
+    e[e > 2] = 2.0
+    e.sort()
+    head_vals = [float(x) for x in e[: min(head, e.size)].tolist()]
+    tail_vals = [float(x) for x in e[-min(tail, e.size) :].tolist()]
+    return metrics, head_vals, tail_vals
+
+
+def compute_rowproj_metrics(
+    params: BuildParams, neigs: int = 50
+) -> Tuple[
+    List[int],
+    np.ndarray,
+    np.ndarray,
+    Dict[str, Any],
+    List[float],
+    List[float],
+    List[float],
+    List[float],
+]:
+    rows, q_to_row_indices, q_weight = build_row_to_qs(params)
+    A = build_row_projection_adjacency(rows, q_to_row_indices, q_weight)
+
+    m = len(rows)
+    degrees = A.sum(axis=1)
+    isolated_nodes = int(np.sum(degrees <= params.eps))
+
+    comps = connected_components(A, eps=params.eps)
+    n_components = len(comps)
+    gc_idx = max(comps, key=len) if comps else []
+
+    Lnorm = normalized_laplacian(A, eps=params.eps)
+    evals_all = np.linalg.eigvalsh(Lnorm)
+    evals_all = np.clip(evals_all, 0.0, 2.0)
+    evals_all.sort()
+
+    metrics = {
+        "n_nodes": m,
+        "n_edges": count_edges(A, eps=params.eps),
+        "n_components": int(n_components),
+        "isolated_nodes": isolated_nodes,
+        "isolated_fraction": float(isolated_nodes / m) if m else 0.0,
+        "degree_min": float(np.min(degrees)) if m else 0.0,
+        "degree_mean": float(np.mean(degrees)) if m else 0.0,
+        "degree_max": float(np.max(degrees)) if m else 0.0,
+    }
+
+    base_metrics, all_head, all_tail = spectral_summary_with_head_tail(
+        evals_all, eps=params.eps, head=neigs, tail=10
+    )
+    metrics.update(base_metrics)
+
+    # Giant component metrics
+    if gc_idx:
+        A_gc = A[np.ix_(gc_idx, gc_idx)]
+        Lnorm_gc = normalized_laplacian(A_gc, eps=params.eps)
+        evals_gc = np.linalg.eigvalsh(Lnorm_gc)
+        evals_gc = np.clip(evals_gc, 0.0, 2.0)
+        evals_gc.sort()
+        gc_metrics, gc_head, gc_tail = spectral_summary_with_head_tail(
+            evals_gc, eps=params.eps, head=20, tail=10
+        )
+        gc_size = len(gc_idx)
+        metrics.update({
+            "gc_size": int(gc_size),
+            "gc_fraction": float(gc_size / m) if m else 0.0,
+            "gc_edges": count_edges(A_gc, eps=params.eps),
+            "gc_spectral_gap": float(gc_metrics["spectral_gap"]),
+            "gc_entropy": float(gc_metrics["spectral_entropy"]),
+            "gc_zero_count_all": float(gc_metrics["zero_count_all"]),
+            "gc_eigenvalues_head": gc_head,
+            "gc_eigenvalues_tail": gc_tail,
+        })
+    else:
+        metrics.update({
+            "gc_size": 0,
+            "gc_fraction": 0.0,
+            "gc_edges": 0,
+            "gc_spectral_gap": 0.0,
+            "gc_entropy": 0.0,
+            "gc_zero_count_all": 0.0,
+            "gc_eigenvalues_head": [],
+            "gc_eigenvalues_tail": [],
+        })
+
+    evals_head = [float(x) for x in evals_all[: min(neigs, m)].tolist()]
+    evals_tail = [float(x) for x in evals_all[-min(10, m) :].tolist()]
+
+    return rows, A, evals_all, metrics, evals_head, evals_tail, all_head, all_tail
 
 
 def write_json(path: str, obj: Any) -> None:
@@ -231,27 +341,10 @@ def write_checksums(out_dir: str, filenames: List[str]) -> None:
 def run_rowproj_experiment(params: BuildParams, out_dir: str, neigs: int = 50) -> None:
     os.makedirs(out_dir, exist_ok=True)
 
-    rows, q_to_row_indices, q_weight = build_row_to_qs(params)
-    A = build_row_projection_adjacency(rows, q_to_row_indices, q_weight)
-
+    rows, A, evals_all, metrics, evals_head, evals_tail, _, _ = compute_rowproj_metrics(
+        params, neigs=neigs
+    )
     m = len(rows)
-    n_components = connected_components_count(A, eps=params.eps)
-
-    Lnorm = normalized_laplacian(A, eps=params.eps)
-    evals_all = np.linalg.eigvalsh(Lnorm)
-    evals_all = np.clip(evals_all, 0.0, 2.0)
-    evals_all.sort()
-
-    metrics = {}
-    metrics.update({
-        "n_nodes": m,
-        "n_edges": int(np.sum(np.triu(A, 1) > params.eps)),
-        "n_components": int(n_components),
-        "degree_min": float(np.min(A.sum(axis=1))),
-        "degree_mean": float(np.mean(A.sum(axis=1))),
-        "degree_max": float(np.max(A.sum(axis=1))),
-    })
-    metrics.update(spectral_metrics(evals_all, eps=params.eps))
 
     # Persist artifacts
     write_json(os.path.join(out_dir, "params.json"), {
@@ -273,7 +366,8 @@ def run_rowproj_experiment(params: BuildParams, out_dir: str, neigs: int = 50) -
 
     write_json(os.path.join(out_dir, "eigenvalues.json"), {
         "eigenvalues_all": [float(x) for x in evals_all.tolist()],
-        "eigenvalues_head": [float(x) for x in evals_all[:min(neigs, m)].tolist()],
+        "eigenvalues_head": evals_head,
+        "eigenvalues_tail": evals_tail,
     })
 
     write_json(os.path.join(out_dir, "metrics.json"), {
