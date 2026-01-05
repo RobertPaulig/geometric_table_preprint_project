@@ -1,0 +1,205 @@
+% geometric_table_snowflakes_preprint.tex
+% Title: Geometric Table Snowflakes: Divisibility Geometry, Primitive Factor Graphs, and Spectral Fingerprints of Integers
+% Compile: latexmk -pdf -interaction=nonstopmode geometric_table_snowflakes_preprint.tex
+\documentclass[11pt]{article}
+
+% ----- Packages -----
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% ----- Hyperref -----
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+% ----- Theorem environments -----
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ----- Macros -----
+\newcommand{\GT}{\mathrm{GT}}
+\newcommand{\lcm}{\mathrm{lcm}}
+\newcommand{\gcd}{\mathrm{gcd}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\title{\bfseries Geometric Table Snowflakes: Divisibility Geometry, Primitive Factor Graphs, and Spectral Fingerprints of Integers}
+\author{Robert Paulig\\
+\small (working draft; contact: \texttt{btc.paulig@gmail.com})}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We introduce the \emph{Geometric Table}: a sparse divisibility matrix whose non-empty cells encode factor pairs and induce a geometry of rational rays on the integer lattice. From local windows of the table we build \emph{primitive factor graphs} and study their Laplacian spectra as reproducible fingerprints of integer structure. We connect (i) diagonal ``ray algebra'' around a node $N$ to the divisor sets $d\pm 1$; (ii) a bipartite graph model (numbers $\leftrightarrow$ rays) filtered by primitive factor pairs; and (iii) a reproducible computational protocol (``evidence packs'') for spectral comparisons of classes of centers.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+This draft studies a single object --- the Geometric Table --- from three synchronized perspectives: (a) geometry of rays, (b) graphs induced by factor pairs, and (c) spectral invariants. The immediate goal is a reproducible computational framework; the long-term goal is to test whether spectral signatures correlate with prime-structure events (e.g., centers of twin primes).
+
+\paragraph{Snowflakes.}
+We call an even integer $N$ a \emph{full snowflake} if $N-1$ and $N+1$ are prime (equivalently, $N$ is the midpoint of a twin-prime pair). Proving infinitely many full snowflakes is equivalent to the Twin Prime Conjecture; nevertheless, our framework supports \emph{partial} snowflakes (sieve-level conditions) that are provably infinite via CRT and may still exhibit distinctive spectral structure.
+
+\section{Geometric Table}
+\subsection{Divisibility matrix and support}
+Fix window parameters $(N_{\max},K)$. Define
+\begin{equation}
+T_{N_{\max},K}(n,k)=
+\begin{cases}
+\frac{n}{k}, & k\mid n,\\
+\varnothing, & \text{otherwise},
+\end{cases}
+\qquad 1\le n\le N_{\max},\ 1\le k\le K.
+\end{equation}
+Its binary support is $B(n,k)=\1_{\{k\mid n\}}$.
+
+\subsection{Rays and angles}
+For a fixed quotient $q\in\N$, the set of lattice points with $T(n,k)=q$ satisfies $n=qk$, i.e.\ a ray from the origin with slope $q$. Define the ray angle
+\begin{equation}
+\theta(q)=\arctan(q)\in (0,\pi/2).
+\end{equation}
+
+\subsection{Primitive cells}
+The usual lattice visibility $\gcd(n,k)=1$ trivializes under $k\mid n$. Instead we define \emph{primitive factor cells} by
+\begin{equation}
+B^{\mathrm{prim}}(n,k)=\1_{\{k\mid n,\ \gcd(k,n/k)=1\}}.
+\end{equation}
+This retains only factor pairs with no shared prime factors.
+
+\section{Diagonal ray algebra around a node $N$}
+Fix an integer $N$ (the ``node''). Consider the diagonals $n+k=N$ and $n-k=N$.
+
+\begin{proposition}[Diagonal characterization]
+Let $k\in\N$. Then the cell on the diagonal $n+k=N$ is non-empty if and only if $k\mid N$, and in that case
+\[
+T(N-k,k)=\frac{N}{k}-1.
+\]
+Similarly, the cell on the diagonal $n-k=N$ is non-empty if and only if $k\mid N$, and in that case
+\[
+T(N+k,k)=\frac{N}{k}+1.
+\]
+\end{proposition}
+
+Define the diagonal spectra
+\begin{equation}
+S^-(N)=\{d-1:\ d\mid N\},\qquad S^+(N)=\{d+1:\ d\mid N\}.
+\end{equation}
+Primes observed on the diagonals correspond to divisibility constraints: $p\in S^-(N)$ iff $(p+1)\mid N$; $p\in S^+(N)$ iff $(p-1)\mid N$.
+
+\section{Primitive Geometric Table Graph}
+\subsection{Windowed bipartite graph}
+Fix a center $N_0$, window half-height $h$, and width $K$. Let
+\[
+I=[N_0-h,N_0+h]\cap \N.
+\]
+Define a bipartite graph $G=(U\sqcup V,E,w)$:
+\begin{align}
+U&=I \quad \text{(rows / integers)},\\
+V&=\{q\in\N:\ \exists n\in I,\ \exists k\le K \text{ with } n=kq\},\\
+E&=\{(n,q): n\in I,\ \exists k\le K: n=kq,\ \gcd(k,q)=1\}.
+\end{align}
+Weights can be chosen as $w(n,q)=1$ (unweighted), or geometrically by $w(n,q)=\theta(q)=\arctan(q)$, or scale-weighted by $w(n,q)=\log q$.
+
+\subsection{Adjacency, Laplacian, and spectrum}
+Let $A$ be the (weighted) adjacency matrix on $U\cup V$, $D$ its degree matrix, and $L=D-A$ the Laplacian. We typically compare normalized Laplacians
+\[
+L_{\mathrm{norm}}=I-D^{-1/2}AD^{-1/2}.
+\]
+We define the \emph{spectral fingerprint} of a window by a vector of low-frequency eigenvalues
+\[
+\bm{\lambda}_r(N_0;h,K)=\bigl(\lambda_1,\ldots,\lambda_r\bigr),
+\]
+together with summary features (spectral gap, entropy, localization measures).
+
+\section{Snowflakes and ``full rays''}
+\subsection{Partial snowflakes via sieve constraints}
+For $K\ge 2$, define the \emph{partial snowflake condition}
+\begin{equation}
+FS_K(N):\quad \forall p\le K\ (p \text{ prime}),\quad N\not\equiv \pm 1 \pmod p.
+\end{equation}
+This is equivalent to requiring $p\nmid (N-1)$ and $p\nmid(N+1)$ for all primes $p\le K$.
+
+\begin{theorem}[CRT infinitude of partial snowflakes]
+For each fixed $K\ge 2$, the set of $N$ satisfying $FS_K(N)$ is infinite and is a union of residue classes modulo $Q_K=\prod_{p\le K}p$.
+\end{theorem}
+
+\subsection{Full snowflakes (twin-prime centers)}
+Define \emph{full snowflakes} by the scale-coupled condition
+\[
+FS_\ast(N):\quad \forall p\le \sqrt{N+1}\ (p \text{ prime}),\quad N\not\equiv \pm 1 \pmod p.
+\]
+\begin{theorem}[Full snowflakes $\Leftrightarrow$ twin primes]
+For even $N$, $FS_\ast(N)$ holds if and only if $N-1$ and $N+1$ are prime.
+\end{theorem}
+
+\section{Experimental protocol and reproducibility}
+\subsection{Default parameters}
+Default experimental parameters:
+\[
+h=200,\qquad K=200,
+\]
+and two weight modes: $w\equiv 1$ and $w(n,q)=\arctan(q)$.
+
+\subsection{Outputs (Evidence Pack)}
+Each run produces:
+\begin{itemize}[leftmargin=2em]
+  \item \texttt{params.json} (window, weights, filters);
+  \item \texttt{nodes.json} (vertex maps);
+  \item \texttt{edges.csv} (edge list);
+  \item \texttt{eigenvalues.json} and \texttt{metrics.json};
+  \item \texttt{checksums.sha256} over all artifacts.
+\end{itemize}
+
+\section{Discussion and open problems}
+We propose studying whether spectral features reliably discriminate: (i) highly composite nodes, (ii) partial snowflakes $FS_K$ with large $K$, and (iii) full snowflakes (twin-prime centers). Proving infinitely many full snowflakes is equivalent to the Twin Prime Conjecture; nonetheless, the Geometric Table framework may expose new invariants and heuristics for ``ray stability'' and factor-geometry.
+
+\appendix
+\section{Reference algorithm (pseudocode)}
+\begin{algorithm}[H]
+\caption{Build primitive bipartite graph from a window}
+\begin{algorithmic}[1]
+\Require center $N_0$, half-height $h$, width $K$
+\State $I \gets \{N_0-h,\dots,N_0+h\}\cap\N$
+\State $U \gets I$, $V\gets \emptyset$, $E\gets \emptyset$
+\For{$n \in I$}
+  \For{$k \in \{1,\dots,K\}$}
+    \If{$k \mid n$}
+      \State $q \gets n/k$
+      \If{$\gcd(k,q)=1$}
+        \State add $q$ to $V$
+        \State add edge $(n,q)$ to $E$
+      \EndIf
+    \EndIf
+  \EndFor
+\EndFor
+\State \Return $(U,V,E)$
+\end{algorithmic}
+\end{algorithm}
+
+\bibliographystyle{plain}
+% \bibliography{references}
+\end{document}
