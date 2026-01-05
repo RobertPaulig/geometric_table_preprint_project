@@ -1,9 +1,10 @@
 % geometric_table_snowflakes_preprint.tex
 % Title: Geometric Table Snowflakes: Divisibility Geometry, Primitive Factor Graphs, and Spectral Fingerprints of Integers
-% Compile: latexmk -pdf -interaction=nonstopmode geometric_table_snowflakes_preprint.tex
+% Compile: latexmk -lualatex -interaction=nonstopmode geometric_table_snowflakes_preprint.tex
 \documentclass[11pt]{article}
 
 % ----- Packages -----
+\usepackage{iftex}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath, amssymb, amsthm, mathtools}
 \usepackage{bm}
@@ -15,6 +16,16 @@
 \usepackage{xcolor}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+
+% ----- Fonts (LuaLaTeX/XeLaTeX) -----
+\ifPDFTeX
+  % pdfLaTeX fallback (kept for compatibility)
+\else
+  \usepackage{fontspec}
+  \setmainfont{Latin Modern Roman}
+  \setsansfont{Latin Modern Sans}
+  \setmonofont{Latin Modern Mono}
+\fi
 
 % ----- Hyperref -----
 \hypersetup{
