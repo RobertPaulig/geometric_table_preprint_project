@@ -12,7 +12,7 @@ from typing import Dict, List, Tuple, Literal, Any, Iterable
 import numpy as np
 
 
-WeightMode = Literal["ones", "atan", "log"]
+WeightMode = Literal["ones", "atan", "log", "idf"]
 GraphMode = Literal["rowproj"]
 
 
@@ -68,8 +68,14 @@ def build_row_to_qs(params: BuildParams) -> Tuple[List[int], Dict[int, List[int]
                     continue
 
             q_to_row_indices.setdefault(q, []).append(i)
-            if q not in q_weight:
+            if q not in q_weight and params.weight != "idf":
                 q_weight[q] = weight_of_q(q, params.weight)
+
+    if params.weight == "idf":
+        m = len(rows)
+        for q, idx in q_to_row_indices.items():
+            freq = max(1, len(idx))
+            q_weight[q] = float(math.log(1.0 + (m / float(freq))))
 
     return rows, q_to_row_indices, q_weight
 
@@ -214,7 +220,7 @@ def spectral_summary_with_head_tail(
 
 
 def compute_rowproj_metrics(
-    params: BuildParams, neigs: int = 50
+    params: BuildParams, neigs: int = 50, core_r: int = 30
 ) -> Tuple[
     List[int],
     np.ndarray,
@@ -293,6 +299,63 @@ def compute_rowproj_metrics(
     evals_head = [float(x) for x in evals_all[: min(neigs, m)].tolist()]
     evals_tail = [float(x) for x in evals_all[-min(10, m) :].tolist()]
 
+    # Core window metrics
+    core_lo = params.center - core_r
+    core_hi = params.center + core_r
+    core_idx = [i for i, n in enumerate(rows) if core_lo <= n <= core_hi]
+    if core_idx:
+        A_core = A[np.ix_(core_idx, core_idx)]
+        core_nodes = len(core_idx)
+        core_comps = connected_components(A_core, eps=params.eps)
+        core_n_components = len(core_comps)
+        core_gc_idx = max(core_comps, key=len) if core_comps else []
+
+        metrics.update({
+            "core_nodes": int(core_nodes),
+            "core_edges": count_edges(A_core, eps=params.eps),
+            "core_components": int(core_n_components),
+        })
+
+        if core_gc_idx:
+            A_core_gc = A_core[np.ix_(core_gc_idx, core_gc_idx)]
+            L_core_gc = normalized_laplacian(A_core_gc, eps=params.eps)
+            evals_core_gc = np.linalg.eigvalsh(L_core_gc)
+            evals_core_gc = np.clip(evals_core_gc, 0.0, 2.0)
+            evals_core_gc.sort()
+            core_metrics, core_head, core_tail = spectral_summary_with_head_tail(
+                evals_core_gc, eps=params.eps, head=20, tail=10
+            )
+            core_gc_size = len(core_gc_idx)
+            metrics.update({
+                "core_gc_size": int(core_gc_size),
+                "core_gc_fraction": float(core_gc_size / core_nodes) if core_nodes else 0.0,
+                "core_gc_spectral_gap": float(core_metrics["spectral_gap"]),
+                "core_gc_entropy": float(core_metrics["spectral_entropy"]),
+                "core_gc_eigenvalues_head": core_head,
+                "core_gc_eigenvalues_tail": core_tail,
+            })
+        else:
+            metrics.update({
+                "core_gc_size": 0,
+                "core_gc_fraction": 0.0,
+                "core_gc_spectral_gap": 0.0,
+                "core_gc_entropy": 0.0,
+                "core_gc_eigenvalues_head": [],
+                "core_gc_eigenvalues_tail": [],
+            })
+    else:
+        metrics.update({
+            "core_nodes": 0,
+            "core_edges": 0,
+            "core_components": 0,
+            "core_gc_size": 0,
+            "core_gc_fraction": 0.0,
+            "core_gc_spectral_gap": 0.0,
+            "core_gc_entropy": 0.0,
+            "core_gc_eigenvalues_head": [],
+            "core_gc_eigenvalues_tail": [],
+        })
+
     return rows, A, evals_all, metrics, evals_head, evals_tail, all_head, all_tail
 
 
@@ -338,11 +401,13 @@ def write_checksums(out_dir: str, filenames: List[str]) -> None:
         f.write("\n".join(lines) + "\n")
 
 
-def run_rowproj_experiment(params: BuildParams, out_dir: str, neigs: int = 50) -> None:
+def run_rowproj_experiment(
+    params: BuildParams, out_dir: str, neigs: int = 50, core_r: int = 30
+) -> None:
     os.makedirs(out_dir, exist_ok=True)
 
     rows, A, evals_all, metrics, evals_head, evals_tail, _, _ = compute_rowproj_metrics(
-        params, neigs=neigs
+        params, neigs=neigs, core_r=core_r
     )
     m = len(rows)
 
@@ -356,6 +421,7 @@ def run_rowproj_experiment(params: BuildParams, out_dir: str, neigs: int = 50) -
         "graph_mode": params.graph_mode,
         "eps": params.eps,
         "neigs_saved": min(neigs, m),
+        "core_r": core_r,
     })
 
     write_json(os.path.join(out_dir, "nodes.json"), {

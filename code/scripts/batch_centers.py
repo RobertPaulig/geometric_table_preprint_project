@@ -6,6 +6,19 @@ import csv
 import random
 from pathlib import Path
 
+
+def is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    if n % 2 == 0:
+        return n == 2
+    d = 3
+    while d * d <= n:
+        if n % d == 0:
+            return False
+        d += 2
+    return True
+
 from geometric_table import BuildParams, compute_rowproj_metrics
 
 
@@ -13,12 +26,14 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
     p.add_argument("--center-min", type=int, default=500)
     p.add_argument("--center-max", type=int, default=1500)
-    p.add_argument("--M", type=int, default=30)
+    p.add_argument("--M", type=int, default=200)
     p.add_argument("--seed", type=int, default=12345)
     p.add_argument("--h", type=int, default=200)
     p.add_argument("--K", type=int, default=200)
     p.add_argument("--primitive", action="store_true", default=True)
     p.add_argument("--include-centers", type=str, default="600,840,1000")
+    p.add_argument("--weight", choices=["ones", "idf"], default="ones")
+    p.add_argument("--core-r", type=int, default=30)
     p.add_argument("--out", type=str, default="out/batch_summary.csv")
     return p.parse_args()
 
@@ -40,6 +55,7 @@ def main() -> None:
 
     fieldnames = [
         "center",
+        "is_twin_center",
         "n_nodes",
         "n_edges",
         "n_components",
@@ -51,6 +67,13 @@ def main() -> None:
         "gc_edges",
         "gc_spectral_gap",
         "gc_entropy",
+        "core_nodes",
+        "core_edges",
+        "core_components",
+        "core_gc_size",
+        "core_gc_fraction",
+        "core_gc_spectral_gap",
+        "core_gc_entropy",
     ]
 
     with out_path.open("w", encoding="utf-8", newline="") as f:
@@ -62,12 +85,15 @@ def main() -> None:
                 h=args.h,
                 K=args.K,
                 primitive=bool(args.primitive),
-                weight="ones",
+                weight=args.weight,
                 graph_mode="rowproj",
             )
-            _, _, _, metrics, _, _, _, _ = compute_rowproj_metrics(params, neigs=50)
+            _, _, _, metrics, _, _, _, _ = compute_rowproj_metrics(
+                params, neigs=50, core_r=args.core_r
+            )
             row = {k: metrics.get(k) for k in fieldnames}
             row["center"] = center
+            row["is_twin_center"] = int(is_prime(center - 1) and is_prime(center + 1))
             w.writerow(row)
 
     print(f"OK: wrote {out_path}")

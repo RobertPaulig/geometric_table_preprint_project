@@ -13,9 +13,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--h", type=int, default=200)
     p.add_argument("--K", type=int, default=200)
     p.add_argument("--primitive", action="store_true", help="use primitive cells gcd(k,q)=1")
-    p.add_argument("--weight", choices=["ones", "atan", "log"], default="ones")
+    p.add_argument("--weight", choices=["ones", "atan", "log", "idf"], default="ones")
     p.add_argument("--graph-mode", choices=["rowproj"], default="rowproj")
     p.add_argument("--neigs", type=int, default=50)
+    p.add_argument("--core-r", type=int, default=30)
     p.add_argument("--out", type=str, required=True)
     return p.parse_args()
 
@@ -35,7 +36,7 @@ def main() -> None:
     )
 
     # For now only rowproj is implemented (v2 focus)
-    run_rowproj_experiment(params, out_dir=out_dir, neigs=args.neigs)
+    run_rowproj_experiment(params, out_dir=out_dir, neigs=args.neigs, core_r=args.core_r)
 
     print(f"OK: wrote artifacts to {out_dir}")
 
