@@ -210,6 +210,7 @@ row-projection graph spectrum). With fixed $(h,K,r)$, repeated motifs across cen
 they represent baseline modular structure of divisibility under a fixed “lens”.
 Our analysis therefore focuses on \emph{deviations} from this baseline within controlled residue classes
 (e.g.\ $N_0\equiv 0\pmod 6$ for twin-center candidates) and on the persistence of such deviations across scales.
+To avoid degeneracy of the induced core graph at large centers, we initialize $K_0\propto\sqrt{N_0}$ and adaptively increase it until the core giant component reaches a minimal size; the effective $K$ is logged and included as a covariate.
 
 \subsection{Twin-Center Effect in the Core Window}
 We compare twin-centers (both $N\pm 1$ prime) against non-twins using core-window

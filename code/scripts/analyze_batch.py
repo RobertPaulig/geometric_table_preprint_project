@@ -109,11 +109,13 @@ def corr(x: List[float], y: List[float]) -> float:
 
 def regression(rows: List[Dict[str, float]], target: str) -> Dict[str, float]:
     y = np.array([r[target] for r in rows], dtype=float)
+    log_K = np.log(np.maximum(1.0, np.array([r.get("K_used", 0.0) for r in rows], dtype=float)))
     X = np.column_stack([
         np.ones(len(rows), dtype=float),
         np.array([r["is_twin_center"] for r in rows], dtype=float),
         np.array([r["core_edges"] for r in rows], dtype=float),
         np.array([r["core_gc_fraction"] for r in rows], dtype=float),
+        log_K,
     ])
     beta, *_ = np.linalg.lstsq(X, y, rcond=None)
     y_hat = X @ beta
@@ -125,6 +127,7 @@ def regression(rows: List[Dict[str, float]], target: str) -> Dict[str, float]:
         "beta_twin": float(beta[1]),
         "beta_core_edges": float(beta[2]),
         "beta_core_gc_fraction": float(beta[3]),
+        "beta_log_K_used": float(beta[4]),
         "r2": r2,
     }
 
@@ -167,10 +170,11 @@ def main() -> None:
     p.add_argument("--label", type=str, default="ones")
     args = p.parse_args()
 
-    rows = read_rows(Path(args.input))
+    rows_all = read_rows(Path(args.input))
+    rows = []
     filtered = []
     n_dropped_nan = 0
-    for r in rows:
+    for r in rows_all:
         vals = [
             r.get("core_edges"),
             r.get("core_gc_fraction"),
@@ -187,6 +191,8 @@ def main() -> None:
         filtered.append(r)
 
     rows = filtered
+    total_twins = sum(1 for r in rows_all if r.get("is_twin_center") == 1)
+    total_non_twins = sum(1 for r in rows_all if r.get("is_twin_center") == 0)
     twins = [r for r in rows if r["is_twin_center"] == 1]
     non_twins = [r for r in rows if r["is_twin_center"] == 0]
 
@@ -196,6 +202,34 @@ def main() -> None:
         "non_twins": len(non_twins),
         "n_dropped_nan": n_dropped_nan,
         "n_used_regression": len(rows),
+        "survival_rate_total": float(len(rows) / max(1, len(rows_all))),
+        "survival_rate_twins": float(len(twins) / max(1, total_twins)),
+        "survival_rate_non_twins": float(len(non_twins) / max(1, total_non_twins)),
+    }
+
+    def k_stats(subset: List[Dict[str, float]]) -> Dict[str, float]:
+        if not subset:
+            return {"K_used_min": float("nan"), "K_used_median": float("nan"), "K_used_max": float("nan"), "hit_kmax_fraction": float("nan")}
+        k_vals = sorted([r.get("K_used", float("nan")) for r in subset if not math.isnan(r.get("K_used", float("nan")))])
+        if not k_vals:
+            return {"K_used_min": float("nan"), "K_used_median": float("nan"), "K_used_max": float("nan"), "hit_kmax_fraction": float("nan")}
+        mid = len(k_vals) // 2
+        if len(k_vals) % 2 == 0:
+            median_k = 0.5 * (k_vals[mid - 1] + k_vals[mid])
+        else:
+            median_k = k_vals[mid]
+        hit = sum(1 for r in subset if r.get("hit_kmax", 0))
+        return {
+            "K_used_min": float(k_vals[0]),
+            "K_used_median": float(median_k),
+            "K_used_max": float(k_vals[-1]),
+            "hit_kmax_fraction": float(hit / max(1, len(subset))),
+        }
+
+    class_stats = {
+        "twins": k_stats(twins),
+        "non_twins": k_stats(non_twins),
+        "all": k_stats(rows),
     }
 
     metrics = ["core_gc_spectral_gap", "core_gc_entropy", "core_gc_fraction", "core_edges", "core_components"]
@@ -217,13 +251,13 @@ def main() -> None:
     }
 
     pvals = {
-        "perm_p_gap": permutation_pvalue(
+        "perm_p_groupdiff_gap": permutation_pvalue(
             [r["core_gc_spectral_gap"] for r in twins],
             [r["core_gc_spectral_gap"] for r in non_twins],
             iters=args.permutation_iters,
             seed=args.seed,
         ),
-        "perm_p_entropy": permutation_pvalue(
+        "perm_p_groupdiff_entropy": permutation_pvalue(
             [r["core_gc_entropy"] for r in twins],
             [r["core_gc_entropy"] for r in non_twins],
             iters=args.permutation_iters,
@@ -268,6 +302,7 @@ def main() -> None:
         "correlations": corrs,
         "regression_gap": reg_gap,
         "regression_entropy": reg_ent,
+        "class_stats": class_stats,
     }
     (out_dir / f"analysis_report_{args.label}.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"

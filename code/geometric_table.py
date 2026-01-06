@@ -43,6 +43,38 @@ def window_rows(center: int, h: int) -> List[int]:
     return list(range(lo, hi + 1))
 
 
+def divisors_up_to_K(n: int, K: int) -> Iterable[int]:
+    """
+    Enumerate divisors k of n with k <= K efficiently by factoring n.
+    """
+    factors: List[Tuple[int, int]] = []
+    x = n
+    d = 2
+    while d * d <= x:
+        if x % d == 0:
+            exp = 0
+            while x % d == 0:
+                x //= d
+                exp += 1
+            factors.append((d, exp))
+        d = 3 if d == 2 else d + 2
+    if x > 1:
+        factors.append((x, 1))
+
+    divisors = [1]
+    for p, e in factors:
+        new_divs = []
+        pow_p = 1
+        for _ in range(e):
+            pow_p *= p
+            new_divs.extend([d * pow_p for d in divisors])
+        divisors.extend(new_divs)
+
+    for k in divisors:
+        if k <= K:
+            yield k
+
+
 def build_row_to_qs(params: BuildParams) -> Tuple[List[int], Dict[int, List[int]], Dict[int, float]]:
     """
     Returns:
@@ -54,18 +86,13 @@ def build_row_to_qs(params: BuildParams) -> Tuple[List[int], Dict[int, List[int]
     q_to_row_indices: Dict[int, List[int]] = {}
     q_weight: Dict[int, float] = {}
 
-    # For each row n, enumerate k<=K dividing n and produce q=n//k
+    # For each row n, enumerate divisors k<=K and produce q=n//k
     for i, n in enumerate(rows):
-        for k in range(1, params.K + 1):
-            if n % k != 0:
-                continue
+        for k in divisors_up_to_K(n, params.K):
             q = n // k
 
-            if params.primitive:
-                # Primitive cell criterion for Geometric Table:
-                # n = k*q is "primitive" iff gcd(k,q)=1.
-                if math.gcd(k, q) != 1:
-                    continue
+            if params.primitive and math.gcd(k, q) != 1:
+                continue
 
             q_to_row_indices.setdefault(q, []).append(i)
             if q not in q_weight and params.weight != "idf":
@@ -92,9 +119,7 @@ def build_row_to_qs_for_rows(
     q_to_row_indices: Dict[int, List[int]] = {}
     q_weight: Dict[int, float] = {}
     for i, n in enumerate(rows):
-        for k in range(1, K + 1):
-            if n % k != 0:
-                continue
+        for k in divisors_up_to_K(n, K):
             q = n // k
             if primitive and math.gcd(k, q) != 1:
                 continue
@@ -485,6 +510,49 @@ def compute_core_edges_only(
     q_to_row_indices, q_weight = build_row_to_qs_for_rows(rows, K, primitive, weight)
     A = build_row_projection_adjacency(rows, q_to_row_indices, q_weight)
     return count_edges(A, eps=eps)
+
+
+def choose_hybrid_K(
+    center: int,
+    core_r: int,
+    primitive: bool,
+    weight: WeightMode,
+    alpha: float = 1.0,
+    growth: float = 1.5,
+    min_core_gc: int = 10,
+    max_bumps: int = 6,
+    K_max: int = 5000,
+    eps: float = 1e-12,
+) -> Tuple[int, int, int, bool, int]:
+    """
+    Hybrid K policy: start from scale-law K0 ~ alpha*sqrt(center), then
+    multiplicatively increase until the core GC reaches min_core_gc or limits.
+    Returns (K0, K_eff, bumps, hit_kmax, final_gc_size).
+    """
+    K0 = int(math.ceil(alpha * math.sqrt(max(1, center))))
+    K_eff = max(1, min(K_max, K0))
+    bumps = 0
+    gc_size = compute_core_gc_size_fast(
+        center=center,
+        core_r=core_r,
+        K=K_eff,
+        primitive=primitive,
+        weight=weight,
+        eps=eps,
+    )
+    while gc_size < min_core_gc and bumps < max_bumps and K_eff < K_max:
+        K_eff = min(K_max, int(math.ceil(growth * K_eff)))
+        bumps += 1
+        gc_size = compute_core_gc_size_fast(
+            center=center,
+            core_r=core_r,
+            K=K_eff,
+            primitive=primitive,
+            weight=weight,
+            eps=eps,
+        )
+    hit_kmax = K_eff >= K_max and gc_size < min_core_gc
+    return K0, K_eff, bumps, hit_kmax, gc_size
 
 
 def write_json(path: str, obj: Any) -> None:
