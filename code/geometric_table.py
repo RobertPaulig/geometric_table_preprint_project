@@ -80,6 +80,37 @@ def build_row_to_qs(params: BuildParams) -> Tuple[List[int], Dict[int, List[int]
     return rows, q_to_row_indices, q_weight
 
 
+def build_row_to_qs_for_rows(
+    rows: List[int],
+    K: int,
+    primitive: bool,
+    weight: WeightMode,
+) -> Tuple[Dict[int, List[int]], Dict[int, float]]:
+    """
+    Build q->row_indices and q->weight for a given list of rows.
+    """
+    q_to_row_indices: Dict[int, List[int]] = {}
+    q_weight: Dict[int, float] = {}
+    for i, n in enumerate(rows):
+        for k in range(1, K + 1):
+            if n % k != 0:
+                continue
+            q = n // k
+            if primitive and math.gcd(k, q) != 1:
+                continue
+            q_to_row_indices.setdefault(q, []).append(i)
+            if q not in q_weight and weight != "idf":
+                q_weight[q] = weight_of_q(q, weight)
+
+    if weight == "idf":
+        m = len(rows)
+        for q, idx in q_to_row_indices.items():
+            freq = max(1, len(idx))
+            q_weight[q] = float(math.log(1.0 + (m / float(freq))))
+
+    return q_to_row_indices, q_weight
+
+
 def build_row_projection_adjacency(
     rows: List[int],
     q_to_row_indices: Dict[int, List[int]],
@@ -309,11 +340,14 @@ def compute_rowproj_metrics(
         core_comps = connected_components(A_core, eps=params.eps)
         core_n_components = len(core_comps)
         core_gc_idx = max(core_comps, key=len) if core_comps else []
+        core_degrees = A_core.sum(axis=1)
+        core_isolated = int(np.sum(core_degrees <= params.eps))
 
         metrics.update({
             "core_nodes": int(core_nodes),
             "core_edges": count_edges(A_core, eps=params.eps),
             "core_components": int(core_n_components),
+            "core_isolated_nodes": core_isolated,
         })
 
         if core_gc_idx:
@@ -331,6 +365,7 @@ def compute_rowproj_metrics(
                 "core_gc_fraction": float(core_gc_size / core_nodes) if core_nodes else 0.0,
                 "core_gc_spectral_gap": float(core_metrics["spectral_gap"]),
                 "core_gc_entropy": float(core_metrics["spectral_entropy"]),
+                "core_gc_zero_count_all": float(core_metrics["zero_count_all"]),
                 "core_gc_eigenvalues_head": core_head,
                 "core_gc_eigenvalues_tail": core_tail,
             })
@@ -340,6 +375,7 @@ def compute_rowproj_metrics(
                 "core_gc_fraction": 0.0,
                 "core_gc_spectral_gap": 0.0,
                 "core_gc_entropy": 0.0,
+                "core_gc_zero_count_all": 0.0,
                 "core_gc_eigenvalues_head": [],
                 "core_gc_eigenvalues_tail": [],
             })
@@ -348,15 +384,90 @@ def compute_rowproj_metrics(
             "core_nodes": 0,
             "core_edges": 0,
             "core_components": 0,
+            "core_isolated_nodes": 0,
             "core_gc_size": 0,
             "core_gc_fraction": 0.0,
             "core_gc_spectral_gap": 0.0,
             "core_gc_entropy": 0.0,
+            "core_gc_zero_count_all": 0.0,
             "core_gc_eigenvalues_head": [],
             "core_gc_eigenvalues_tail": [],
         })
 
     return rows, A, evals_all, metrics, evals_head, evals_tail, all_head, all_tail
+
+
+def compute_core_metrics_fast(
+    center: int,
+    core_r: int,
+    K: int,
+    primitive: bool,
+    weight: WeightMode,
+    eps: float,
+) -> Dict[str, Any]:
+    rows = list(range(max(1, center - core_r), center + core_r + 1))
+    q_to_row_indices, q_weight = build_row_to_qs_for_rows(rows, K, primitive, weight)
+    A = build_row_projection_adjacency(rows, q_to_row_indices, q_weight)
+    core_nodes = len(rows)
+    core_degrees = A.sum(axis=1)
+    core_isolated = int(np.sum(core_degrees <= eps))
+    core_edges = count_edges(A, eps=eps)
+    core_comps = connected_components(A, eps=eps)
+    core_n_components = len(core_comps)
+    core_gc_idx = max(core_comps, key=len) if core_comps else []
+
+    metrics = {
+        "core_nodes": int(core_nodes),
+        "core_edges": int(core_edges),
+        "core_components": int(core_n_components),
+        "core_isolated_nodes": core_isolated,
+    }
+
+    if core_gc_idx:
+        A_core_gc = A[np.ix_(core_gc_idx, core_gc_idx)]
+        L_core_gc = normalized_laplacian(A_core_gc, eps=eps)
+        evals_core_gc = np.linalg.eigvalsh(L_core_gc)
+        evals_core_gc = np.clip(evals_core_gc, 0.0, 2.0)
+        evals_core_gc.sort()
+        core_metrics, core_head, core_tail = spectral_summary_with_head_tail(
+            evals_core_gc, eps=eps, head=20, tail=10
+        )
+        core_gc_size = len(core_gc_idx)
+        metrics.update({
+            "core_gc_size": int(core_gc_size),
+            "core_gc_fraction": float(core_gc_size / core_nodes) if core_nodes else 0.0,
+            "core_gc_spectral_gap": float(core_metrics["spectral_gap"]),
+            "core_gc_entropy": float(core_metrics["spectral_entropy"]),
+            "core_gc_zero_count_all": float(core_metrics["zero_count_all"]),
+            "core_gc_eigenvalues_head": core_head,
+            "core_gc_eigenvalues_tail": core_tail,
+        })
+    else:
+        metrics.update({
+            "core_gc_size": 0,
+            "core_gc_fraction": 0.0,
+            "core_gc_spectral_gap": 0.0,
+            "core_gc_entropy": 0.0,
+            "core_gc_zero_count_all": 0.0,
+            "core_gc_eigenvalues_head": [],
+            "core_gc_eigenvalues_tail": [],
+        })
+
+    return metrics
+
+
+def compute_core_edges_only(
+    center: int,
+    core_r: int,
+    K: int,
+    primitive: bool,
+    weight: WeightMode,
+    eps: float,
+) -> int:
+    rows = list(range(max(1, center - core_r), center + core_r + 1))
+    q_to_row_indices, q_weight = build_row_to_qs_for_rows(rows, K, primitive, weight)
+    A = build_row_projection_adjacency(rows, q_to_row_indices, q_weight)
+    return count_edges(A, eps=eps)
 
 
 def write_json(path: str, obj: Any) -> None:

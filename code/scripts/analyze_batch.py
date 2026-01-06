@@ -19,9 +19,15 @@ def read_rows(path: Path) -> List[Dict[str, float]]:
         for row in r:
             parsed = {}
             for k, v in row.items():
+                if k == "center_set":
+                    parsed[k] = v
+                    continue
                 if k in ("center", "is_twin_center"):
                     parsed[k] = int(v)
                 else:
+                    if v is None or v == "":
+                        parsed[k] = float("nan")
+                        continue
                     parsed[k] = float(v)
             rows.append(parsed)
     return rows
@@ -255,6 +261,7 @@ def main() -> None:
     report = {
         "label": args.label,
         "counts": counts,
+        "center_set": rows[0].get("center_set", "unknown") if rows else "unknown",
         "group_stats": group_stats,
         "effects": effects,
         "p_values": pvals,

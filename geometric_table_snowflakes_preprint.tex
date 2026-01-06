@@ -251,6 +251,30 @@ These results are empirical; they do not prove infinitude of twin primes nor
 circumvent known theoretical barriers. They provide evidence of spectral patterns
 consistent with the proposed hypotheses.
 
+\subsection{Mod-6 Controlled Analysis (Centers $c\equiv 0 \pmod 6$)}
+Twin-prime centers are almost always divisible by $6$, so we repeat the batch
+analysis restricted to $c\equiv 0 \pmod 6$ to remove this confounder. We also
+report matched-pair comparisons within this class (twin vs nearest non-twin by
+core-edge count) to isolate the twin effect at fixed composite density.
+
+\begin{table}[h]
+\centering
+\input{out/latex_table_groups_six_ones_core.tex}
+\caption{Group statistics for six-only batch (weight: ones, core-only).}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/core_gap_box_twins_six_ones_core.png}
+\caption{Six-only: core GC gap (twins vs non-twins).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/matched_delta_gap_six.png}
+\caption{Matched pairs: $\Delta$ core gap (twin - control) for $c\equiv 0 \pmod 6$.}
+\end{figure}
+
 \appendix
 \section{IDF and Core-$r$ Variants}
 IDF-weighted tables and figures are provided for comparison:

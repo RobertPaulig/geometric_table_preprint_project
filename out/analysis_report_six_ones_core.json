@@ -1,0 +1,94 @@
+{
+  "label": "six_ones_core",
+  "counts": {
+    "total": 69,
+    "twins": 10,
+    "non_twins": 59,
+    "n_dropped_nan": 1931,
+    "n_used_regression": 69
+  },
+  "center_set": "six",
+  "group_stats": {
+    "twins": {
+      "core_gc_spectral_gap": [
+        0.41086934274762027,
+        0.33453018244833177
+      ],
+      "core_gc_entropy": [
+        1.9965003532400616,
+        1.1284464686230762
+      ],
+      "core_gc_fraction": [
+        0.2622950819672131,
+        0.2536484647520189
+      ],
+      "core_edges": [
+        46.8,
+        57.050503941683104
+      ],
+      "core_components": [
+        41.5,
+        13.97318861248212
+      ]
+    },
+    "non_twins": {
+      "core_gc_spectral_gap": [
+        0.38949169454909927,
+        0.37325266425896314
+      ],
+      "core_gc_entropy": [
+        1.9769874624200423,
+        1.0694091892806985
+      ],
+      "core_gc_fraction": [
+        0.24423450958599602,
+        0.21898003042489805
+      ],
+      "core_edges": [
+        40.271186440677965,
+        44.11573012378997
+      ],
+      "core_components": [
+        41.28813559322034,
+        11.93634365766242
+      ]
+    }
+  },
+  "effects": {
+    "cohens_d_gap": 0.057259936317385095,
+    "cohens_d_entropy": 0.017834009076817748,
+    "effect_size_warning": ""
+  },
+  "p_values": {
+    "perm_p_gap": 0.8642135786421358,
+    "perm_p_entropy": 0.9587041295870413,
+    "perm_p_beta_twin_gap": 0.7509249075092491,
+    "perm_p_beta_twin_entropy": 0.6862313768623137
+  },
+  "correlations": {
+    "corr_core_gap_edges": -0.5385319628885288,
+    "corr_core_gap_gc_fraction": -0.6717155022593747
+  },
+  "regression_gap": {
+    "beta0": 0.6817492038923233,
+    "beta_twin": 0.029240582058468523,
+    "beta_core_edges": 0.0038719784840497116,
+    "beta_core_gc_fraction": -1.8350669507286617,
+    "r2": 0.4901543530963275,
+    "beta_twin_ci": [
+      -0.14330789251302406,
+      0.20281182514415658
+    ]
+  },
+  "regression_entropy": {
+    "beta0": 0.8302470030707978,
+    "beta_twin": -0.04671437991124727,
+    "beta_core_edges": -0.005230154711303066,
+    "beta_core_gc_fraction": 5.5576298252961935,
+    "r2": 0.9117571964903337,
+    "beta_twin_ci": [
+      -0.28255127803708546,
+      0.1843215931198322
+    ]
+  }
+}

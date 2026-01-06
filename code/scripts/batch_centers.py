@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import random
+import math
 from pathlib import Path
 
 
@@ -19,7 +20,7 @@ def is_prime(n: int) -> bool:
         d += 2
     return True
 
-from geometric_table import BuildParams, compute_rowproj_metrics
+from geometric_table import BuildParams, compute_rowproj_metrics, compute_core_metrics_fast
 
 
 def parse_args() -> argparse.Namespace:
@@ -34,6 +35,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--include-centers", type=str, default="600,840,1000")
     p.add_argument("--weight", choices=["ones", "idf"], default="ones")
     p.add_argument("--core-r", type=int, default=30)
+    p.add_argument("--center-set", choices=["all", "even", "six"], default="all")
+    p.add_argument("--fast-core", action="store_true", default=False)
     p.add_argument("--out", type=str, default="out/batch_summary.csv")
     return p.parse_args()
 
@@ -41,7 +44,15 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     rng = random.Random(args.seed)
-    centers = list(range(args.center_min, args.center_max + 1))
+    if args.center_set == "six":
+        start = int(math.ceil(args.center_min / 6))
+        end = int(math.floor(args.center_max / 6))
+        centers = [6 * m for m in range(start, end + 1)]
+    elif args.center_set == "even":
+        start = args.center_min + (args.center_min % 2)
+        centers = list(range(start, args.center_max + 1, 2))
+    else:
+        centers = list(range(args.center_min, args.center_max + 1))
     include = [int(x) for x in args.include_centers.split(",") if x.strip()]
     include = [c for c in include if c in centers]
     pool = [c for c in centers if c not in include]
@@ -56,6 +67,7 @@ def main() -> None:
     fieldnames = [
         "center",
         "is_twin_center",
+        "center_set",
         "n_nodes",
         "n_edges",
         "n_components",
@@ -70,30 +82,43 @@ def main() -> None:
         "core_nodes",
         "core_edges",
         "core_components",
+        "core_isolated_nodes",
         "core_gc_size",
         "core_gc_fraction",
         "core_gc_spectral_gap",
         "core_gc_entropy",
+        "core_gc_zero_count_all",
     ]
 
     with out_path.open("w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
         for center in sample:
-            params = BuildParams(
-                center=center,
-                h=args.h,
-                K=args.K,
-                primitive=bool(args.primitive),
-                weight=args.weight,
-                graph_mode="rowproj",
-            )
-            _, _, _, metrics, _, _, _, _ = compute_rowproj_metrics(
-                params, neigs=50, core_r=args.core_r
-            )
+            if args.fast_core:
+                metrics = compute_core_metrics_fast(
+                    center=center,
+                    core_r=args.core_r,
+                    K=args.K,
+                    primitive=bool(args.primitive),
+                    weight=args.weight,
+                    eps=1e-12,
+                )
+            else:
+                params = BuildParams(
+                    center=center,
+                    h=args.h,
+                    K=args.K,
+                    primitive=bool(args.primitive),
+                    weight=args.weight,
+                    graph_mode="rowproj",
+                )
+                _, _, _, metrics, _, _, _, _ = compute_rowproj_metrics(
+                    params, neigs=50, core_r=args.core_r
+                )
             row = {k: metrics.get(k) for k in fieldnames}
             row["center"] = center
             row["is_twin_center"] = int(is_prime(center - 1) and is_prime(center + 1))
+            row["center_set"] = args.center_set
             w.writerow(row)
 
     print(f"OK: wrote {out_path}")
