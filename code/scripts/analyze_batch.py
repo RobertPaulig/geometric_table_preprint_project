@@ -34,31 +34,56 @@ def mean_std(vals: List[float]) -> Tuple[float, float]:
 
 
 def cohens_d(a: List[float], b: List[float]) -> float:
-    if not a or not b:
-        return 0.0
+    if len(a) < 2 or len(b) < 2:
+        return float("nan")
     ma = sum(a) / len(a)
     mb = sum(b) / len(b)
     va = sum((x - ma) ** 2 for x in a) / (len(a) - 1) if len(a) > 1 else 0.0
     vb = sum((x - mb) ** 2 for x in b) / (len(b) - 1) if len(b) > 1 else 0.0
     pooled = ((len(a) - 1) * va + (len(b) - 1) * vb) / max(1, (len(a) + len(b) - 2))
     if pooled <= 0:
-        return 0.0
+        return float("nan")
     return (ma - mb) / math.sqrt(pooled)
 
 
 def permutation_pvalue(a: List[float], b: List[float], iters: int, seed: int) -> float:
-    rng = random.Random(seed)
     combined = a + b
     n_a = len(a)
+    n = len(combined)
     if n_a == 0 or len(b) == 0:
         return 1.0
     obs = abs(sum(a) / len(a) - sum(b) / len(b))
     count = 0
+    rng = np.random.default_rng(seed)
     for _ in range(iters):
-        rng.shuffle(combined)
-        a_perm = combined[:n_a]
-        b_perm = combined[n_a:]
+        perm_idx = rng.permutation(n)
+        a_perm = [combined[i] for i in perm_idx[:n_a]]
+        b_perm = [combined[i] for i in perm_idx[n_a:]]
         diff = abs(sum(a_perm) / len(a_perm) - sum(b_perm) / len(b_perm))
+        if diff >= obs:
+            count += 1
+    return (count + 1) / (iters + 1)
+
+
+def permutation_pvalue_beta_twin(
+    rows: List[Dict[str, float]],
+    target: str,
+    iters: int,
+    seed: int,
+) -> float:
+    if not rows:
+        return 1.0
+    obs = abs(regression(rows, target=target)["beta_twin"])
+    count = 0
+    rng = np.random.default_rng(seed)
+    for _ in range(iters):
+        perm = []
+        perm_labels = rng.permutation([r["is_twin_center"] for r in rows])
+        for r, lab in zip(rows, perm_labels):
+            r2 = dict(r)
+            r2["is_twin_center"] = int(lab)
+            perm.append(r2)
+        diff = abs(regression(perm, target=target)["beta_twin"])
         if diff >= obs:
             count += 1
     return (count + 1) / (iters + 1)
@@ -76,8 +101,8 @@ def corr(x: List[float], y: List[float]) -> float:
     return num / den if den != 0 else 0.0
 
 
-def regression(rows: List[Dict[str, float]]) -> Dict[str, float]:
-    y = np.array([r["core_gc_spectral_gap"] for r in rows], dtype=float)
+def regression(rows: List[Dict[str, float]], target: str) -> Dict[str, float]:
+    y = np.array([r[target] for r in rows], dtype=float)
     X = np.column_stack([
         np.ones(len(rows), dtype=float),
         np.array([r["is_twin_center"] for r in rows], dtype=float),
@@ -98,12 +123,12 @@ def regression(rows: List[Dict[str, float]]) -> Dict[str, float]:
     }
 
 
-def bootstrap_beta_twin(rows: List[Dict[str, float]], iters: int, seed: int) -> Tuple[float, float]:
+def bootstrap_beta_twin(rows: List[Dict[str, float]], target: str, iters: int, seed: int) -> Tuple[float, float]:
     rng = random.Random(seed)
     vals = []
     for _ in range(iters):
         sample = [rows[rng.randrange(0, len(rows))] for _ in range(len(rows))]
-        vals.append(regression(sample)["beta_twin"])
+        vals.append(regression(sample, target=target)["beta_twin"])
     vals.sort()
     lo = vals[int(0.025 * len(vals))]
     hi = vals[int(0.975 * len(vals)) - 1]
@@ -137,6 +162,25 @@ def main() -> None:
     args = p.parse_args()
 
     rows = read_rows(Path(args.input))
+    filtered = []
+    n_dropped_nan = 0
+    for r in rows:
+        vals = [
+            r.get("core_edges"),
+            r.get("core_gc_fraction"),
+            r.get("core_gc_spectral_gap"),
+            r.get("core_gc_entropy"),
+            r.get("core_gc_size"),
+        ]
+        if any(v is None or math.isnan(v) for v in vals):
+            n_dropped_nan += 1
+            continue
+        if r.get("core_gc_size", 0) < 3:
+            n_dropped_nan += 1
+            continue
+        filtered.append(r)
+
+    rows = filtered
     twins = [r for r in rows if r["is_twin_center"] == 1]
     non_twins = [r for r in rows if r["is_twin_center"] == 0]
 
@@ -144,6 +188,8 @@ def main() -> None:
         "total": len(rows),
         "twins": len(twins),
         "non_twins": len(non_twins),
+        "n_dropped_nan": n_dropped_nan,
+        "n_used_regression": len(rows),
     }
 
     metrics = ["core_gc_spectral_gap", "core_gc_entropy", "core_gc_fraction", "core_edges", "core_components"]
@@ -152,9 +198,16 @@ def main() -> None:
         "non_twins": {m: mean_std([r[m] for r in non_twins]) for m in metrics},
     }
 
+    d_gap = cohens_d([r["core_gc_spectral_gap"] for r in twins], [r["core_gc_spectral_gap"] for r in non_twins])
+    d_ent = cohens_d([r["core_gc_entropy"] for r in twins], [r["core_gc_entropy"] for r in non_twins])
     effects = {
-        "cohens_d_gap": cohens_d([r["core_gc_spectral_gap"] for r in twins], [r["core_gc_spectral_gap"] for r in non_twins]),
-        "cohens_d_entropy": cohens_d([r["core_gc_entropy"] for r in twins], [r["core_gc_entropy"] for r in non_twins]),
+        "cohens_d_gap": d_gap,
+        "cohens_d_entropy": d_ent,
+        "effect_size_warning": (
+            "undefined (zero variance or tiny group)"
+            if (math.isnan(d_gap) or math.isnan(d_ent))
+            else ""
+        ),
     }
 
     pvals = {
@@ -170,6 +223,18 @@ def main() -> None:
             iters=args.permutation_iters,
             seed=args.seed + 1,
         ),
+        "perm_p_beta_twin_gap": permutation_pvalue_beta_twin(
+            rows,
+            target="core_gc_spectral_gap",
+            iters=args.permutation_iters,
+            seed=args.seed + 2,
+        ),
+        "perm_p_beta_twin_entropy": permutation_pvalue_beta_twin(
+            rows,
+            target="core_gc_entropy",
+            iters=args.permutation_iters,
+            seed=args.seed + 3,
+        ),
     }
 
     corrs = {
@@ -177,9 +242,12 @@ def main() -> None:
         "corr_core_gap_gc_fraction": corr([r["core_gc_spectral_gap"] for r in rows], [r["core_gc_fraction"] for r in rows]),
     }
 
-    reg = regression(rows)
-    beta_lo, beta_hi = bootstrap_beta_twin(rows, iters=args.bootstrap_iters, seed=args.seed)
-    reg["beta_twin_ci"] = [beta_lo, beta_hi]
+    reg_gap = regression(rows, target="core_gc_spectral_gap")
+    reg_ent = regression(rows, target="core_gc_entropy")
+    beta_lo_g, beta_hi_g = bootstrap_beta_twin(rows, target="core_gc_spectral_gap", iters=args.bootstrap_iters, seed=args.seed)
+    beta_lo_e, beta_hi_e = bootstrap_beta_twin(rows, target="core_gc_entropy", iters=args.bootstrap_iters, seed=args.seed + 7)
+    reg_gap["beta_twin_ci"] = [beta_lo_g, beta_hi_g]
+    reg_ent["beta_twin_ci"] = [beta_lo_e, beta_hi_e]
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -191,7 +259,8 @@ def main() -> None:
         "effects": effects,
         "p_values": pvals,
         "correlations": corrs,
-        "regression": reg,
+        "regression_gap": reg_gap,
+        "regression_entropy": reg_ent,
     }
     (out_dir / f"analysis_report_{args.label}.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"

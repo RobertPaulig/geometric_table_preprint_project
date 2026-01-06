@@ -193,6 +193,8 @@ We propose studying whether spectral features reliably discriminate: (i) highly 
 We use windows with $h=200$, $K=200$, primitive filtering, and a fixed RNG seed.
 The core window uses $r=30$ around the center. We report results for $w\equiv 1$
 and the IDF weight. Centers are sampled uniformly from $[500,1500]$.
+Main figures and tables are shown for $w\equiv 1$; IDF variants are listed in
+the Appendix.
 
 \subsection{Giant Component Spectra}
 Normalized Laplacian spectra on the full graph contain many zeros, matching the
@@ -225,21 +227,21 @@ core-gap vs core-edges relationship, with highlighted centers.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/core_gap_box_twins.png}
+\includegraphics[width=0.7\linewidth]{fig/core_gap_box_twins_ones.png}
 \caption{Core GC gap: twins vs non-twins.}
 \label{fig:core-gap-box}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/core_entropy_box_twins.png}
+\includegraphics[width=0.7\linewidth]{fig/core_entropy_box_twins_ones.png}
 \caption{Core GC entropy: twins vs non-twins.}
 \label{fig:core-entropy-box}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/core_gap_hist.png}
+\includegraphics[width=0.7\linewidth]{fig/core_gap_hist_ones.png}
 \caption{Core GC gap distribution with highlighted centers.}
 \label{fig:core-gap-hist}
 \end{figure}
@@ -248,6 +250,25 @@ core-gap vs core-edges relationship, with highlighted centers.
 These results are empirical; they do not prove infinitude of twin primes nor
 circumvent known theoretical barriers. They provide evidence of spectral patterns
 consistent with the proposed hypotheses.
+
+\appendix
+\section{IDF and Core-$r$ Variants}
+IDF-weighted tables and figures are provided for comparison:
+\input{out/latex_table_groups_idf.tex}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/core_gap_box_twins_idf.png}
+\caption{Core GC gap: twins vs non-twins (IDF).}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/core_entropy_box_twins_idf.png}
+\caption{Core GC entropy: twins vs non-twins (IDF).}
+\end{figure}
+
+We also report robustness over $r\in\{20,30,40\}$ using batch summaries
+in \texttt{out/analysis\_report\_core20.json}, \texttt{out/analysis\_report\_core30.json},
+and \texttt{out/analysis\_report\_core40.json}.
 
 \appendix
 \section{Reference algorithm (pseudocode)}

@@ -3,7 +3,9 @@
   "counts": {
     "total": 200,
     "twins": 4,
-    "non_twins": 196
+    "non_twins": 196,
+    "n_dropped_nan": 0,
+    "n_used_regression": 200
   },
   "group_stats": {
     "twins": {
@@ -53,17 +55,20 @@
   },
   "effects": {
     "cohens_d_gap": -0.10156752365861703,
-    "cohens_d_entropy": 0.2930249925274977
+    "cohens_d_entropy": 0.2930249925274977,
+    "effect_size_warning": ""
   },
   "p_values": {
-    "perm_p_gap": 0.8433156684331566,
-    "perm_p_entropy": 0.5782421757824218
+    "perm_p_gap": 0.8469153084691531,
+    "perm_p_entropy": 0.5754424557544245,
+    "perm_p_beta_twin_gap": 0.519048095190481,
+    "perm_p_beta_twin_entropy": 0.9524047595240476
   },
   "correlations": {
     "corr_core_gap_edges": -0.3105415610287315,
     "corr_core_gap_gc_fraction": -0.582609685249044
   },
-  "regression": {
+  "regression_gap": {
     "beta0": 0.40595824308635675,
     "beta_twin": 0.03276885892009089,
     "beta_core_edges": 0.005642387742145587,
@@ -72,6 +77,17 @@
     "beta_twin_ci": [
       -0.0012500555720285885,
       0.06655456374356494
+    ]
+  },
+  "regression_entropy": {
+    "beta0": 1.3697250660649352,
+    "beta_twin": -0.003334046196589977,
+    "beta_core_edges": -0.003586141551924972,
+    "beta_core_gc_fraction": 3.187531892036578,
+    "r2": 0.9419338300774085,
+    "beta_twin_ci": [
+      -0.1485790952128171,
+      0.13296719174363963
     ]
   }
 }

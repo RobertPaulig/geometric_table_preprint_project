@@ -25,11 +25,18 @@ def read_rows(path: Path):
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--input", type=str, required=True)
+    p.add_argument("--label", type=str, default="ones")
+    p.add_argument("--input", type=str, default="")
     p.add_argument("--out-dir", type=str, default="fig")
     args = p.parse_args()
 
-    rows = read_rows(Path(args.input))
+    if args.input:
+        input_path = Path(args.input)
+        label = args.label
+    else:
+        label = args.label
+        input_path = Path("out") / f"batch_summary_{label}.csv"
+    rows = read_rows(input_path)
     twins = [r for r in rows if r["is_twin_center"] == 1]
     non_twins = [r for r in rows if r["is_twin_center"] == 0]
 
@@ -45,7 +52,7 @@ def main() -> None:
     ax.set_ylabel("core_gc_spectral_gap")
     ax.set_title("Core Gap: Twins vs Non-twins")
     fig.tight_layout()
-    fig.savefig(out_dir / "core_gap_box_twins.png", dpi=150)
+    fig.savefig(out_dir / f"core_gap_box_twins_{label}.png", dpi=150)
     plt.close(fig)
 
     # Boxplot: core entropy
@@ -57,7 +64,7 @@ def main() -> None:
     ax.set_ylabel("core_gc_entropy")
     ax.set_title("Core Entropy: Twins vs Non-twins")
     fig.tight_layout()
-    fig.savefig(out_dir / "core_entropy_box_twins.png", dpi=150)
+    fig.savefig(out_dir / f"core_entropy_box_twins_{label}.png", dpi=150)
     plt.close(fig)
 
     # Scatter: core edges vs gap
@@ -87,7 +94,7 @@ def main() -> None:
     ax.set_title("Core Gap vs Core Edges")
     ax.legend(frameon=False)
     fig.tight_layout()
-    fig.savefig(out_dir / "core_gap_scatter_edges.png", dpi=150)
+    fig.savefig(out_dir / f"core_gap_scatter_edges_{label}.png", dpi=150)
     plt.close(fig)
 
     # Histogram: core gap
@@ -103,7 +110,7 @@ def main() -> None:
     ax.set_title("Core Gap Distribution")
     ax.legend(frameon=False)
     fig.tight_layout()
-    fig.savefig(out_dir / "core_gap_hist.png", dpi=150)
+    fig.savefig(out_dir / f"core_gap_hist_{label}.png", dpi=150)
     plt.close(fig)
 
     print(f"OK: wrote figures to {out_dir}")
