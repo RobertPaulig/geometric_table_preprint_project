@@ -104,6 +104,16 @@ def main() -> None:
         "K_used",
         "k_bumps",
         "hit_kmax",
+        "twin_isolates",
+        "twin_deg_sum",
+        "twin_deg_minus1",
+        "twin_deg_plus1",
+        "twin_is_isolated_minus1",
+        "twin_is_isolated_plus1",
+        "twin_in_gc_minus1",
+        "twin_in_gc_plus1",
+        "twin_edges_inc_minus1",
+        "twin_edges_inc_plus1",
     ]
 
     with out_path.open("w", encoding="utf-8", newline="") as f:
@@ -155,6 +165,16 @@ def main() -> None:
             row["K_used"] = k_used
             row["k_bumps"] = k_bumps
             row["hit_kmax"] = int(hit_kmax)
+            row["twin_isolates"] = metrics.get("twin_isolates")
+            row["twin_deg_sum"] = metrics.get("twin_deg_sum")
+            row["twin_deg_minus1"] = metrics.get("twin_deg_minus1")
+            row["twin_deg_plus1"] = metrics.get("twin_deg_plus1")
+            row["twin_is_isolated_minus1"] = metrics.get("twin_is_isolated_minus1")
+            row["twin_is_isolated_plus1"] = metrics.get("twin_is_isolated_plus1")
+            row["twin_in_gc_minus1"] = metrics.get("twin_in_gc_minus1")
+            row["twin_in_gc_plus1"] = metrics.get("twin_in_gc_plus1")
+            row["twin_edges_inc_minus1"] = metrics.get("twin_edges_inc_minus1")
+            row["twin_edges_inc_plus1"] = metrics.get("twin_edges_inc_plus1")
             w.writerow(row)
 
     print(f"OK: wrote {out_path}")

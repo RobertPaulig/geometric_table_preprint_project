@@ -440,12 +440,35 @@ def compute_core_metrics_fast(
     core_comps = connected_components(A, eps=eps)
     core_n_components = len(core_comps)
     core_gc_idx = max(core_comps, key=len) if core_comps else []
+    # twin-row indices within core window
+    idx_minus = center - 1 - rows[0] if rows and (center - 1) >= rows[0] and (center - 1) <= rows[-1] else None
+    idx_plus = center + 1 - rows[0] if rows and (center + 1) >= rows[0] and (center + 1) <= rows[-1] else None
+    def twin_local(idx: int | None) -> Dict[str, Any]:
+        if idx is None:
+            return {"deg": 0.0, "is_isolated": 1, "in_gc": 0, "edges_incident": 0.0}
+        deg = float(core_degrees[idx])
+        is_iso = int(deg <= eps)
+        in_gc = int(core_gc_idx and idx in core_gc_idx)
+        edges_inc = float(np.sum(A[idx] > eps))
+        return {"deg": deg, "is_isolated": is_iso, "in_gc": in_gc, "edges_incident": edges_inc}
+    twin_minus = twin_local(idx_minus)
+    twin_plus = twin_local(idx_plus)
 
     metrics = {
         "core_nodes": int(core_nodes),
         "core_edges": int(core_edges),
         "core_components": int(core_n_components),
         "core_isolated_nodes": core_isolated,
+        "twin_deg_minus1": twin_minus["deg"],
+        "twin_deg_plus1": twin_plus["deg"],
+        "twin_is_isolated_minus1": twin_minus["is_isolated"],
+        "twin_is_isolated_plus1": twin_plus["is_isolated"],
+        "twin_in_gc_minus1": twin_minus["in_gc"],
+        "twin_in_gc_plus1": twin_plus["in_gc"],
+        "twin_edges_inc_minus1": twin_minus["edges_incident"],
+        "twin_edges_inc_plus1": twin_plus["edges_incident"],
+        "twin_isolates": float(twin_minus["is_isolated"] + twin_plus["is_isolated"]),
+        "twin_deg_sum": float(twin_minus["deg"] + twin_plus["deg"]),
     }
 
     if core_gc_idx:

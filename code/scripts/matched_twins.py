@@ -60,6 +60,39 @@ def sign_test(deltas: List[float]) -> float:
     return min(1.0, 2.0 * p)
 
 
+def sign_test_with_ties(deltas: List[float], half_ties: bool) -> Tuple[float, float]:
+    """
+    Return (p_value, frac_positive) with optional half-weight for ties.
+    """
+    n_total = len(deltas)
+    if n_total == 0:
+        return 1.0, 0.0
+    pos = sum(1 for d in deltas if d > 0)
+    neg = sum(1 for d in deltas if d < 0)
+    ties = n_total - pos - neg
+    if half_ties:
+        pos_eff = pos + 0.5 * ties
+        n_eff = pos + neg + ties
+        frac_pos = pos_eff / n_eff if n_eff else 0.0
+        # approximate using binomial with adjusted successes
+        # use normal approx for speed
+        p_hat = 0.5
+        mean = n_eff * p_hat
+        var = n_eff * p_hat * (1 - p_hat)
+        z = 0.0 if var == 0 else abs(pos_eff - mean) / (var ** 0.5)
+        from math import erf, sqrt
+        p_two = 2 * (1 - 0.5 * (1 + erf(z / sqrt(2))))
+        return float(p_two), float(frac_pos)
+    else:
+        # exclude ties
+        n_eff = pos + neg
+        if n_eff == 0:
+            return 1.0, 0.5
+        frac_pos = pos / n_eff
+        p_val = sign_test([d for d in deltas if d != 0])
+        return float(p_val), float(frac_pos)
+
+
 def median(vals: List[float]) -> float:
     if not vals:
         return float("nan")
@@ -302,9 +335,24 @@ def main() -> None:
     raw_pairs = [p for p in pairs if not p["strict_pass"]]
     strict_pairs = [p for p in pairs if p["strict_pass"]]
 
+    def sign_stats(subset: List[Dict[str, float]]) -> Dict[str, float]:
+        deltas_gap = [p["twin_gap"] - p["control_gap"] for p in subset]
+        p_excl, frac_excl = sign_test_with_ties(deltas_gap, half_ties=False)
+        p_half, frac_half = sign_test_with_ties(deltas_gap, half_ties=True)
+        ties = len(deltas_gap) - sum(1 for d in deltas_gap if d != 0)
+        return {
+            "n_pairs_total": len(deltas_gap),
+            "n_pairs_nonzero": len(deltas_gap) - ties,
+            "n_ties": ties,
+            "sign_p_excluding_ties": p_excl,
+            "frac_pos_excluding_ties": frac_excl,
+            "sign_p_with_half_ties": p_half,
+            "frac_pos_with_half_ties": frac_half,
+        }
+
     report = {
-        "raw": stats(raw_pairs, seed_offset=0),
-        "strict": stats(strict_pairs, seed_offset=10000),
+        "raw": {**stats(raw_pairs, seed_offset=0), **sign_stats(raw_pairs)},
+        "strict": {**stats(strict_pairs, seed_offset=10000), **sign_stats(strict_pairs)},
     }
     Path(args.out_json).write_text(json.dumps(report, indent=2), encoding="utf-8")
 

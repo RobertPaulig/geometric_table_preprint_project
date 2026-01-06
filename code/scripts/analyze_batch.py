@@ -232,7 +232,15 @@ def main() -> None:
         "all": k_stats(rows),
     }
 
-    metrics = ["core_gc_spectral_gap", "core_gc_entropy", "core_gc_fraction", "core_edges", "core_components"]
+    metrics = [
+        "core_gc_spectral_gap",
+        "core_gc_entropy",
+        "core_gc_fraction",
+        "core_edges",
+        "core_components",
+        "twin_isolates",
+        "twin_deg_sum",
+    ]
     group_stats = {
         "twins": {m: mean_std([r[m] for r in twins]) for m in metrics},
         "non_twins": {m: mean_std([r[m] for r in non_twins]) for m in metrics},
@@ -275,6 +283,18 @@ def main() -> None:
             iters=args.permutation_iters,
             seed=args.seed + 3,
         ),
+        "perm_p_beta_twin_isolates": permutation_pvalue_beta_twin(
+            rows,
+            target="twin_isolates",
+            iters=args.permutation_iters,
+            seed=args.seed + 4,
+        ),
+        "perm_p_beta_twin_deg_sum": permutation_pvalue_beta_twin(
+            rows,
+            target="twin_deg_sum",
+            iters=args.permutation_iters,
+            seed=args.seed + 5,
+        ),
     }
 
     corrs = {
@@ -284,10 +304,16 @@ def main() -> None:
 
     reg_gap = regression(rows, target="core_gc_spectral_gap")
     reg_ent = regression(rows, target="core_gc_entropy")
+    reg_iso = regression(rows, target="twin_isolates")
+    reg_deg = regression(rows, target="twin_deg_sum")
     beta_lo_g, beta_hi_g = bootstrap_beta_twin(rows, target="core_gc_spectral_gap", iters=args.bootstrap_iters, seed=args.seed)
     beta_lo_e, beta_hi_e = bootstrap_beta_twin(rows, target="core_gc_entropy", iters=args.bootstrap_iters, seed=args.seed + 7)
+    beta_lo_iso, beta_hi_iso = bootstrap_beta_twin(rows, target="twin_isolates", iters=args.bootstrap_iters, seed=args.seed + 13)
+    beta_lo_deg, beta_hi_deg = bootstrap_beta_twin(rows, target="twin_deg_sum", iters=args.bootstrap_iters, seed=args.seed + 17)
     reg_gap["beta_twin_ci"] = [beta_lo_g, beta_hi_g]
     reg_ent["beta_twin_ci"] = [beta_lo_e, beta_hi_e]
+    reg_iso["beta_twin_ci"] = [beta_lo_iso, beta_hi_iso]
+    reg_deg["beta_twin_ci"] = [beta_lo_deg, beta_hi_deg]
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -302,6 +328,8 @@ def main() -> None:
         "correlations": corrs,
         "regression_gap": reg_gap,
         "regression_entropy": reg_ent,
+        "regression_twin_isolates": reg_iso,
+        "regression_twin_deg_sum": reg_deg,
         "class_stats": class_stats,
     }
     (out_dir / f"analysis_report_{args.label}.json").write_text(
