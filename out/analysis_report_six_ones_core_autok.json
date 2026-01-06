@@ -1,0 +1,94 @@
+{
+  "label": "six_ones_core_autok",
+  "counts": {
+    "total": 754,
+    "twins": 54,
+    "non_twins": 700,
+    "n_dropped_nan": 246,
+    "n_used_regression": 754
+  },
+  "center_set": "six",
+  "group_stats": {
+    "twins": {
+      "core_gc_spectral_gap": [
+        0.43873513390215857,
+        0.3903671608576646
+      ],
+      "core_gc_entropy": [
+        1.7350844882307097,
+        0.8067495219233134
+      ],
+      "core_gc_fraction": [
+        0.1596842744383728,
+        0.12154366533713919
+      ],
+      "core_edges": [
+        25.11111111111111,
+        26.0787032927655
+      ],
+      "core_components": [
+        44.7962962962963,
+        8.542659030981858
+      ]
+    },
+    "non_twins": {
+      "core_gc_spectral_gap": [
+        0.4793425892966423,
+        0.41885683564213316
+      ],
+      "core_gc_entropy": [
+        1.636521288741476,
+        0.7549683883512024
+      ],
+      "core_gc_fraction": [
+        0.14257611241217824,
+        0.10106697318779116
+      ],
+      "core_edges": [
+        21.034285714285716,
+        17.423759523087075
+      ],
+      "core_components": [
+        46.142857142857146,
+        7.725071824512543
+      ]
+    }
+  },
+  "effects": {
+    "cohens_d_gap": -0.09727846762660615,
+    "cohens_d_entropy": 0.12972209715483085,
+    "effect_size_warning": ""
+  },
+  "p_values": {
+    "perm_p_gap": 0.48895110488951105,
+    "perm_p_entropy": 0.35736426357364265,
+    "perm_p_beta_twin_gap": 0.9898010198980102,
+    "perm_p_beta_twin_entropy": 0.8156184381561844
+  },
+  "correlations": {
+    "corr_core_gap_edges": -0.5758418354091566,
+    "corr_core_gap_gc_fraction": -0.707316670576628
+  },
+  "regression_gap": {
+    "beta0": 0.8968644092827852,
+    "beta_twin": 0.0004967056947692942,
+    "beta_core_edges": 0.005792952823872571,
+    "beta_core_gc_fraction": -3.783049177646199,
+    "r2": 0.5137110516085681,
+    "beta_twin_ci": [
+      -0.07863380240998959,
+      0.08149582199744493
+    ]
+  },
+  "regression_entropy": {
+    "beta0": 0.6695484467876629,
+    "beta_twin": -0.010241835265874598,
+    "beta_core_edges": -0.004652797791168471,
+    "beta_core_gc_fraction": 7.468580129226917,
+    "r2": 0.833527441835163,
+    "beta_twin_ci": [
+      -0.1107500858605695,
+      0.08006390462952107
+    ]
+  }
+}

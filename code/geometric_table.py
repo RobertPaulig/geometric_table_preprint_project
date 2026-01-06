@@ -456,6 +456,23 @@ def compute_core_metrics_fast(
     return metrics
 
 
+def compute_core_gc_size_fast(
+    center: int,
+    core_r: int,
+    K: int,
+    primitive: bool,
+    weight: WeightMode,
+    eps: float,
+) -> int:
+    rows = list(range(max(1, center - core_r), center + core_r + 1))
+    q_to_row_indices, q_weight = build_row_to_qs_for_rows(rows, K, primitive, weight)
+    A = build_row_projection_adjacency(rows, q_to_row_indices, q_weight)
+    comps = connected_components(A, eps=eps)
+    if not comps:
+        return 0
+    return len(max(comps, key=len))
+
+
 def compute_core_edges_only(
     center: int,
     core_r: int,

@@ -202,6 +202,15 @@ number of connected components. We therefore compute spectral summaries on the
 giant component (GC), where $\lambda_2$ and entropy reflect structure rather than
 disconnectedness.
 
+\paragraph{Windows as a translation-invariant feature extractor.}
+For a center $N_0$, we define a finite observation window of the Geometric Table
+by restricting rows to $n\in[N_0-h,N_0+h]$ and columns to divisors $k\le K$.
+This induces a deterministic feature map $F_{h,K,r}(N_0)$ (via the core subwindow $r$ and the corresponding
+row-projection graph spectrum). With fixed $(h,K,r)$, repeated motifs across centers are expected:
+they represent baseline modular structure of divisibility under a fixed “lens”.
+Our analysis therefore focuses on \emph{deviations} from this baseline within controlled residue classes
+(e.g.\ $N_0\equiv 0\pmod 6$ for twin-center candidates) and on the persistence of such deviations across scales.
+
 \subsection{Twin-Center Effect in the Core Window}
 We compare twin-centers (both $N\pm 1$ prime) against non-twins using core-window
 GC metrics. The group summaries are in Table~\ref{tab:group-stats}.
@@ -259,20 +268,20 @@ core-edge count) to isolate the twin effect at fixed composite density.
 
 \begin{table}[h]
 \centering
-\input{out/latex_table_groups_six_ones_core.tex}
-\caption{Group statistics for six-only batch (weight: ones, core-only).}
+\input{out/latex_table_groups_six_ones_core_autok.tex}
+\caption{Group statistics for six-only batch (weight: ones, core-only, adaptive $K$).}
 \end{table}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/core_gap_box_twins_six_ones_core.png}
-\caption{Six-only: core GC gap (twins vs non-twins).}
+\includegraphics[width=0.7\linewidth]{fig/core_gap_box_twins_six_ones_core_autok.png}
+\caption{Six-only: core GC gap (twins vs non-twins, adaptive $K$).}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/matched_delta_gap_six.png}
-\caption{Matched pairs: $\Delta$ core gap (twin - control) for $c\equiv 0 \pmod 6$.}
+\includegraphics[width=0.7\linewidth]{fig/matched_delta_gap_six_autok.png}
+\caption{Matched pairs: $\Delta$ core gap (twin - control) for $c\equiv 0 \pmod 6$ (adaptive $K$).}
 \end{figure}
 
 \appendix

@@ -1,0 +1,9 @@
+{
+  "n_pairs": 64,
+  "mean_delta_gap": 0.014931517261644238,
+  "mean_delta_entropy": -0.03437711861438097,
+  "perm_p_delta_gap": 0.808019198080192,
+  "perm_p_delta_entropy": 0.5192480751924807,
+  "sign_test_p_gap": 0.9006532462520331,
+  "fraction_gap_positive": 0.515625
+}

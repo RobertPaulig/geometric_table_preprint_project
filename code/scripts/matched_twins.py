@@ -9,7 +9,7 @@ import random
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from geometric_table import compute_core_metrics_fast, compute_core_edges_only
+from geometric_table import compute_core_metrics_fast, compute_core_edges_only, compute_core_gc_size_fast
 
 
 def is_prime(n: int) -> bool:
@@ -66,6 +66,12 @@ def main() -> None:
     p.add_argument("--max-d", type=int, default=50)
     p.add_argument("--seed", type=int, default=12345)
     p.add_argument("--iters", type=int, default=10000)
+    p.add_argument("--auto-k", action="store_true", default=False)
+    p.add_argument("--k-max", type=int, default=5000)
+    p.add_argument("--k-step", type=int, default=200)
+    p.add_argument("--min-gc-size", type=int, default=10)
+    p.add_argument("--centers-csv", type=str, default="")
+    p.add_argument("--restrict-to-csv", action="store_true", default=False)
     p.add_argument("--out-csv", type=str, default="out/matched_pairs_six_core30.csv")
     p.add_argument("--out-json", type=str, default="out/matched_analysis_six_core30.json")
     p.add_argument("--out-fig-gap", type=str, default="fig/matched_delta_gap_six.png")
@@ -74,29 +80,71 @@ def main() -> None:
 
     rng = random.Random(args.seed)
     twins = []
-    start = int(math.ceil(args.center_min / 6))
-    end = int(math.floor(args.center_max / 6))
-    for m in range(start, end + 1):
-        c = 6 * m
-        if is_prime(c - 1) and is_prime(c + 1):
-            twins.append(c)
+    csv_centers = set()
+    if args.centers_csv:
+        path = Path(args.centers_csv)
+        if path.exists():
+            with path.open("r", encoding="utf-8") as f:
+                r = csv.DictReader(f)
+                for row in r:
+                    try:
+                        c = int(float(row["center"]))
+                    except Exception:
+                        continue
+                    if c < args.center_min or c > args.center_max:
+                        continue
+                    csv_centers.add(c)
+                    if is_prime(c - 1) and is_prime(c + 1):
+                        twins.append(c)
+        else:
+            raise FileNotFoundError(path)
+    else:
+        start = int(math.ceil(args.center_min / 6))
+        end = int(math.floor(args.center_max / 6))
+        for m in range(start, end + 1):
+            c = 6 * m
+            if is_prime(c - 1) and is_prime(c + 1):
+                twins.append(c)
 
     pairs = []
     edges_cache: Dict[int, int] = {}
     metrics_cache: Dict[int, Dict[str, float]] = {}
+    k_cache: Dict[int, int] = {}
     for c in twins:
         if c in metrics_cache:
             twin_metrics = metrics_cache[c]
+            twin_k = k_cache.get(c, args.K)
         else:
+            twin_k = args.K
+            if args.auto_k:
+                gc_size = compute_core_gc_size_fast(
+                    center=c,
+                    core_r=args.core_r,
+                    K=twin_k,
+                    primitive=bool(args.primitive),
+                    weight=args.weight,
+                    eps=1e-12,
+                )
+                while gc_size < args.min_gc_size and twin_k < args.k_max:
+                    twin_k = min(args.k_max, twin_k + args.k_step)
+                    gc_size = compute_core_gc_size_fast(
+                        center=c,
+                        core_r=args.core_r,
+                        K=twin_k,
+                        primitive=bool(args.primitive),
+                        weight=args.weight,
+                        eps=1e-12,
+                    )
             twin_metrics = compute_core_metrics_fast(
                 center=c,
                 core_r=args.core_r,
-                K=args.K,
+                K=twin_k,
                 primitive=bool(args.primitive),
                 weight=args.weight,
                 eps=1e-12,
             )
             metrics_cache[c] = twin_metrics
+            k_cache[c] = twin_k
         twin_edges = twin_metrics["core_edges"]
         best = None
         for d in range(-args.max_d, args.max_d + 1):
@@ -105,20 +153,53 @@ def main() -> None:
             ctrl = c + 6 * d
             if ctrl < args.center_min or ctrl > args.center_max:
                 continue
+            if args.restrict_to_csv and csv_centers and ctrl not in csv_centers:
+                continue
             if is_prime(ctrl - 1) and is_prime(ctrl + 1):
                 continue
             if ctrl in edges_cache:
                 ctrl_edges = edges_cache[ctrl]
+                ctrl_k = k_cache.get(ctrl, args.K)
             else:
-                ctrl_edges = compute_core_edges_only(
-                    center=ctrl,
-                    core_r=args.core_r,
-                    K=args.K,
-                    primitive=bool(args.primitive),
-                    weight=args.weight,
-                    eps=1e-12,
-                )
+                ctrl_k = args.K
+                if args.auto_k:
+                    gc_size = compute_core_gc_size_fast(
+                        center=ctrl,
+                        core_r=args.core_r,
+                        K=ctrl_k,
+                        primitive=bool(args.primitive),
+                        weight=args.weight,
+                        eps=1e-12,
+                    )
+                    while gc_size < args.min_gc_size and ctrl_k < args.k_max:
+                        ctrl_k = min(args.k_max, ctrl_k + args.k_step)
+                        gc_size = compute_core_gc_size_fast(
+                            center=ctrl,
+                            core_r=args.core_r,
+                            K=ctrl_k,
+                            primitive=bool(args.primitive),
+                            weight=args.weight,
+                            eps=1e-12,
+                        )
+                    ctrl_edges = compute_core_edges_only(
+                        center=ctrl,
+                        core_r=args.core_r,
+                        K=ctrl_k,
+                        primitive=bool(args.primitive),
+                        weight=args.weight,
+                        eps=1e-12,
+                    )
+                else:
+                    ctrl_edges = compute_core_edges_only(
+                        center=ctrl,
+                        core_r=args.core_r,
+                        K=ctrl_k,
+                        primitive=bool(args.primitive),
+                        weight=args.weight,
+                        eps=1e-12,
+                    )
                 edges_cache[ctrl] = ctrl_edges
+                k_cache[ctrl] = ctrl_k
             diff = abs(twin_edges - ctrl_edges)
             cand = (diff, ctrl, ctrl_edges)
             if best is None or cand[0] < best[0]:
@@ -132,7 +213,7 @@ def main() -> None:
             ctrl_metrics = compute_core_metrics_fast(
                 center=ctrl,
                 core_r=args.core_r,
-                K=args.K,
+                K=k_cache.get(ctrl, args.K),
                 primitive=bool(args.primitive),
                 weight=args.weight,
                 eps=1e-12,
@@ -147,6 +228,8 @@ def main() -> None:
             "control_entropy": ctrl_metrics["core_gc_entropy"],
             "twin_edges": twin_edges,
             "control_edges": ctrl_metrics["core_edges"],
+            "twin_K_used": twin_k,
+            "control_K_used": k_cache.get(ctrl, args.K),
         })
 
     out_csv = Path(args.out_csv)
