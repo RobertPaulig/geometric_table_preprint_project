@@ -188,6 +188,67 @@ Each run produces:
 \section{Discussion and open problems}
 We propose studying whether spectral features reliably discriminate: (i) highly composite nodes, (ii) partial snowflakes $FS_K$ with large $K$, and (iii) full snowflakes (twin-prime centers). Proving infinitely many full snowflakes is equivalent to the Twin Prime Conjecture; nonetheless, the Geometric Table framework may expose new invariants and heuristics for ``ray stability'' and factor-geometry.
 
+\section{Empirical Results}
+\subsection{Setup}
+We use windows with $h=200$, $K=200$, primitive filtering, and a fixed RNG seed.
+The core window uses $r=30$ around the center. We report results for $w\equiv 1$
+and the IDF weight. Centers are sampled uniformly from $[500,1500]$.
+
+\subsection{Giant Component Spectra}
+Normalized Laplacian spectra on the full graph contain many zeros, matching the
+number of connected components. We therefore compute spectral summaries on the
+giant component (GC), where $\lambda_2$ and entropy reflect structure rather than
+disconnectedness.
+
+\subsection{Twin-Center Effect in the Core Window}
+We compare twin-centers (both $N\pm 1$ prime) against non-twins using core-window
+GC metrics. The group summaries are in Table~\ref{tab:group-stats}.
+
+\begin{table}[h]
+\centering
+\input{out/latex_table_groups_ones.tex}
+\caption{Group statistics for core-window GC metrics (weight: ones).}
+\label{tab:group-stats}
+\end{table}
+
+\subsection{Controlling for Composite Density}
+We regress core GC gap against twin label, core edges, and GC fraction to control
+for composite-density confounds. Figure~\ref{fig:core-gap-scatter} shows the
+core-gap vs core-edges relationship, with highlighted centers.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\linewidth]{fig/core_gap_scatter_edges.png}
+\caption{Core gap vs core edges (twins vs non-twins; highlighted centers).}
+\label{fig:core-gap-scatter}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/core_gap_box_twins.png}
+\caption{Core GC gap: twins vs non-twins.}
+\label{fig:core-gap-box}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/core_entropy_box_twins.png}
+\caption{Core GC entropy: twins vs non-twins.}
+\label{fig:core-entropy-box}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/core_gap_hist.png}
+\caption{Core GC gap distribution with highlighted centers.}
+\label{fig:core-gap-hist}
+\end{figure}
+
+\paragraph{Disclaimer.}
+These results are empirical; they do not prove infinitude of twin primes nor
+circumvent known theoretical barriers. They provide evidence of spectral patterns
+consistent with the proposed hypotheses.
+
 \appendix
 \section{Reference algorithm (pseudocode)}
 \begin{algorithm}[H]
