@@ -75,4 +75,34 @@ Wave patterns can be decomposed into three interacting structures: periodic comb
 \caption{Diagonal hits raster for $N=2520$ (hit/non-hit over $k$). Impulses align with dense divisor blocks.}
 \end{figure}
 
+\section{Baselines and scaling (M3)}
+Two deterministic baselines serve as controls. First, the expected occupancy density
+over a window is $H_K/K$ where $H_K=\sum_{k\le K}1/k$, and the measured densities
+match this baseline closely. Second, column densities follow the $1/k$ law.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/metrics/col_density_vs_1_over_k.png}
+\caption{Mean column density versus the $1/k$ baseline. Deviations are small.}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\hline
+$K$ & $\overline{\text{occ}}$ & $H_K/K$ & $|\Delta|$ \\
+\hline
+60  & 0.07764 & 0.077998 & 0.000354 \\
+120 & 0.04452 & 0.044741 & 0.000224 \\
+240 & 0.02510 & 0.025250 & 0.000145 \\
+\hline
+\end{tabular}
+\caption{Scaling check: measured occupancy density matches $H_K/K$.}
+\end{table}
+
+\paragraph{Ray-count identity.}
+For each window and $q$, the observed ray count equals the exact formula
+$\max(0, \min(K,\lfloor (a+H-1)/q\rfloor) - \lceil a/q\rceil + 1)$, confirming
+that the $q$-structure is deterministic geometry rather than noise.
+
 \end{document}

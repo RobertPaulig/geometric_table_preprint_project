@@ -55,6 +55,17 @@ def q_counts(occ: np.ndarray, start: int) -> Counter:
     return counts
 
 
+def q_count_formula(start: int, H: int, K: int, q: int) -> int:
+    if q <= 0:
+        return 0
+    lo = (start + q - 1) // q
+    hi = (start + H - 1) // q
+    hi = min(K, hi)
+    if hi < lo:
+        return 0
+    return hi - lo + 1
+
+
 def diag_hits(N0: int, K: int) -> Tuple[List[int], int]:
     hits = [k for k in range(1, K + 1) if N0 % k == 0]
     run_len = 0
@@ -119,9 +130,13 @@ def main() -> None:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    harmonic = sum(1.0 / k for k in range(1, args.K + 1))
+    occ_expected = harmonic / args.K
+
     windows = list(range(1, args.N - args.H + 2, args.step))
     col_rows = []
     q_rows = []
+    q_check_rows = []
     window_rows = []
 
     col_heat = np.zeros((len(windows), args.K), dtype=float)
@@ -137,6 +152,8 @@ def main() -> None:
         qc = q_counts(occ, start)
         for q, cnt in qc.most_common(50):
             q_rows.append([start, q, cnt])
+            cnt_formula = q_count_formula(start, args.H, args.K, q)
+            q_check_rows.append([start, q, cnt, cnt_formula, int(cnt == cnt_formula)])
 
         # window summaries
         occ_density = float(occ.mean())
@@ -144,6 +161,8 @@ def main() -> None:
         window_rows.append([
             start,
             occ_density,
+            occ_expected,
+            occ_density - occ_expected,
             float(np.mean(row_nonempty)),
             float(np.var(row_nonempty)),
         ])
@@ -171,6 +190,11 @@ def main() -> None:
         w = csv.writer(f)
         w.writerow(["win_start", "q", "count"])
         w.writerows(q_rows)
+
+    with (out_dir / "q_counts_check.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["win_start", "q", "count_observed", "count_formula", "ok_flag"])
+        w.writerows(q_check_rows)
 
     if windows:
         sample_starts = [windows[0], windows[len(windows) // 2], windows[-1]]
@@ -208,8 +232,33 @@ def main() -> None:
     # Window summary CSV
     with (out_dir / "window_summary.csv").open("w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["win_start", "occ_density", "row_nonempty_mean", "row_nonempty_var"])
+        w.writerow([
+            "win_start",
+            "occ_density",
+            "occ_density_expected",
+            "occ_error",
+            "row_nonempty_mean",
+            "row_nonempty_var",
+        ])
         w.writerows(window_rows)
+
+    # Column density baseline vs 1/k
+    mean_dens = col_heat.mean(axis=0) if len(windows) > 0 else np.zeros(args.K, dtype=float)
+    with (out_dir / "col_density_error.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["k", "observed_density", "baseline_1_over_k", "error"])
+        for k in range(1, args.K + 1):
+            baseline = 1.0 / k
+            observed = float(mean_dens[k - 1])
+            w.writerow([k, observed, baseline, observed - baseline])
+    save_bar_png(
+        out_dir / "col_density_vs_1_over_k.png",
+        list(range(1, args.K + 1)),
+        [float(x) for x in mean_dens],
+        title="Column density vs 1/k (mean across windows)",
+        xlabel="k",
+        ylabel="density",
+    )
 
     print(f"OK: wrote wave metrics to {out_dir}")
 
