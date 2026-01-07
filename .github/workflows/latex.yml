@@ -1,0 +1,29 @@
+name: latex
+
+on:
+  push:
+    paths:
+      - "geometric_table_snowflakes_preprint.tex"
+      - "out/**"
+      - "fig/**"
+      - "scripts/build_pdf.sh"
+  pull_request:
+    paths:
+      - "geometric_table_snowflakes_preprint.tex"
+      - "out/**"
+      - "fig/**"
+      - "scripts/build_pdf.sh"
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: teatimeguest/setup-texlive-action@v3
+        with:
+          packages: >-
+            scheme-basic
+            latexmk
+            luatex
+            fontspec
+      - run: bash scripts/build_pdf.sh

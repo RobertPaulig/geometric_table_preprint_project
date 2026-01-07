@@ -38,3 +38,14 @@ python scripts/run_experiment.py --center 600 --h 200 --K 200 --primitive --weig
 * eigenvalues.json
 * metrics.json
 * checksums.sha256
+
+## Build PDF
+Without `latexmk`:
+```bash
+./scripts/build_pdf.sh
+```
+On Windows:
+```powershell
+.\scripts\build_pdf.ps1
+```
+See `BUILD.md` for details.
