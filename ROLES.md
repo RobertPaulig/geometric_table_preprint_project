@@ -1,19 +1,21 @@
-# Roles and message protocol
+# Роли и протокол сообщений
 
-This project uses three explicit personas:
-- **ЧЕЛОВЕК** — the human operator who relays messages between the Architect and the Executor.
-- **АРХИТЕКТОР** — defines tasks, methodology, and article text.
-- **ИСПОЛНИТЕЛЬ** — edits code/TeX, runs experiments, commits/pushes, and reports results.
+Система использует три явных персоны:
+- **ЧЕЛОВЕК** — оператор, передающий сообщения между Архитектором и Исполнителем.
+- **АРХИТЕКТОР** — формулирует задачи, методологию, тексты для статьи.
+- **ИСПОЛНИТЕЛЬ** — правит код/TeX, запускает эксперименты, коммитит/пушит, присылает отчёты.
 
-Message headers:
-- Tasks from architect to executor: `АРХИТЕКТОР → ИСПОЛНИТЕЛЮ`.
-- Explanations from architect to human: `АРХИТЕКТОР → ЧЕЛОВЕКУ`.
-- Replies from executor back to architect: `ИСПОЛНИТЕЛЬ → АРХИТЕКТОРУ`.
-- If the executor needs to speak directly to the human: `ИСПОЛНИТЕЛЬ → ЧЕЛОВЕКУ`.
+Форматы заголовков сообщений:
+- Задачи от Архитектора к Исполнителю: `АРХИТЕКТОР → ИСПОЛНИТЕЛЮ`.
+- Пояснения Архитектора Человеку: `АРХИТЕКТОР → ЧЕЛОВЕКУ`.
+- Ответы Исполнителя Архитектору: `ИСПОЛНИТЕЛЬ → АРХИТЕКТОРУ`.
+- Если Исполнитель обращается прямо к Человеку: `ИСПОЛНИТЕЛЬ → ЧЕЛОВЕКУ`.
 
-Default response format for executor reports (short and structured):
-1. Git status (hash, push, files).
-2. Batch summary (counts, survival rate, K policy stats).
-3. Regression results (beta, CI, p-value).
-4. Matched-pairs results (counts, deltas, p-values, sanity flags).
-5. Brief conclusion on whether the effect appears.
+Язык отчётов: всегда русский.
+
+Краткий формат отчётов Исполнителя:
+1. Git (хеш, push, файлы).
+2. Batch: счётчики, survival, K-статистика.
+3. Регрессии: беты, CI, p-value.
+4. Matched: количество пар, дельты, p-value, sanity-флаги.
+5. Итог: появился ли эффект.

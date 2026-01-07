@@ -82,6 +82,7 @@ def sign_test_with_ties(deltas: List[float], half_ties: bool) -> Tuple[float, fl
         z = 0.0 if var == 0 else abs(pos_eff - mean) / (var ** 0.5)
         from math import erf, sqrt
         p_two = 2 * (1 - 0.5 * (1 + erf(z / sqrt(2))))
+        p_two = min(1.0, max(0.0, p_two))
         return float(p_two), float(frac_pos)
     else:
         # exclude ties
@@ -253,7 +254,8 @@ def main() -> None:
             rel_ok = abs(delta_edges) <= max(args.delta_edges_tol, args.delta_edges_rel_tol * max(1.0, twin_edges))
             delta_logK = math.log(max(1.0, twin_k)) - math.log(max(1.0, ctrl_k))
             delta_frac = twin_metrics["core_gc_fraction"] - ctrl_frac
-            if abs(delta_logK) <= args.delta_logK_tol and rel_ok and abs(delta_edges) <= args.delta_edges_tol and abs(delta_frac) <= args.delta_frac_tol:
+            edges_ok = rel_ok  # относительный допуск с минимальным порогом
+            if abs(delta_logK) <= args.delta_logK_tol and edges_ok and abs(delta_frac) <= args.delta_frac_tol:
                 strict_candidates.append(cnd)
         strict_best = None
         if strict_candidates:
@@ -307,11 +309,13 @@ def main() -> None:
     def stats(subset: List[Dict[str, float]], seed_offset: int) -> Dict[str, float]:
         deltas_gap = [p["twin_gap"] - p["control_gap"] for p in subset]
         deltas_entropy = [p["twin_entropy"] - p["control_entropy"] for p in subset]
+        deltas_edges = [p["delta_edges"] for p in subset]
         mean_delta_gap = float(sum(deltas_gap) / len(deltas_gap)) if deltas_gap else 0.0
         mean_delta_entropy = float(sum(deltas_entropy) / len(deltas_entropy)) if deltas_entropy else 0.0
         frac_gap_positive = float(sum(1 for d in deltas_gap if d > 0) / len(deltas_gap)) if deltas_gap else 0.0
         med_gap = median(deltas_gap)
         med_ent = median(deltas_entropy)
+        med_edges = median(deltas_edges)
         ci_gap_lo, ci_gap_hi = bootstrap_median(deltas_gap, iters=2000, seed=args.seed + seed_offset)
         ci_ent_lo, ci_ent_hi = bootstrap_median(deltas_entropy, iters=2000, seed=args.seed + seed_offset + 1)
         sanity_warning = ""
@@ -323,6 +327,9 @@ def main() -> None:
             "mean_delta_entropy": mean_delta_entropy,
             "median_delta_gap": med_gap,
             "median_delta_entropy": med_ent,
+            "delta_edges_min": float(min(deltas_edges)) if deltas_edges else float("nan"),
+            "delta_edges_median": med_edges,
+            "delta_edges_max": float(max(deltas_edges)) if deltas_edges else float("nan"),
             "median_delta_gap_ci": [ci_gap_lo, ci_gap_hi],
             "median_delta_entropy_ci": [ci_ent_lo, ci_ent_hi],
             "perm_p_delta_gap": paired_permutation_pvalue(deltas_gap, args.iters, args.seed + seed_offset),
@@ -351,6 +358,8 @@ def main() -> None:
         }
 
     report = {
+        "n_pairs_raw": len(raw_pairs),
+        "n_pairs_strict": len(strict_pairs),
         "raw": {**stats(raw_pairs, seed_offset=0), **sign_stats(raw_pairs)},
         "strict": {**stats(strict_pairs, seed_offset=10000), **sign_stats(strict_pairs)},
     }

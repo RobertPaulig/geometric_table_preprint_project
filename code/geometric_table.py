@@ -544,7 +544,7 @@ def choose_hybrid_K(
     growth: float = 1.5,
     min_core_gc: int = 10,
     max_bumps: int = 6,
-    K_max: int = 5000,
+    K_max: int = 20000,
     eps: float = 1e-12,
 ) -> Tuple[int, int, int, bool, int]:
     """
