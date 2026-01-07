@@ -5,8 +5,12 @@
     "twins": 4,
     "non_twins": 196,
     "n_dropped_nan": 0,
-    "n_used_regression": 200
+    "n_used_regression": 200,
+    "survival_rate_total": 1.0,
+    "survival_rate_twins": 1.0,
+    "survival_rate_non_twins": 1.0
   },
+  "center_set": "all",
   "group_stats": {
     "twins": {
       "core_gc_spectral_gap": [
@@ -28,6 +32,14 @@
       "core_components": [
         25.0,
         4.743416490252569
+      ],
+      "twin_isolates": [
+        NaN,
+        NaN
+      ],
+      "twin_deg_sum": [
+        NaN,
+        NaN
       ]
     },
     "non_twins": {
@@ -50,6 +62,14 @@
       "core_components": [
         23.831632653061224,
         4.355060320554522
+      ],
+      "twin_isolates": [
+        NaN,
+        NaN
+      ],
+      "twin_deg_sum": [
+        NaN,
+        NaN
       ]
     }
   },
@@ -59,35 +79,83 @@
     "effect_size_warning": ""
   },
   "p_values": {
-    "perm_p_gap": 0.27947205279472054,
-    "perm_p_entropy": 0.6454354564543545,
+    "perm_p_groupdiff_gap": 0.27947205279472054,
+    "perm_p_groupdiff_entropy": 0.6454354564543545,
     "perm_p_beta_twin_gap": 0.1045895410458954,
-    "perm_p_beta_twin_entropy": 0.2576742325767423
+    "perm_p_beta_twin_entropy": 0.2576742325767423,
+    "perm_p_beta_twin_isolates": 9.999000099990002e-05,
+    "perm_p_beta_twin_deg_sum": 9.999000099990002e-05
   },
   "correlations": {
     "corr_core_gap_edges": 0.7064941507652065,
     "corr_core_gap_gc_fraction": 0.43332301486865643
   },
   "regression_gap": {
-    "beta0": 0.13495925481778903,
-    "beta_twin": 0.02983737609398574,
-    "beta_core_edges": 0.0015793332089327344,
-    "beta_core_gc_fraction": -0.3622359716771607,
+    "beta0": 0.004642215188315706,
+    "beta_twin": 0.029837376093985717,
+    "beta_core_edges": 0.0015793332089327206,
+    "beta_core_gc_fraction": -0.36223597167716026,
+    "beta_log_K_used": 0.02459592935150631,
     "r2": 0.6145709119156066,
     "beta_twin_ci": [
-      0.0030644191901830365,
-      0.049407820894156296
+      0.003064419190182602,
+      0.04940782089415615
     ]
   },
   "regression_entropy": {
-    "beta0": 2.2037667819378166,
-    "beta_twin": 0.015521898725902138,
-    "beta_core_edges": 3.301597290154487e-05,
-    "beta_core_gc_fraction": 2.0664646391177195,
+    "beta0": 0.07580332034605182,
+    "beta_twin": 0.015521898725896852,
+    "beta_core_edges": 3.301597290155528e-05,
+    "beta_core_gc_fraction": 2.0664646391177173,
+    "beta_log_K_used": 0.401630048631491,
     "r2": 0.9799936916579979,
     "beta_twin_ci": [
-      -0.014180487104854136,
-      0.045307395517215895
+      -0.01418048710485242,
+      0.045307395517215424
     ]
+  },
+  "regression_twin_isolates": {
+    "beta0": NaN,
+    "beta_twin": NaN,
+    "beta_core_edges": NaN,
+    "beta_core_gc_fraction": NaN,
+    "beta_log_K_used": NaN,
+    "r2": NaN,
+    "beta_twin_ci": [
+      NaN,
+      NaN
+    ]
+  },
+  "regression_twin_deg_sum": {
+    "beta0": NaN,
+    "beta_twin": NaN,
+    "beta_core_edges": NaN,
+    "beta_core_gc_fraction": NaN,
+    "beta_log_K_used": NaN,
+    "r2": NaN,
+    "beta_twin_ci": [
+      NaN,
+      NaN
+    ]
+  },
+  "class_stats": {
+    "twins": {
+      "K_used_min": 200.0,
+      "K_used_median": 200.0,
+      "K_used_max": 200.0,
+      "hit_kmax_fraction": 0.0
+    },
+    "non_twins": {
+      "K_used_min": 200.0,
+      "K_used_median": 200.0,
+      "K_used_max": 200.0,
+      "hit_kmax_fraction": 0.0
+    },
+    "all": {
+      "K_used_min": 200.0,
+      "K_used_median": 200.0,
+      "K_used_max": 200.0,
+      "hit_kmax_fraction": 0.0
+    }
   }
 }

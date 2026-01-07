@@ -173,7 +173,7 @@ Default experimental parameters:
 \[
 h=200,\qquad K=200,
 \]
-and two weight modes: $w\equiv 1$ and $w(n,q)=\arctan(q)$.
+and two weight modes: $w\equiv 1$ and the IDF weight.
 
 \subsection{Outputs (Evidence Pack)}
 Each run produces:
@@ -231,7 +231,7 @@ core-gap vs core-edges relationship, with highlighted centers.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.75\linewidth]{fig/core_gap_scatter_edges.png}
+\includegraphics[width=0.75\linewidth]{fig/core_gap_scatter_edges_ones.png}
 \caption{Core gap vs core edges (twins vs non-twins; highlighted centers).}
 \label{fig:core-gap-scatter}
 \end{figure}
@@ -271,13 +271,13 @@ core-edge count) to isolate the twin effect at fixed composite density.
 
 \paragraph{Global GC metrics (negative result).}
 On the six-only batch with hybrid $K$ (scale-adaptive), $M=2000$, survival $\approx 0.84$, the regression
-of core GC gap on twin label, core edges, core GC fraction, and $\log K_{\text{used}}$ yields $\beta_{\text{twin}}\approx 0$ with permutation
+of core GC gap on twin label, core edges, core GC fraction, and $\log K_{\text{used}}$ yields $\beta_{\text{twin}}\approx -0.017$ with permutation
 $p\approx 0.54$; matched-pairs mean/median $\Delta$ gap $\approx 0$. Thus GC gap is not a stable marker of twin centers once scale and mod-6 are controlled.
 
 \paragraph{Local twin-row signatures (positive result).}
 Adding local features for the rows $c\pm 1$ shows a strong effect: twin isolates
-($\text{twin\_isolates}$) $\beta_{\text{twin}}\approx 0.41$ (perm-$p\approx 2\times 10^{-4}$),
-and twin degree sum ($\text{twin\_deg\_sum}$) $\beta_{\text{twin}}\approx -0.88$ (perm-$p\approx 2\times 10^{-4}$).
+($\text{twin\_isolates}$) $\beta_{\text{twin}}\approx 0.408$ (perm-$p\approx 2\times 10^{-4}$),
+and twin degree sum ($\text{twin\_deg\_sum}$) $\beta_{\text{twin}}\approx -0.878$ (perm-$p\approx 2\times 10^{-4}$).
 These are geometric signatures of the absence of small divisors in $c\pm 1$, not a proof of infinitude of twin primes.
 
 \paragraph{Matched strictness.}
@@ -324,14 +324,13 @@ and \texttt{out/analysis\_report\_core40.json}.
 \section{Reproducibility commands}
 Run batch and analysis (six-only, hybrid $K$) from the project root:
 \begin{verbatim}
-cd code
-PYTHONPATH=. python scripts/batch_centers.py --center-min 500 --center-max 200000 \
+PYTHONPATH=code python code/scripts/batch_centers.py --center-min 500 --center-max 200000 \
   --M 2000 --center-set six --core-r 30 --primitive --weight ones --fast-core \
   --alpha 1.3 --growth 1.5 --max-bumps 6 --min-gc-size 10 --k-max 20000 \
   --out out/batch_summary_six_ones_core_autok.csv
-PYTHONPATH=. python scripts/analyze_batch.py --input out/batch_summary_six_ones_core_autok.csv \
+PYTHONPATH=code python code/scripts/analyze_batch.py --input out/batch_summary_six_ones_core_autok.csv \
   --out-dir out --label six_ones_core_autok --permutation-iters 5000 --bootstrap-iters 1000
-PYTHONPATH=. python scripts/matched_twins.py --center-min 500 --center-max 200000 \
+PYTHONPATH=code python code/scripts/matched_twins.py --center-min 500 --center-max 200000 \
   --core-r 30 --primitive --weight ones --alpha 1.3 --growth 1.5 --max-bumps 6 \
   --min-gc-size 10 --k-max 20000 --max-d 50 --max-d-strict 200 --delta-logK-tol 0.05 \
   --delta-edges-tol 10 --delta-edges-rel-tol 0.02 --delta-frac-tol 0.05 \

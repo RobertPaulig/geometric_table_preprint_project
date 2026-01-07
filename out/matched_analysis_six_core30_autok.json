@@ -1,9 +1,64 @@
 {
-  "n_pairs": 64,
-  "mean_delta_gap": 0.014931517261644238,
-  "mean_delta_entropy": -0.03437711861438097,
-  "perm_p_delta_gap": 0.808019198080192,
-  "perm_p_delta_entropy": 0.5192480751924807,
-  "sign_test_p_gap": 0.9006532462520331,
-  "fraction_gap_positive": 0.515625
+  "n_pairs_raw": 126,
+  "n_pairs_strict": 123,
+  "raw": {
+    "n_pairs": 126,
+    "mean_delta_gap": -0.04483771440934576,
+    "mean_delta_entropy": 0.03293364857754953,
+    "median_delta_gap": 0.0,
+    "median_delta_entropy": 0.0,
+    "delta_edges_min": -8.0,
+    "delta_edges_median": 0.0,
+    "delta_edges_max": 8.0,
+    "median_delta_gap_ci": [
+      -0.002005354687042625,
+      0.0
+    ],
+    "median_delta_entropy_ci": [
+      -0.008187813107590536,
+      0.02560249378172541
+    ],
+    "perm_p_delta_gap": 0.285971402859714,
+    "perm_p_delta_entropy": 0.37746225377462256,
+    "sign_test_p_gap": 0.015818204008052113,
+    "fraction_gap_positive": 0.3888888888888889,
+    "sanity_warning": "",
+    "n_pairs_total": 126,
+    "n_pairs_nonzero": 101,
+    "n_ties": 25,
+    "sign_p_excluding_ties": 0.8423820985077439,
+    "frac_pos_excluding_ties": 0.48514851485148514,
+    "sign_p_with_half_ties": 0.7892680261342813,
+    "frac_pos_with_half_ties": 0.4880952380952381
+  },
+  "strict": {
+    "n_pairs": 123,
+    "mean_delta_gap": -0.046662529731584385,
+    "mean_delta_entropy": 0.014595673135928567,
+    "median_delta_gap": 0.0,
+    "median_delta_entropy": 0.0,
+    "delta_edges_min": -7.0,
+    "delta_edges_median": 0,
+    "delta_edges_max": 7.0,
+    "median_delta_gap_ci": [
+      -0.03239889157372508,
+      0.0
+    ],
+    "median_delta_entropy_ci": [
+      -0.03357849493572784,
+      0.008034334625024453
+    ],
+    "perm_p_delta_gap": 0.26707329267073293,
+    "perm_p_delta_entropy": 0.6723327667233276,
+    "sign_test_p_gap": 0.0005560923592546708,
+    "fraction_gap_positive": 0.34146341463414637,
+    "sanity_warning": "",
+    "n_pairs_total": 123,
+    "n_pairs_nonzero": 101,
+    "n_ties": 22,
+    "sign_p_excluding_ties": 0.11091834966064046,
+    "frac_pos_excluding_ties": 0.4158415841584158,
+    "sign_p_with_half_ties": 0.12531568180831743,
+    "frac_pos_with_half_ties": 0.43089430894308944
+  }
 }
