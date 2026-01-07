@@ -141,4 +141,48 @@ t\_small\_div\_count & 5.40 / 4 & 5.37 / 4 \\
 \caption{Summary stats for wheel overlay features at $m=12$, $K=120$.}
 \end{table}
 
+\section{M5 Twin signal on the $t$-axis}
+We analyze the twin indicator $x_t$ along the $t$-axis for fixed wheel $B=L_m$,
+looking for periodic structure beyond the DC component. We report FFT power,
+autocorrelation, and modular lifts across residue classes.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m5/fft_power.png}
+\caption{FFT power of the centered twin indicator $x_t-\bar{x}$.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m5/autocorr.png}
+\caption{Autocorrelation of the twin indicator (lags up to 5000).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m5/mod_m420_lift.png}
+\caption{Residue-class lift for $m=420$ (relative to global twin rate).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\hline
+Peak & $f_{\mathrm{idx}}$ & period $\approx T/f_{\mathrm{idx}}$ & perm-$p$ \\
+\hline
+1 & 30769 & 6.50 & 0.000 \\
+2 & 92308 & 2.17 & 0.000 \\
+3 & 82353 & 2.43 & 0.000 \\
+4 & 94737 & 2.11 & 0.000 \\
+5 & 76923 & 2.60 & 0.000 \\
+\hline
+\end{tabular}
+\caption{Top FFT peaks (from $T=200000$). Periods are approximate; perm-$p$ uses shuffled controls.}
+\end{table}
+
+\paragraph{Autocorr and modular lifts.}
+Top autocorrelation lags cluster around $\ell\in\{663, 741, \dots\}$ with small magnitude
+($\approx 0.02$), and modular lifts show mild non-uniformity (e.g.\ $m=420$).
+These signals are structured but not strongly separating at this resolution.
+
 \end{document}
