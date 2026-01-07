@@ -105,4 +105,40 @@ For each window and $q$, the observed ray count equals the exact formula
 $\max(0, \min(K,\lfloor (a+H-1)/q\rfloor) - \lceil a/q\rceil + 1)$, confirming
 that the $q$-structure is deterministic geometry rather than noise.
 
+\section{M4 Wheel Overlay}
+Wheel centers $N=t\cdot L_m$ fix a dense diagonal backbone from $L_m$ while $t$ modulates
+local smoothness. We overlay wave-style features on these centers and compare twin
+vs non-twin cases.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m4/m4_runlen_hist.png}
+\caption{Diagonal run length ($K=120$) for wheel centers: twin vs non-twin.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m4/m4_tdiv_hist.png}
+\caption{$t$-small-divisor counts for wheel centers: twin vs non-twin.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m4/m4_scatter_runlen_vs_tdiv.png}
+\caption{Scatter of diagonal run length vs $t$-divisor count (twins highlighted).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+Feature & Twin (mean/median) & Non-twin (mean/median) \\
+\hline
+diag\_run\_len\_K & 12.33 / 12 & 12.27 / 12 \\
+t\_small\_div\_count & 5.40 / 4 & 5.37 / 4 \\
+\hline
+\end{tabular}
+\caption{Summary stats for wheel overlay features at $m=12$, $K=120$.}
+\end{table}
+
 \end{document}

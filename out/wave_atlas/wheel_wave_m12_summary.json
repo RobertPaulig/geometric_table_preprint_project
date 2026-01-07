@@ -1,0 +1,85 @@
+{
+  "counts": {
+    "n_rows": 200000,
+    "n_twins": 9925,
+    "n_non_twins": 190075
+  },
+  "summary_twin": {
+    "diag_run_len_mean": 12.32846347607053,
+    "diag_run_len_median": 12.0,
+    "t_small_div_mean": 5.4012090680100755,
+    "t_small_div_median": 4.0
+  },
+  "summary_non_twin": {
+    "diag_run_len_mean": 12.271377087991583,
+    "diag_run_len_median": 12.0,
+    "t_small_div_mean": 5.366886755228199,
+    "t_small_div_median": 4.0
+  },
+  "top10_diag_run_len": [
+    {
+      "N": 5354228880,
+      "t": 193154,
+      "run_len": 24,
+      "is_twin": 0
+    },
+    {
+      "N": 232792560,
+      "t": 8398,
+      "run_len": 22,
+      "is_twin": 1
+    },
+    {
+      "N": 465585120,
+      "t": 16796,
+      "run_len": 22,
+      "is_twin": 0
+    },
+    {
+      "N": 698377680,
+      "t": 25194,
+      "run_len": 22,
+      "is_twin": 0
+    },
+    {
+      "N": 931170240,
+      "t": 33592,
+      "run_len": 22,
+      "is_twin": 0
+    },
+    {
+      "N": 1163962800,
+      "t": 41990,
+      "run_len": 22,
+      "is_twin": 0
+    },
+    {
+      "N": 1396755360,
+      "t": 50388,
+      "run_len": 22,
+      "is_twin": 0
+    },
+    {
+      "N": 1629547920,
+      "t": 58786,
+      "run_len": 22,
+      "is_twin": 0
+    },
+    {
+      "N": 1862340480,
+      "t": 67184,
+      "run_len": 22,
+      "is_twin": 0
+    },
+    {
+      "N": 2095133040,
+      "t": 75582,
+      "run_len": 22,
+      "is_twin": 0
+    }
+  ],
+  "sanity": {
+    "K": 120,
+    "m": 12
+  }
+}
