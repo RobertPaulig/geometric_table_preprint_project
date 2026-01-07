@@ -53,4 +53,26 @@ The scroll animation is saved as
 \caption{Diagonal profiles for $N=2520$ and $N=27720$.}
 \end{figure}
 
+\section{Wave Metrics (M2)}
+Wave patterns can be decomposed into three interacting structures: periodic combs
+(column densities), rays $n=qk$ (counts by $q$), and diagonal impulses (divisor hits).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/metrics/col_density_heatmap.png}
+\caption{Column density heatmap across sliding windows (x=$k$, y=window start). Clear periodic combs appear at small $k$.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/metrics/q_top_bars_win1.png}
+\caption{Top $q$ counts in the first window (rays $n=qk$). Dominant $q$ values trace the most frequent rays.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/metrics/diag_hits_raster_N2520_K120.png}
+\caption{Diagonal hits raster for $N=2520$ (hit/non-hit over $k$). Impulses align with dense divisor blocks.}
+\end{figure}
+
 \end{document}
