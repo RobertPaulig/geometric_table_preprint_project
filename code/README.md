@@ -49,3 +49,18 @@ On Windows:
 .\scripts\build_pdf.ps1
 ```
 See `BUILD.md` for details.
+
+## Wave Atlas
+Generate Wave Atlas artifacts (from repo root):
+```bash
+PYTHONPATH=code python code/scripts/wave_atlas_generate.py \
+  --N 3000 --K 120 --H 220 --step 60 \
+  --diag-N 60 --diag-N 420 --diag-N 2520 --diag-N 27720 \
+  --out-dir out/wave_atlas
+```
+Build the PDF:
+```bash
+cd docs
+lualatex wave_atlas.tex
+lualatex wave_atlas.tex
+```

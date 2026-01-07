@@ -1,0 +1,56 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{Wave Atlas: Geometric Table Fronts (M1)}
+\author{Working note}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Definitions}
+Let $M(n,k)=\mathbf{1}_{\{k\mid n\}}$ be the occupancy matrix of the Geometric Table,
+and $V(n,k)=n/k$ on cells where $k\mid n$ (empty otherwise). For a fixed diagonal
+center $N$, define the diagonal profile
+\[
+D_N(k)=N/k-1,\qquad k\le K,\ k\mid N.
+\]
+We visualize three ``wave'' views: occupancy, log-values, and diagonal hits.
+
+\section{Occupancy and values}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/divisibility_occ_N3000_K120.png}
+\caption{Occupancy heatmap $M(n,k)$ for $N_{\max}=3000$, $K=120$.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/divisibility_val_log_N3000_K120.png}
+\caption{Log-values heatmap $\log(1+V(n,k))$ on occupied cells.}
+\end{figure}
+
+\paragraph{Scroll.}
+The scroll animation is saved as
+\texttt{out/wave\_atlas/divisibility\_occ\_scroll\_N3000\_K120\_H220\_step60.gif}.
+
+\section{Diagonal profiles}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.49\linewidth]{../out/wave_atlas/diagonal_hits_N60_K120.png}
+\includegraphics[width=0.49\linewidth]{../out/wave_atlas/diagonal_hits_N420_K120.png}
+\caption{Diagonal profiles for $N=60$ and $N=420$.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.49\linewidth]{../out/wave_atlas/diagonal_hits_N2520_K120.png}
+\includegraphics[width=0.49\linewidth]{../out/wave_atlas/diagonal_hits_N27720_K120.png}
+\caption{Diagonal profiles for $N=2520$ and $N=27720$.}
+\end{figure}
+
+\end{document}
