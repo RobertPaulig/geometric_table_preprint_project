@@ -393,10 +393,34 @@ We run the sequential conditioning pipeline for $m=8..14$ with fixed $t_{\max}=2
 The dominant layer follows the first prime $p_0>m$, and energy decays by orders
 of magnitude across layers.
 
+\begin{table}[h]
+\centering
+\scriptsize
+\input{../out/wave_atlas/m11/m11_table.tex}
+\caption{Multi-wheel summary (m=8..14). E1..E3 are top-peak energies after layers 1..3.}
+\end{table}
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m11/m11_energy_decay.png}
 \caption{Energy decay by layer across wheels (m=8..14).}
+\end{figure}
+
+\section{M12 Residual-as-process}
+After removing three sieve layers, we study the residual event process on the
+allowed axis. The residual looks weakly structured, closer to noise than to a
+strong periodic signal.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m12/m12_compare_dispersion.png}
+\caption{Dispersion index (Var/Mean) of residual counts across m=10,12,14.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m12/m12/residual_gaps.png}
+\caption{Residual gap distribution for m=12 after three layers.}
 \end{figure}
 
 \end{document}
