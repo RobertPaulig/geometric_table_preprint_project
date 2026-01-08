@@ -277,4 +277,37 @@ $m=12$ ($p_0=13$) & 18/20 & 17/20 \\
 \caption{Persistence of $p_0$ signature in M7; conditioning reduces but does not eliminate structure.}
 \end{table}
 
+\section{M8 Sequential conditioning}
+We apply conditioning in layers: remove $p_0$, then $p_1$, then $p_2$, and track
+the remaining spectral structure.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m8/m10/m8_fft_layers.png}
+\caption{Sequential conditioning layers for m=10 (p0=11, p1=13, p2=17).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m8/m12/m8_fft_layers.png}
+\caption{Sequential conditioning layers for m=12 (p0=13, p1=17, p2=19).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\hline
+Wheel & layer & top period & fit \\
+\hline
+$m=10$ & 1 & 6.50 & $13/(2\cdot 1)$ \\
+$m=10$ & 2 & 5.67 & $17/3$ \\
+$m=10$ & 3 & 2.71 & $19/7$ \\
+$m=12$ & 1 & 5.67 & $17/3$ \\
+$m=12$ & 2 & 2.71 & $19/7$ \\
+$m=12$ & 3 & 2.04 & $41/(2\cdot 10)$ \\
+\hline
+\end{tabular}
+\caption{Top periods by layer after sequential conditioning (M8).}
+\end{table}
+
 \end{document}
