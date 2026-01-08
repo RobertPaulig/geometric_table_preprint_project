@@ -22,3 +22,11 @@ cd docs && lualatex wave_atlas.tex && lualatex wave_atlas.tex
 
 Artifacts:
 out/wave_atlas/{m1..m9b}/...
+
+Wave Atlas v1.1 Release Notes
+
+Tag: wave-atlas-v1.1
+Commit: 7dbc915c30a4fba5129b85a9b1b6a7024b2457c3
+Changes: add ROADMAP.md and Appendix Roadmap/Future Work in wave_atlas.tex.
+PDF size: 927320 bytes
+PDF SHA256: EC5AAFC9F2EB1718F09F645E5C88BA89F97111AEA4F51FDDF9FFA7647F2DEF19
