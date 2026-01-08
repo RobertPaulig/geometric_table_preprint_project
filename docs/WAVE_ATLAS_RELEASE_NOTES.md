@@ -30,3 +30,11 @@ Commit: 7dbc915c30a4fba5129b85a9b1b6a7024b2457c3
 Changes: add ROADMAP.md and Appendix Roadmap/Future Work in wave_atlas.tex.
 PDF size: 926879 bytes
 PDF SHA256: 1BDB7586A4ABD156783006C8F1570AD8FFC785B1C25421548AB55490A7798456
+
+Wave Atlas v1.2 Release Notes
+
+Tag: wave-atlas-v1.2
+Commit: d2201adb9b0b6a6e6f5ef2e5a6f3b2f3e62d12b7
+Changes: M11 LaTeX table via \input, M12 residual process, M12b inhomogeneous null for dispersion; cleanup raw wheel_scan files.
+PDF size: 1059651 bytes
+PDF SHA256: A46DE0386126BBE31BE6A7AE0E92AC48970FA2507A85D7D8356A111961E26B45
