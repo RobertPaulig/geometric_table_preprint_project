@@ -1,0 +1,33 @@
+name: wave_atlas
+
+on:
+  push:
+    paths:
+      - "docs/wave_atlas.tex"
+      - "docs/ROADMAP.md"
+      - "docs/WAVE_ATLAS_RELEASE_NOTES.md"
+      - "out/wave_atlas/**"
+      - "scripts/make_wave_atlas.sh"
+      - ".github/workflows/wave_atlas.yml"
+  pull_request:
+    paths:
+      - "docs/wave_atlas.tex"
+      - "docs/ROADMAP.md"
+      - "docs/WAVE_ATLAS_RELEASE_NOTES.md"
+      - "out/wave_atlas/**"
+      - "scripts/make_wave_atlas.sh"
+      - ".github/workflows/wave_atlas.yml"
+
+jobs:
+  build_wave_atlas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-luatex texlive-latex-extra texlive-fonts-recommended
+      - name: Build PDF (pdf-only)
+        run: |
+          chmod +x scripts/make_wave_atlas.sh
+          scripts/make_wave_atlas.sh --pdf-only

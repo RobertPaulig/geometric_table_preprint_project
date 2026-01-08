@@ -1,7 +1,28 @@
 # Wave Atlas (M1)
 
 This is a minimal, reproducible atlas of wave/front visualizations in the
-Geometric Table. Generate artifacts and build the PDF:
+Geometric Table. Build the atlas with a single command:
+
+```bash
+./scripts/make_wave_atlas.sh
+```
+
+On Windows:
+
+```powershell
+.\scripts\make_wave_atlas.ps1
+```
+
+PDF-only (use existing artifacts):
+
+```bash
+./scripts/make_wave_atlas.sh --pdf-only
+```
+```powershell
+.\scripts\make_wave_atlas.ps1 -PdfOnly
+```
+
+Manual steps (if needed):
 
 ```bash
 PYTHONPATH=code python code/scripts/wave_atlas_generate.py \

@@ -51,14 +51,30 @@ On Windows:
 See `BUILD.md` for details.
 
 ## Wave Atlas
-Generate Wave Atlas artifacts (from repo root):
+Build Wave Atlas (from repo root):
+```bash
+./scripts/make_wave_atlas.sh
+```
+On Windows:
+```powershell
+.\scripts\make_wave_atlas.ps1
+```
+PDF-only (use existing artifacts):
+```bash
+./scripts/make_wave_atlas.sh --pdf-only
+```
+```powershell
+.\scripts\make_wave_atlas.ps1 -PdfOnly
+```
+
+Manual generation (if needed):
 ```bash
 PYTHONPATH=code python code/scripts/wave_atlas_generate.py \
   --N 3000 --K 120 --H 220 --step 60 \
   --diag-N 60 --diag-N 420 --diag-N 2520 --diag-N 27720 \
   --out-dir out/wave_atlas
 ```
-Build the PDF:
+Build the PDF manually:
 ```bash
 cd docs
 lualatex wave_atlas.tex
