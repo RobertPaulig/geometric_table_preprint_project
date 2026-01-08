@@ -216,4 +216,39 @@ $m=12$ & 6.50, 2.17, 2.43, 2.60 & harmonics of 13/2 \\
 \caption{FFT peak periods shift with the first unfiltered prime.}
 \end{table}
 
+\section{M7 Detrend and conditioning}
+We detrend the twin indicator with a rolling mean and then condition on the
+forbidden classes mod $p_0$ (removing the dominant wheel signature).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m7/m12/segment_rates.png}
+\caption{Segmented twin rate (m=12, segment length 20k). Rates drift but remain stable at scale.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m7/m12/detrend_fft_power_detrended.png}
+\caption{Detrended FFT power (m=12). Dominant peaks reduce in amplitude after detrending.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m7/m12/cond_p0_fft_power.png}
+\caption{Conditional FFT after removing $p_0=13$ forbidden classes (m=12).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+Wheel & top-lags divisible by $p_0$ & top-moduli divisible by $p_0$ \\
+\hline
+$m=10$ ($p_0=11$) & 18/20 & 16/20 \\
+$m=12$ ($p_0=13$) & 18/20 & 17/20 \\
+\hline
+\end{tabular}
+\caption{Persistence of $p_0$ signature in M7; conditioning reduces but does not eliminate structure.}
+\end{table}
+
 \end{document}

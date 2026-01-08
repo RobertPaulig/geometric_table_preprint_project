@@ -1,0 +1,267 @@
+#!/usr/bin/env python
+# code/scripts/twin_t_axis_detrend.py
+from __future__ import annotations
+
+import argparse
+import csv
+import gzip
+import json
+import math
+import random
+from pathlib import Path
+from typing import List, Tuple
+
+import numpy as np
+
+
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser()
+    p.add_argument("--wheel-csv", type=str, required=True)
+    p.add_argument("--B", type=int, required=True)
+    p.add_argument("--p0", type=int, required=True)
+    p.add_argument("--t-max", type=int, default=0)
+    p.add_argument("--seg-len", type=int, default=20000)
+    p.add_argument("--smooth-len", type=int, default=5000)
+    p.add_argument("--perm", type=int, default=100)
+    p.add_argument("--cond-max-mod", type=int, default=0)
+    p.add_argument("--out-dir", type=str, required=True)
+    return p.parse_args()
+
+
+def open_csv(path: Path):
+    if path.suffix == ".gz":
+        return gzip.open(path, "rt", encoding="utf-8", newline="")
+    return path.open("r", encoding="utf-8", newline="")
+
+
+def read_twins(path: Path, t_max: int) -> np.ndarray:
+    x = np.zeros(t_max + 1, dtype=np.int8)
+    with open_csv(path) as f:
+        r = csv.DictReader(f)
+        for row in r:
+            t = int(row["t"])
+            if t > t_max:
+                continue
+            x[t] = int(row["is_twin"])
+    return x[1:]
+
+
+def fft_power(y: np.ndarray) -> np.ndarray:
+    Y = np.fft.rfft(y)
+    return (np.abs(Y) ** 2).astype(float)
+
+
+def autocorr_fft(y: np.ndarray, max_lag: int) -> np.ndarray:
+    n = len(y)
+    f = np.fft.rfft(y, n=2 * n)
+    ac = np.fft.irfft(f * np.conj(f))[: max_lag + 1]
+    return ac / ac[0] if ac[0] != 0 else ac
+
+
+def rolling_mean(x: np.ndarray, L: int) -> np.ndarray:
+    if L <= 1:
+        return x.astype(float)
+    kernel = np.ones(L) / L
+    return np.convolve(x, kernel, mode="same")
+
+
+def save_line(path: Path, xs: List[int], ys: List[float], title: str, xlabel: str, ylabel: str, logy: bool = False) -> None:
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(6.5, 3.8))
+    ax.plot(xs, ys, linewidth=1.0)
+    if logy:
+        ax.set_yscale("log")
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    fig.tight_layout()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+
+
+def segment_fft(y: np.ndarray, seg_len: int, topk: int) -> Tuple[List[float], List[List[Tuple[int, float]]]]:
+    n = len(y)
+    segs = []
+    peaks = []
+    for start in range(0, n, seg_len):
+        seg = y[start : start + seg_len]
+        if len(seg) < seg_len:
+            break
+        segs.append(seg.mean())
+        p = fft_power(seg - seg.mean())
+        p[0] = 0.0
+        idx = np.argsort(p)[-topk:][::-1]
+        peaks.append([(int(i), float(p[i])) for i in idx])
+    return segs, peaks
+
+
+def conditioning_indices(T: int, p0: int, inv: int) -> List[int]:
+    forbid = {inv % p0, (-inv) % p0}
+    return [t for t in range(1, T + 1) if (t % p0) not in forbid]
+
+
+def main() -> None:
+    args = parse_args()
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    t_max = args.t_max
+    if t_max <= 0:
+        raise ValueError("--t-max required")
+    x = read_twins(Path(args.wheel_csv), t_max)
+    T = len(x)
+    x_mean = float(x.mean())
+    y = x.astype(float) - x_mean
+
+    # segmentation
+    seg_rates, seg_peaks = segment_fft(x.astype(float), args.seg_len, 5)
+    with (out_dir / "segment_rates.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["segment_idx", "rate"])
+        for i, rate in enumerate(seg_rates):
+            w.writerow([i, rate])
+    save_line(out_dir / "segment_rates.png", list(range(len(seg_rates))), seg_rates, "Twin rate per segment", "segment", "rate")
+    with (out_dir / "segment_fft_top.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["segment_idx", "rank", "f_idx", "power"])
+        for i, peaks in enumerate(seg_peaks):
+            for r, (fidx, powv) in enumerate(peaks, start=1):
+                w.writerow([i, r, fidx, powv])
+    # peak stability scatter (top peak)
+    top_periods = []
+    for i, peaks in enumerate(seg_peaks):
+        if peaks:
+            fidx = peaks[0][0]
+            top_periods.append((i, args.seg_len / fidx if fidx > 0 else 0))
+    if top_periods:
+        save_line(
+            out_dir / "segment_peak_stability.png",
+            [p[0] for p in top_periods],
+            [p[1] for p in top_periods],
+            "Top peak period per segment",
+            "segment",
+            "period",
+        )
+
+    # detrend (rolling mean)
+    p_hat = rolling_mean(x.astype(float), args.smooth_len)
+    var = np.maximum(p_hat * (1 - p_hat), 1e-6)
+    z = (x - p_hat) / np.sqrt(var)
+
+    # raw vs detrended FFT
+    power_raw = fft_power(y)
+    power_raw[0] = 0.0
+    power_det = fft_power(z - z.mean())
+    power_det[0] = 0.0
+    save_line(out_dir / "detrend_fft_power.png", list(range(1, len(power_raw))), [float(v) for v in power_raw[1:]],
+              "FFT power (raw)", "f_idx", "power", logy=True)
+    save_line(out_dir / "detrend_fft_power_detrended.png", list(range(1, len(power_det))), [float(v) for v in power_det[1:]],
+              "FFT power (detrended)", "f_idx", "power", logy=True)
+
+    # raw vs detrended autocorr
+    max_lag = min(5000, T - 1)
+    ac_raw = autocorr_fft(y, max_lag)
+    ac_det = autocorr_fft(z - z.mean(), max_lag)
+    save_line(out_dir / "detrend_autocorr.png", list(range(1, max_lag + 1)),
+              [float(v) for v in ac_raw[1:]], "Autocorr (raw)", "lag", "corr")
+    save_line(out_dir / "detrend_autocorr_detrended.png", list(range(1, max_lag + 1)),
+              [float(v) for v in ac_det[1:]], "Autocorr (detrended)", "lag", "corr")
+
+    # conditioning on p0
+    inv = pow(args.B % args.p0, -1, args.p0)
+    cond_idx = conditioning_indices(T, args.p0, inv)
+    cond_x = x[np.array(cond_idx) - 1]
+    cond_y = cond_x.astype(float) - cond_x.mean()
+    cond_power = fft_power(cond_y)
+    cond_power[0] = 0.0
+    save_line(out_dir / "cond_p0_fft_power.png", list(range(1, len(cond_power))),
+              [float(v) for v in cond_power[1:]], f"Conditional FFT (p0={args.p0})", "f_idx", "power", logy=True)
+    cond_ac = autocorr_fft(cond_y, max_lag)
+    save_line(out_dir / "cond_p0_autocorr.png", list(range(1, max_lag + 1)),
+              [float(v) for v in cond_ac[1:]], f"Conditional autocorr (p0={args.p0})", "lag", "corr")
+
+    # conditional peaks
+    idx = np.argsort(cond_power)[-20:][::-1]
+    with (out_dir / "cond_p0_top_peaks.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["rank", "f_idx", "period_estimate", "power"])
+        for r, fidx in enumerate(idx, start=1):
+            w.writerow([r, int(fidx), float(len(cond_y) / fidx) if fidx > 0 else 0.0, float(cond_power[fidx])])
+
+    # conditional mod lift summary
+    mod_rows = []
+    cond_max = args.cond_max_mod if args.cond_max_mod > 0 else 840
+    for m in range(2, cond_max + 1):
+        counts = [0] * m
+        twins = [0] * m
+        for t in cond_idx:
+            r = t % m
+            counts[r] += 1
+            twins[r] += int(x[t - 1])
+        pbar = sum(twins) / sum(counts) if sum(counts) else 0.0
+        lift = []
+        chi2 = 0.0
+        for r in range(m):
+            pr = twins[r] / counts[r] if counts[r] else 0.0
+            lift.append(pr / pbar if pbar > 0 else 0.0)
+            exp = counts[r] * pbar
+            if exp > 0:
+                chi2 += (twins[r] - exp) ** 2 / exp
+        mod_rows.append([m, max(lift), min(lift), chi2, pbar])
+        if m in (420, 840):
+            save_line(out_dir / f"cond_p0_mod_lift_m{m}.png", list(range(m)), lift, f"Conditional lift mod {m}", "r", "lift")
+    mod_rows_sorted = sorted(mod_rows, key=lambda r: r[3], reverse=True)[:20]
+    with (out_dir / "cond_p0_mod_chi2_top.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["m", "max_lift", "min_lift", "chi2", "pbar"])
+        w.writerows(mod_rows_sorted)
+
+    # permutation control on detrended (segment-wise shuffle)
+    rng = random.Random(12345)
+    peak_obs = np.sort(power_det)[-5:][::-1]
+    perm_peaks = [[] for _ in range(5)]
+    perm_iters = args.perm
+    if T >= 1_000_000:
+        perm_iters = min(20, perm_iters)
+    for _ in range(perm_iters):
+        zs = z.copy()
+        rng.shuffle(zs)
+        p = fft_power(zs - zs.mean())
+        p[0] = 0.0
+        top = np.sort(p)[-5:][::-1]
+        for i in range(5):
+            perm_peaks[i].append(float(top[i]))
+    perm_summary = []
+    for i in range(5):
+        vals = sorted(perm_peaks[i]) if perm_peaks[i] else [0.0]
+        q95 = vals[int(0.95 * len(vals))]
+        p_like = sum(1 for v in vals if v >= peak_obs[i]) / len(vals)
+        perm_summary.append({
+            "rank": i + 1,
+            "observed": float(peak_obs[i]),
+            "perm_q95": float(q95),
+            "p_like": float(p_like),
+        })
+    Path(out_dir / "m7_perm_control.json").write_text(json.dumps(perm_summary, indent=2), encoding="utf-8")
+
+    Path(out_dir / "p0_forbidden_classes.json").write_text(json.dumps({
+        "B": args.B,
+        "p0": args.p0,
+        "inv": inv,
+        "forbidden": [inv % args.p0, (-inv) % args.p0],
+    }, indent=2), encoding="utf-8")
+
+    Path(out_dir / "detrend_summary.json").write_text(json.dumps({
+        "smooth_len": args.smooth_len,
+        "mean_x": x_mean,
+        "mean_p_hat": float(p_hat.mean()),
+        "var_z": float(np.var(z)),
+    }, indent=2), encoding="utf-8")
+
+    print(f"OK: wrote M7 artifacts to {out_dir}")
+
+
+if __name__ == "__main__":
+    main()
