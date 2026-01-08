@@ -8,5 +8,11 @@
   "allowed_count": 122172,
   "residual_events": 6320,
   "mean_gap": 19.325051432188637,
-  "dispersion": 4.293594377510041
+  "dispersion": 4.293594377510041,
+  "dispersion_null_mean": 4.19971227519016,
+  "dispersion_null_ci": [
+    2.9694812182146673,
+    5.423563533478077
+  ],
+  "p_like": 0.46
 }

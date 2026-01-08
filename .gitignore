@@ -30,3 +30,7 @@ code/out/
 .DS_Store
 Thumbs.db
 Desktop.ini
+# raw multiwheel scans (regenerable)
+wheel_scan_m*_t200000.csv
+wheel_scan_m*_t200000.json
+wheel_scan_m*_t200000.csv.gz

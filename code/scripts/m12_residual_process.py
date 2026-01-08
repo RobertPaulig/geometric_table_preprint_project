@@ -19,6 +19,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--t-max", type=int, default=200000)
     p.add_argument("--p-max", type=int, default=200000)
     p.add_argument("--out-dir", type=str, default="out/wave_atlas/m12")
+    p.add_argument("--smooth-len", type=int, default=2000)
+    p.add_argument("--null-iters", type=int, default=100)
     return p.parse_args()
 
 
@@ -146,6 +148,13 @@ def save_hist(path: Path, data: List[int], title: str, xlabel: str) -> None:
     plt.close(fig)
 
 
+def rolling_mean(x: np.ndarray, L: int) -> np.ndarray:
+    if L <= 1:
+        return x.astype(float)
+    kernel = np.ones(L) / L
+    return np.convolve(x, kernel, mode="same")
+
+
 def main() -> None:
     args = parse_args()
     out_dir = Path(args.out_dir)
@@ -153,6 +162,7 @@ def main() -> None:
 
     m_list = [int(x.strip()) for x in args.m_list.split(",") if x.strip()]
     disp_rows = []
+    null_rows = []
 
     for m in m_list:
         B = lcm_upto(m)
@@ -167,6 +177,18 @@ def main() -> None:
         gaps = gap_distribution(x_res)
         ac = autocorr(x_res, max_lag=200)
         disp = dispersion_index(x_res, window=5000)
+
+        # inhomogeneous null via local intensity
+        p_hat = rolling_mean(x_res.astype(float), args.smooth_len)
+        rng = np.random.default_rng(12345)
+        null_disp = []
+        for _ in range(args.null_iters):
+            sim = rng.random(len(p_hat)) < p_hat
+            null_disp.append(dispersion_index(sim.astype(np.int8), window=5000))
+        null_mean = float(np.mean(null_disp)) if null_disp else 0.0
+        null_lo = float(np.quantile(null_disp, 0.05)) if null_disp else 0.0
+        null_hi = float(np.quantile(null_disp, 0.95)) if null_disp else 0.0
+        p_like = float(np.mean([d >= disp for d in null_disp])) if null_disp else 0.0
 
         m_dir = out_dir / f"m{m}"
         m_dir.mkdir(parents=True, exist_ok=True)
@@ -186,14 +208,36 @@ def main() -> None:
             "residual_events": int(x_res.sum()),
             "mean_gap": float(np.mean(gaps) if gaps else 0.0),
             "dispersion": float(disp),
+            "dispersion_null_mean": null_mean,
+            "dispersion_null_ci": [null_lo, null_hi],
+            "p_like": p_like,
         }
         Path(m_dir / "residual_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
         disp_rows.append(summary)
+        null_rows.append(summary)
 
     # compare dispersion
     xs = [row["m"] for row in disp_rows]
     ys = [row["dispersion"] for row in disp_rows]
     save_line(out_dir / "m12_compare_dispersion.png", xs, ys, "Dispersion by m (residual)", "m", "Var/Mean")
+
+    # null comparison plot
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(figsize=(6.5, 3.8))
+    obs = [row["dispersion"] for row in null_rows]
+    null_mean = [row["dispersion_null_mean"] for row in null_rows]
+    null_lo = [row["dispersion_null_ci"][0] for row in null_rows]
+    null_hi = [row["dispersion_null_ci"][1] for row in null_rows]
+    ax.errorbar(xs, null_mean, yerr=[np.subtract(null_mean, null_lo), np.subtract(null_hi, null_mean)], fmt="o", label="null mean ±90%")
+    ax.plot(xs, obs, "s", label="observed")
+    ax.set_xlabel("m")
+    ax.set_ylabel("dispersion")
+    ax.set_title("Dispersion vs inhomogeneous null")
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(out_dir / "m12_dispersion_null_compare.png", dpi=150)
+    plt.close(fig)
+
     Path(out_dir / "m12_summary.json").write_text(json.dumps(disp_rows, indent=2), encoding="utf-8")
 
     print(f"OK: wrote residual artifacts to {out_dir}")
