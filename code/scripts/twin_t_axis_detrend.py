@@ -81,6 +81,15 @@ def save_line(path: Path, xs: List[int], ys: List[float], title: str, xlabel: st
     plt.close(fig)
 
 
+def save_spectrum_csv(path: Path, power: np.ndarray) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["f_idx", "power"])
+        for i in range(1, len(power)):
+            w.writerow([i, float(power[i])])
+
+
 def segment_fft(y: np.ndarray, seg_len: int, topk: int) -> Tuple[List[float], List[List[Tuple[int, float]]]]:
     n = len(y)
     segs = []
@@ -100,6 +109,40 @@ def segment_fft(y: np.ndarray, seg_len: int, topk: int) -> Tuple[List[float], Li
 def conditioning_indices(T: int, p0: int, inv: int) -> List[int]:
     forbid = {inv % p0, (-inv) % p0}
     return [t for t in range(1, T + 1) if (t % p0) not in forbid]
+
+
+def is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    if n % 2 == 0:
+        return n == 2
+    r = int(math.isqrt(n))
+    for d in range(3, r + 1, 2):
+        if n % d == 0:
+            return False
+    return True
+
+
+def next_primes(p0: int, count: int = 5) -> List[int]:
+    primes = []
+    n = p0 + 1
+    while len(primes) < count:
+        if is_prime(n):
+            primes.append(n)
+        n += 1
+    return primes
+
+
+def fit_harmonic(period: float, primes: List[int], max_d: int = 12) -> Tuple[int, int, str, float, float]:
+    best = (0, 0, "", 0.0, float("inf"))
+    for p in primes:
+        for d in range(1, max_d + 1):
+            for mode, denom in (("p/d", d), ("p/(2d)", 2 * d)):
+                cand = p / denom
+                rel = abs(period - cand) / period if period > 0 else float("inf")
+                if rel < best[4]:
+                    best = (p, d, mode, cand, rel)
+    return best
 
 
 def main() -> None:
@@ -159,6 +202,8 @@ def main() -> None:
               "FFT power (raw)", "f_idx", "power", logy=True)
     save_line(out_dir / "detrend_fft_power_detrended.png", list(range(1, len(power_det))), [float(v) for v in power_det[1:]],
               "FFT power (detrended)", "f_idx", "power", logy=True)
+    save_spectrum_csv(out_dir / "detrend_fft_power_raw.csv", power_raw)
+    save_spectrum_csv(out_dir / "detrend_fft_power_detrended.csv", power_det)
 
     # raw vs detrended autocorr
     max_lag = min(5000, T - 1)
@@ -178,6 +223,7 @@ def main() -> None:
     cond_power[0] = 0.0
     save_line(out_dir / "cond_p0_fft_power.png", list(range(1, len(cond_power))),
               [float(v) for v in cond_power[1:]], f"Conditional FFT (p0={args.p0})", "f_idx", "power", logy=True)
+    save_spectrum_csv(out_dir / "cond_p0_fft_power.csv", cond_power)
     cond_ac = autocorr_fft(cond_y, max_lag)
     save_line(out_dir / "cond_p0_autocorr.png", list(range(1, max_lag + 1)),
               [float(v) for v in cond_ac[1:]], f"Conditional autocorr (p0={args.p0})", "lag", "corr")
@@ -189,6 +235,14 @@ def main() -> None:
         w.writerow(["rank", "f_idx", "period_estimate", "power"])
         for r, fidx in enumerate(idx, start=1):
             w.writerow([r, int(fidx), float(len(cond_y) / fidx) if fidx > 0 else 0.0, float(cond_power[fidx])])
+    primes = next_primes(args.p0, count=5)
+    with (out_dir / "cond_top_peaks_fit.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["rank", "period_estimate", "p", "d", "mode", "fit_period", "rel_error"])
+        for r, fidx in enumerate(idx, start=1):
+            period = float(len(cond_y) / fidx) if fidx > 0 else 0.0
+            p, d, mode, cand, rel = fit_harmonic(period, primes)
+            w.writerow([r, period, p, d, mode, cand, rel])
 
     # conditional mod lift summary
     mod_rows = []

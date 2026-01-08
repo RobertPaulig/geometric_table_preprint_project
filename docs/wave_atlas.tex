@@ -218,7 +218,10 @@ $m=12$ & 6.50, 2.17, 2.43, 2.60 & harmonics of 13/2 \\
 
 \section{M7 Detrend and conditioning}
 We detrend the twin indicator with a rolling mean and then condition on the
-forbidden classes mod $p_0$ (removing the dominant wheel signature).
+forbidden classes mod $p_0$ (removing the dominant wheel signature). Segment
+analysis shows mild nonstationarity, so detrending is applied before spectral
+comparisons. For m=10, conditional modulus scans are limited to $m\le 210$
+for compute budget.
 
 \begin{figure}[h]
 \centering
@@ -237,6 +240,29 @@ forbidden classes mod $p_0$ (removing the dominant wheel signature).
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m7/m12/cond_p0_fft_power.png}
 \caption{Conditional FFT after removing $p_0=13$ forbidden classes (m=12).}
 \end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\linewidth]{../out/wave_atlas/m7/cond_fft_overlay_m10_m12.png}
+\caption{Detrended vs conditioned spectra for m=10 and m=12. Conditioning removes the dominant $p_0$ ridge and leaves weaker structure.}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\hline
+Wheel & rank & period & best fit & rel.\ err. \\
+\hline
+$m=10$ & 1 & 10.64 & $23/(2\cdot 1)$ & 0.081 \\
+$m=10$ & 2 & 5.32 & $17/3$ & 0.066 \\
+$m=10$ & 3 & 3.48 & $17/5$ & 0.022 \\
+$m=12$ & 1 & 4.79 & $29/(2\cdot 3)$ & 0.008 \\
+$m=12$ & 2 & 2.05 & $29/(2\cdot 7)$ & 0.008 \\
+$m=12$ & 3 & 2.27 & $23/(2\cdot 5)$ & 0.012 \\
+\hline
+\end{tabular}
+\caption{Top periods after conditioning ($p_0$ removed) with nearest harmonic fits to the next primes.}
+\end{table}
 
 \begin{table}[h]
 \centering
