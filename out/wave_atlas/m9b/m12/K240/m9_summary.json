@@ -1,0 +1,19 @@
+{
+  "n_total": 2000,
+  "n_twin": 1000,
+  "n_non": 1000,
+  "perm_p_gap": 0.03896103896103896,
+  "perm_p_twin_isolates": null,
+  "corr_dist_p0_core_edges": 0.01811720076171119,
+  "unique_counts": {
+    "core_edges": 19,
+    "core_gc_spectral_gap": 10,
+    "core_gc_entropy": 9
+  },
+  "layer_counts": {
+    "all": 2000,
+    "L1": 1825,
+    "L2": 1728,
+    "L3": 1661
+  }
+}

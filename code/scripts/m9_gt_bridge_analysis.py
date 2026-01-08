@@ -130,10 +130,11 @@ def main() -> None:
     is_twin = data["is_twin"] == 1
     twin_gap = data["core_gc_spectral_gap"][is_twin]
     non_gap = data["core_gc_spectral_gap"][~is_twin]
-    twin_iso = data["twin_isolates"][is_twin]
-    non_iso = data["twin_isolates"][~is_twin]
-    save_violin(out_dir / "m9_twin_non_gap.png", [twin_gap, non_gap], ["twin", "non"], "core_gc_spectral_gap", "gap")
-    save_violin(out_dir / "m9_twin_non_twin_isolates.png", [twin_iso, non_iso], ["twin", "non"], "twin_isolates", "isolates")
+    if "twin_isolates" in data:
+        twin_iso = data["twin_isolates"][is_twin]
+        non_iso = data["twin_isolates"][~is_twin]
+        save_violin(out_dir / "m9_twin_non_gap.png", [twin_gap, non_gap], ["twin", "non"], "core_gc_spectral_gap", "gap")
+        save_violin(out_dir / "m9_twin_non_twin_isolates.png", [twin_iso, non_iso], ["twin", "non"], "twin_isolates", "isolates")
 
     # summary
     dist_p0 = data[f"dist_to_forbid_{args.p0}"]
@@ -145,8 +146,13 @@ def main() -> None:
         "n_twin": int(is_twin.sum()),
         "n_non": int((~is_twin).sum()),
         "perm_p_gap": float(perm_pvalue(twin_gap, non_gap, args.perm)),
-        "perm_p_twin_isolates": float(perm_pvalue(twin_iso, non_iso, args.perm)),
+        "perm_p_twin_isolates": float(perm_pvalue(twin_iso, non_iso, args.perm)) if "twin_isolates" in data else None,
         "corr_dist_p0_core_edges": corr,
+        "unique_counts": {
+            "core_edges": int(np.unique(core_edges).size),
+            "core_gc_spectral_gap": int(np.unique(data["core_gc_spectral_gap"]).size),
+            "core_gc_entropy": int(np.unique(data["core_gc_entropy"]).size),
+        },
         "layer_counts": {
             "all": int(len(core_edges)),
             "L1": int(masks[1].sum()),

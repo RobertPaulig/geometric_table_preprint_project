@@ -10,7 +10,7 @@ import random
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from geometric_table import compute_core_metrics_fast
+from geometric_table import compute_core_metrics_from_rows, compute_core_metrics_fast
 
 
 def parse_args() -> argparse.Namespace:
@@ -20,11 +20,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--sample", type=int, default=4000)
     p.add_argument("--seed", type=int, default=123)
     p.add_argument("--core-r", type=int, default=30)
+    p.add_argument("--core-rt", type=int, default=30)
     p.add_argument("--K", type=int, default=120)
     p.add_argument("--primitive", action="store_true")
     p.add_argument("--weight", type=str, default="ones")
     p.add_argument("--eps", type=float, default=1e-12)
     p.add_argument("--layer-primes", type=str, required=True)
+    p.add_argument("--row-mode", type=str, default="consecutive", choices=["consecutive", "wheel"])
     p.add_argument("--out", type=str, required=True)
     return p.parse_args()
 
@@ -92,34 +94,52 @@ def main() -> None:
             "t", "center", "is_twin",
             "core_edges", "core_components", "core_isolated_nodes",
             "core_gc_size", "core_gc_fraction", "core_gc_spectral_gap", "core_gc_entropy",
-            "twin_isolates", "twin_deg_sum",
-            "twin_deg_minus1", "twin_deg_plus1",
-            "twin_is_isolated_minus1", "twin_is_isolated_plus1",
-            "twin_in_gc_minus1", "twin_in_gc_plus1",
         ]
+        if args.row_mode == "consecutive":
+            header.extend([
+                "twin_isolates", "twin_deg_sum",
+                "twin_deg_minus1", "twin_deg_plus1",
+                "twin_is_isolated_minus1", "twin_is_isolated_plus1",
+                "twin_in_gc_minus1", "twin_in_gc_plus1",
+            ])
         for p in primes:
             header.extend([f"t_mod_{p}", f"is_forbidden_{p}", f"dist_to_forbid_{p}"])
         header.extend(["layer_hits_L1", "layer_hits_L2", "layer_hits_L3", "layer_allow_L1", "layer_allow_L2", "layer_allow_L3"])
         w.writerow(header)
         for t in t_list:
             center = args.B * t
-            metrics = compute_core_metrics_fast(
-                center=center,
-                core_r=args.core_r,
-                K=args.K,
-                primitive=args.primitive,
-                weight=args.weight,
-                eps=args.eps,
-            )
+            if args.row_mode == "wheel":
+                rows = [args.B * (t + i) for i in range(-args.core_rt, args.core_rt + 1)]
+                metrics = compute_core_metrics_from_rows(
+                    rows=rows,
+                    center_value=None,
+                    K=args.K,
+                    primitive=args.primitive,
+                    weight=args.weight,
+                    eps=args.eps,
+                    include_twin=False,
+                )
+            else:
+                metrics = compute_core_metrics_fast(
+                    center=center,
+                    core_r=args.core_r,
+                    K=args.K,
+                    primitive=args.primitive,
+                    weight=args.weight,
+                    eps=args.eps,
+                )
             row = [
                 t, center, int(t in twins),
                 metrics["core_edges"], metrics["core_components"], metrics["core_isolated_nodes"],
                 metrics["core_gc_size"], metrics["core_gc_fraction"], metrics["core_gc_spectral_gap"], metrics["core_gc_entropy"],
-                metrics["twin_isolates"], metrics["twin_deg_sum"],
-                metrics["twin_deg_minus1"], metrics["twin_deg_plus1"],
-                metrics["twin_is_isolated_minus1"], metrics["twin_is_isolated_plus1"],
-                metrics["twin_in_gc_minus1"], metrics["twin_in_gc_plus1"],
             ]
+            if args.row_mode == "consecutive":
+                row.extend([
+                    metrics["twin_isolates"], metrics["twin_deg_sum"],
+                    metrics["twin_deg_minus1"], metrics["twin_deg_plus1"],
+                    metrics["twin_is_isolated_minus1"], metrics["twin_is_isolated_plus1"],
+                    metrics["twin_in_gc_minus1"], metrics["twin_in_gc_plus1"],
+                ])
             forb_flags = []
             for p in primes:
                 inv = invs[p]

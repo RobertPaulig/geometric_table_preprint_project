@@ -422,15 +422,15 @@ def compute_rowproj_metrics(
     return rows, A, evals_all, metrics, evals_head, evals_tail, all_head, all_tail
 
 
-def compute_core_metrics_fast(
-    center: int,
-    core_r: int,
+def compute_core_metrics_from_rows(
+    rows: list[int],
+    center_value: int | None,
     K: int,
     primitive: bool,
     weight: WeightMode,
     eps: float,
+    include_twin: bool = True,
 ) -> Dict[str, Any]:
-    rows = list(range(max(1, center - core_r), center + core_r + 1))
     q_to_row_indices, q_weight = build_row_to_qs_for_rows(rows, K, primitive, weight)
     A = build_row_projection_adjacency(rows, q_to_row_indices, q_weight)
     core_nodes = len(rows)
@@ -440,36 +440,41 @@ def compute_core_metrics_fast(
     core_comps = connected_components(A, eps=eps)
     core_n_components = len(core_comps)
     core_gc_idx = max(core_comps, key=len) if core_comps else []
-    # twin-row indices within core window
-    idx_minus = center - 1 - rows[0] if rows and (center - 1) >= rows[0] and (center - 1) <= rows[-1] else None
-    idx_plus = center + 1 - rows[0] if rows and (center + 1) >= rows[0] and (center + 1) <= rows[-1] else None
-    def twin_local(idx: int | None) -> Dict[str, Any]:
-        if idx is None:
-            return {"deg": 0.0, "is_isolated": 1, "in_gc": 0, "edges_incident": 0.0}
-        deg = float(core_degrees[idx])
-        is_iso = int(deg <= eps)
-        in_gc = int(core_gc_idx and idx in core_gc_idx)
-        edges_inc = float(np.sum(A[idx] > eps))
-        return {"deg": deg, "is_isolated": is_iso, "in_gc": in_gc, "edges_incident": edges_inc}
-    twin_minus = twin_local(idx_minus)
-    twin_plus = twin_local(idx_plus)
 
-    metrics = {
+    metrics: Dict[str, Any] = {
         "core_nodes": int(core_nodes),
         "core_edges": int(core_edges),
         "core_components": int(core_n_components),
         "core_isolated_nodes": core_isolated,
-        "twin_deg_minus1": twin_minus["deg"],
-        "twin_deg_plus1": twin_plus["deg"],
-        "twin_is_isolated_minus1": twin_minus["is_isolated"],
-        "twin_is_isolated_plus1": twin_plus["is_isolated"],
-        "twin_in_gc_minus1": twin_minus["in_gc"],
-        "twin_in_gc_plus1": twin_plus["in_gc"],
-        "twin_edges_inc_minus1": twin_minus["edges_incident"],
-        "twin_edges_inc_plus1": twin_plus["edges_incident"],
-        "twin_isolates": float(twin_minus["is_isolated"] + twin_plus["is_isolated"]),
-        "twin_deg_sum": float(twin_minus["deg"] + twin_plus["deg"]),
     }
+
+    if include_twin and center_value is not None and rows:
+        idx_minus = center_value - 1 - rows[0] if (center_value - 1) >= rows[0] and (center_value - 1) <= rows[-1] else None
+        idx_plus = center_value + 1 - rows[0] if (center_value + 1) >= rows[0] and (center_value + 1) <= rows[-1] else None
+
+        def twin_local(idx: int | None) -> Dict[str, Any]:
+            if idx is None:
+                return {"deg": 0.0, "is_isolated": 1, "in_gc": 0, "edges_incident": 0.0}
+            deg = float(core_degrees[idx])
+            is_iso = int(deg <= eps)
+            in_gc = int(core_gc_idx and idx in core_gc_idx)
+            edges_inc = float(np.sum(A[idx] > eps))
+            return {"deg": deg, "is_isolated": is_iso, "in_gc": in_gc, "edges_incident": edges_inc}
+
+        twin_minus = twin_local(idx_minus)
+        twin_plus = twin_local(idx_plus)
+        metrics.update({
+            "twin_deg_minus1": twin_minus["deg"],
+            "twin_deg_plus1": twin_plus["deg"],
+            "twin_is_isolated_minus1": twin_minus["is_isolated"],
+            "twin_is_isolated_plus1": twin_plus["is_isolated"],
+            "twin_in_gc_minus1": twin_minus["in_gc"],
+            "twin_in_gc_plus1": twin_plus["in_gc"],
+            "twin_edges_inc_minus1": twin_minus["edges_incident"],
+            "twin_edges_inc_plus1": twin_plus["edges_incident"],
+            "twin_isolates": float(twin_minus["is_isolated"] + twin_plus["is_isolated"]),
+            "twin_deg_sum": float(twin_minus["deg"] + twin_plus["deg"]),
+        })
 
     if core_gc_idx:
         A_core_gc = A[np.ix_(core_gc_idx, core_gc_idx)]
@@ -502,6 +507,26 @@ def compute_core_metrics_fast(
         })
 
     return metrics
+
+
+def compute_core_metrics_fast(
+    center: int,
+    core_r: int,
+    K: int,
+    primitive: bool,
+    weight: WeightMode,
+    eps: float,
+) -> Dict[str, Any]:
+    rows = list(range(max(1, center - core_r), center + core_r + 1))
+    return compute_core_metrics_from_rows(
+        rows=rows,
+        center_value=center,
+        K=K,
+        primitive=primitive,
+        weight=weight,
+        eps=eps,
+        include_twin=True,
+    )
 
 
 def compute_core_gc_size_fast(
