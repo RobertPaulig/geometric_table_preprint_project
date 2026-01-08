@@ -315,4 +315,29 @@ non-wheel primes. Peak energy decays by orders of magnitude across layers, and
 the remaining peaks align with the next prime layer rather than an independent
 periodic mechanism.
 
+\section{M9 Bridge to GT geometry}
+We sample centers $c=B\cdot t$ from the wheel axis and compute GT core metrics
+in the same $K$-window as the wave atlas. Core density varies by $t \bmod p_0$,
+and conditioning on successive layers reshapes the distribution of GT metrics.
+After controlling for layers, the global GC gap remains non-separating, while
+local twin-row features stay strongly separated.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m9/m12/m9_core_edges_by_mod_p0.png}
+\caption{Mean core\_edges by residue class $t \bmod p_0$ (m=12, $p_0=13$).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m9/m12/m9_layers_box_core_edges.png}
+\caption{core\_edges distributions under layer conditioning (m=12).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m9/m12/m9_twin_non_twin_isolates.png}
+\caption{Twin vs non-twin for local twin-row isolates (m=12).}
+\end{figure}
+
 \end{document}

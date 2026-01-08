@@ -1,0 +1,14 @@
+{
+  "n_total": 4000,
+  "n_twin": 2000,
+  "n_non": 2000,
+  "perm_p_gap": 1.0,
+  "perm_p_twin_isolates": 1.0,
+  "corr_dist_p0_core_edges": 0.0,
+  "layer_counts": {
+    "all": 4000,
+    "L1": 3661,
+    "L2": 3455,
+    "L3": 3266
+  }
+}
