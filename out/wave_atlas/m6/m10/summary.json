@@ -1,0 +1,14 @@
+{
+  "counts": {
+    "T": 2200000,
+    "twin_count": 88920,
+    "twin_rate": 0.04041818181818182
+  },
+  "check_prime_summary": {
+    "prime": 11,
+    "top_lags_count": 20,
+    "top_lags_divisible": 18,
+    "top_mod_count": 20,
+    "top_mod_divisible": 16
+  }
+}

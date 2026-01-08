@@ -185,4 +185,35 @@ Top autocorrelation lags cluster around $\ell\in\{663, 741, \dots\}$ with small 
 ($\approx 0.02$), and modular lifts show mild non-uniformity (e.g.\ $m=420$).
 These signals are structured but not strongly separating at this resolution.
 
+\section{M6 Wheel-shift control (m=10 vs m=12)}
+We repeat the $t$-axis analysis with $m=10$ (wheel $B=L_{10}=2520$) at comparable $N_{\max}$
+to test whether the dominant signatures shift to the smallest unfiltered prime (11).
+Raw CSV for $m=10$ is stored compressed in \texttt{out/wheel\_scan\_m10\_t2200000.csv.gz}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+Wheel & top-lags divisible by $p$ & top-moduli divisible by $p$ \\
+\hline
+$m=10$ ($p=11$) & 18/20 & 16/20 \\
+$m=12$ ($p=13$) & 18/20 & 17/20 \\
+\hline
+\end{tabular}
+\caption{Divisibility of top autocorr lags and top chi2 moduli by the first unfiltered prime.}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+Wheel & peak periods (approx.) & comment \\
+\hline
+$m=10$ & 11.0, 2.2, 2.75, 4.25 & harmonics of 11 \\
+$m=12$ & 6.50, 2.17, 2.43, 2.60 & harmonics of 13/2 \\
+\hline
+\end{tabular}
+\caption{FFT peak periods shift with the first unfiltered prime.}
+\end{table}
+
 \end{document}

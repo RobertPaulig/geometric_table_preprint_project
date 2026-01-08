@@ -20,6 +20,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--out-dir", type=str, default="out/wave_atlas/m5")
     p.add_argument("--max-mod", type=int, default=2000)
     p.add_argument("--topK", type=int, default=30)
+    p.add_argument("--check-prime", type=int, default=0, help="optional prime for divisibility checks")
+    p.add_argument("--perm-iters", type=int, default=300)
     p.add_argument("--seed", type=int, default=12345)
     return p.parse_args()
 
@@ -65,14 +67,15 @@ def save_line_png(path: Path, xs: List[int], ys: List[float], title: str, xlabel
     plt.close(fig)
 
 
-def mod_lift(x: np.ndarray, m: int) -> Tuple[List[float], float, float]:
-    counts = [0] * m
-    twins = [0] * m
-    for i, val in enumerate(x, start=1):
-        r = i % m
-        counts[r] += 1
-        twins[r] += int(val)
-    pbar = sum(x) / len(x)
+def mod_lift(twin_idx: np.ndarray, T: int, m: int, pbar: float) -> Tuple[List[float], float]:
+    # counts per residue for all t in [1..T]
+    base = T // m
+    rem = T % m
+    counts = np.full(m, base, dtype=int)
+    if rem:
+        counts[:rem] += 1
+    # twin counts per residue
+    twins = np.bincount(twin_idx % m, minlength=m)
     lift = []
     chi2 = 0.0
     for r in range(m):
@@ -81,7 +84,7 @@ def mod_lift(x: np.ndarray, m: int) -> Tuple[List[float], float, float]:
         exp = counts[r] * pbar
         if exp > 0:
             chi2 += (twins[r] - exp) ** 2 / exp
-    return lift, chi2, pbar
+    return lift, chi2
 
 
 def save_mod_lift_png(path: Path, lifts: List[float], m: int) -> None:
@@ -108,6 +111,7 @@ def main() -> None:
     T = len(x)
     x_mean = float(x.mean())
     y = x.astype(float) - x_mean
+    twin_idx = np.nonzero(x)[0] + 1
 
     power = fft_power(y)
     freqs = np.arange(len(power))
@@ -139,7 +143,7 @@ def main() -> None:
 
     # permutation control (shuffle)
     perm_max = []
-    for _ in range(300):
+    for _ in range(args.perm_iters):
         xs = x.copy()
         rng.shuffle(xs)
         ys = xs.astype(float) - xs.mean()
@@ -179,8 +183,8 @@ def main() -> None:
     # mod lifts + chi2 summary
     mod_summary = []
     for m in range(2, args.max_mod + 1):
-        lift, chi2, pbar = mod_lift(x, m)
-        mod_summary.append([m, max(lift), min(lift), chi2, pbar])
+        lift, chi2 = mod_lift(twin_idx, T, m, x_mean)
+        mod_summary.append([m, max(lift), min(lift), chi2, x_mean])
     with (out_dir / "mod_lift_summary.csv").open("w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
         w.writerow(["m", "max_lift", "min_lift", "chi2", "pbar"])
@@ -195,8 +199,26 @@ def main() -> None:
     # example lifts for selected moduli
     for m in (210, 420, 840):
         if m <= args.max_mod:
-            lift, _, _ = mod_lift(x, m)
+            lift, _ = mod_lift(twin_idx, T, m, x_mean)
             save_mod_lift_png(out_dir / f"mod_m{m}_lift.png", lift, m)
+
+    # divisibility checks for top lags and top moduli
+    div_summary = {}
+    if args.check_prime:
+        p = args.check_prime
+        div_summary = {
+            "prime": p,
+            "top_lags_count": len(top_lags),
+            "top_lags_divisible": sum(1 for lag in top_lags if lag % p == 0),
+            "top_mod_count": len(mod_summary_sorted),
+            "top_mod_divisible": sum(1 for r in mod_summary_sorted if int(r[0]) % p == 0),
+        }
+
+    summary = {
+        "counts": {"T": int(T), "twin_count": int(sum(x)), "twin_rate": float(x_mean)},
+        "check_prime_summary": div_summary,
+    }
+    Path(out_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
     print(f"OK: wrote M5 artifacts to {out_dir}")
 
