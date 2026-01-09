@@ -46,3 +46,11 @@ Commit: 9cfa74a
 Changes: M13 GT wheel-lattice sensitivity; triangles+isolates detect sieve layers; stable across eps.
 PDF size: 1103519 bytes
 PDF SHA256: 16AE7675EE475E954D825EFED94914E032CAA2A4984F1FAA64CF5DF0214E82C9
+
+Wave Atlas v1.4 Release Notes
+
+Tag: wave-atlas-v1.4
+Commit: 27fb4fd
+Changes: M14 wave-sieve candidate generator + figs survival/throughput/gaps.
+PDF size: 1162068 bytes
+PDF SHA256: 679866141B5A6E1CD9462E127DE8C96E048231B3C0224F7922A93772A98D5C2E
