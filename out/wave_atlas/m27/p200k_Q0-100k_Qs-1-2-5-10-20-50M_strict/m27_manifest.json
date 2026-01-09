@@ -1,0 +1,19 @@
+{
+  "p_max": 200000,
+  "Q0": 100000,
+  "Q_list": [
+    1000000,
+    2000000,
+    5000000,
+    10000000,
+    20000000,
+    50000000
+  ],
+  "mersenne_strict": true,
+  "seed": 123,
+  "files": {
+    "m26_dataset.csv": "a30d73c106969bdb1fadb55dd6fd2fc680e31fa9baa3caa6934d34946d14f222",
+    "m26_dataset_meta.json": "9f21dc8fbab9ae2c61a9080c605b62c9a9d60659ace7cd1e5d3330b295dba76f",
+    "m27_dataset_summary.json": "cf84ec79c2457973e54c9e513cd4083f98b3d98e3fae9ebf75c5b83dc5f7df5d"
+  }
+}

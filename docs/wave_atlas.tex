@@ -397,6 +397,7 @@ M23 & Budgeted search simulation (M18 vs M22 vs random). \\
 M24 & Scale stress-test of M22 at larger $(p_{\max},Q_1)$ and big budgets. \\
 M25 & Hard-mode stress-test: $Q_1$ up to 10M and strict Mersenne filters. \\
 M26 & Calibrated survival predictor and extrapolation across Q. \\
+M27 & Extrapolation stress-test beyond fit Q (10M $\rightarrow$ 20M/50M). \\
 \hline
 \end{tabular}
 
@@ -893,4 +894,41 @@ and compute savings without full Q1 labeling.
 \caption{AUC/Brier/LogLoss across Q for calibrated model (M26-A).}
 \end{table}
 
+\clearpage
+\section{M27 Extrapolation stress-test}
+We test extrapolation by fitting the calibrated model at $Q=10$M and evaluating
+at deeper Q, then compare against an upper-bound fit at $Q=20$M. We track
+ranking stability (Spearman) and the extrapolation gap in AUC/Brier/LogLoss.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M/m27_auc_by_Q.png}
+\caption{AUC across Q for fit@10M (M27-A).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M/m27_calibration_Q20000000.png}
+\caption{Calibration at Q=20M for fit@10M (M27-A).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M/m27_predicted_yield_vs_budget_Q20000000.png}
+\caption{Predicted yield vs budget at Q=20M (M27-A).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M/m27_rank_stability.png}
+\caption{Rank stability across Q (M27-A).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M/m27_table.tex}
+\caption{AUC/Brier/LogLoss across Q for fit@10M (M27-A).}
+\end{table}
+
+\clearpage
 \end{document}

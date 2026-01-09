@@ -474,7 +474,7 @@ PYTHONPATH=code python code/scripts/m26_survival_model.py \
 ```
 
 ## M27 - Extrapolation stress-test (fit@10M -> eval@20M/50M)
-Status: Planned
+Status: Done (tag wave-atlas-v1.17)
 
 **Цель:** проверить перенос калибровки и ранжирования за пределы обучающего Q
 и оценить разрыв качества между fit@10M и fit@20M.

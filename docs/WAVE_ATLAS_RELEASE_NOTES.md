@@ -185,3 +185,11 @@ Commit: (tag wave-atlas-v1.16)
 Changes: M26 calibrated survival predictor + extrapolation curve (Q sweep).
 PDF size: 2617846 bytes
 PDF SHA256: 647AAAD927FF7315EDA973418C3464165D6DA57A1F7B85E3148BE001F82A5AE8
+
+Wave Atlas v1.17 Release Notes
+
+Tag: wave-atlas-v1.17
+Commit: (tag wave-atlas-v1.17)
+Changes: M27 extrapolation stress-test (fit@10M vs fit@20M) + TeX section and figures.
+PDF size: 2755894 bytes
+PDF SHA256: A53C81DF400B7FE29602608A4F423BAD1673D0566ABDA71ACA3295349543B64D

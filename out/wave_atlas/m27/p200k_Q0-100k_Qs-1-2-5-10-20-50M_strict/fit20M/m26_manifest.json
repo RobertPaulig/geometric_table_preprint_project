@@ -1,0 +1,42 @@
+{
+  "dataset_csv": "out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv",
+  "fit_Q": 20000000,
+  "eval_Qs": [
+    1000000,
+    2000000,
+    5000000,
+    10000000,
+    20000000,
+    50000000
+  ],
+  "model": "logit+isotonic",
+  "seed": 123,
+  "files": {
+    "m26_auc_by_Q.png": "18284d158f816f3cc38a1913d0e291c7e0281c46c5ab39164bc58dca177beaaa",
+    "m26_brier_by_Q.png": "23f0cd8add5962796621125bb8ed71b90239cf45431ab6b6ec990348769028be",
+    "m26_calibration_by_Q.png": "57b74cc627affe7a8fccba5e9b1cb91d7bdd183b47781a5778b7179378604693",
+    "m26_calibration_fitQ.png": "290164843be856563921f6422de238e4a0ced82a51f1478b0539b4873c27d0e4",
+    "m26_logloss_by_Q.png": "33de7e81d0c9debfa0e644d30b11ab123326975b8f327be7a7d19f339297ef47",
+    "m26_model_summary.json": "ca6e18c96127d939602cfd89e59fe347687529f3c37e930d32b211a7d0f1578c",
+    "m26_predicted_compute_saved_1d.png": "e77b784f8eefebb94a875fff01b46023df0c63a35b494dd2cf7c4f59744e3ee0",
+    "m26_predicted_yield_vs_budget.png": "b76ec43b8d0c890e7908a7ba0ecdf088a7c3781b4af6c3e9b91310bd78fc717a",
+    "m26_table.tex": "347e6cc7bff56be1666fe50e6c66df21c1dbe6f9ffd64cc0cb44c617bef71ce0",
+    "m27_auc_by_Q.png": "a48834c409b42bdfacfbece6a5df43b76cadb24a3b91c9c1ef1fc25b31d51fc0",
+    "m27_brier_by_Q.png": "69dfe8eda4b167bfd7f46bbae5d493a31379bbe3501c3eccb1a4cc2696454ab5",
+    "m27_calibration_Q1000000.png": "9133d82a45e49856b97892bc0898b098596a0ce2297960688ed942ce4113545e",
+    "m27_calibration_Q10000000.png": "298136502270c426d653160c376caab0305f5e90dff3e8164372edee901f229d",
+    "m27_calibration_Q2000000.png": "2856ac679af004a93d1dd885354e5b88c7a20ca288a0f54213213fe9a921f28e",
+    "m27_calibration_Q20000000.png": "b5e5439d07619de90adfa886335e1663d3487db61aba86601336d580eec8fef9",
+    "m27_calibration_Q5000000.png": "4925a1bf11f827f3e1c0feacbc465b7eaeda6e96e807d70832483f9659ce1dc2",
+    "m27_calibration_Q50000000.png": "57b74cc627affe7a8fccba5e9b1cb91d7bdd183b47781a5778b7179378604693",
+    "m27_logloss_by_Q.png": "1ace13ce8f559f48c33c98c046231675c6653de4783158538176cc85e9a50d15",
+    "m27_metrics_by_Q.csv": "648f23eb34fb16993168427c8aa9f7d78124bf5e1013df1426cc74ef48cf8919",
+    "m27_predicted_compute_saved_1d_Q20000000.png": "0772ca356e14a850b46b4f0ace3016d192b40f41a9bca14add8354d9008f180c",
+    "m27_predicted_compute_saved_1d_Q50000000.png": "ecd5f380c201f3bda24b1892be60741fefbb7d123ac5d6fe4bb69001b0a7395b",
+    "m27_predicted_yield_vs_budget_Q20000000.png": "26317a22bfbdc63262b22be9505ac18b02360bdf983db58ee6e19fda9abe3500",
+    "m27_predicted_yield_vs_budget_Q50000000.png": "562a984226a4d9f8d410cf7d66eeb2d0da678c6f7397f7a587678ea8cc995746",
+    "m27_rank_stability.csv": "f4e2dd695ca4d24553a5d4638f88b29c7f276a24ef135bcc8826c17704541eee",
+    "m27_rank_stability.png": "8cbfc6054d47048666879ba8aa8ce7297314543754b0d16e533d95d191e5f570",
+    "m27_table.tex": "347e6cc7bff56be1666fe50e6c66df21c1dbe6f9ffd64cc0cb44c617bef71ce0"
+  }
+}
