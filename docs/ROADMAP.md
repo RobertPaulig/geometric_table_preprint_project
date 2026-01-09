@@ -472,3 +472,60 @@ PYTHONPATH=code python code/scripts/m26_survival_model.py \
   --model logit+isotonic --seed 123 \
   --out-dir out/wave_atlas/m26/p200k_Q0-100k_Qs-1-2-5-10M_strict
 ```
+
+## M27 - Extrapolation stress-test (fit@10M -> eval@20M/50M)
+Status: Planned
+
+**Цель:** проверить перенос калибровки и ранжирования за пределы обучающего Q
+и оценить разрыв качества между fit@10M и fit@20M.
+
+**DoD (артефакты):**
+- out/wave_atlas/m27/*/m26_dataset.csv + m27_dataset_summary.json + m27_manifest.json
+- out/wave_atlas/m27/*/fit10M/m26_model_summary.json
+- out/wave_atlas/m27/*/fit20M/m26_model_summary.json
+- out/wave_atlas/m27/*/fit*/m27_metrics_by_Q.csv
+- out/wave_atlas/m27/*/fit*/m27_auc_by_Q.png
+- out/wave_atlas/m27/*/fit*/m27_brier_by_Q.png
+- out/wave_atlas/m27/*/fit*/m27_logloss_by_Q.png
+- out/wave_atlas/m27/*/fit*/m27_calibration_Q20000000.png
+- out/wave_atlas/m27/*/fit*/m27_predicted_yield_vs_budget_Q20000000.png
+- out/wave_atlas/m27/*/fit*/m27_predicted_compute_saved_1d_Q20000000.png
+- out/wave_atlas/m27/*/fit*/m27_rank_stability.csv + m27_rank_stability.png
+- out/wave_atlas/m27/*/fit10M/m27_extrapolation_gap.csv + m27_extrapolation_gap.json
+- out/wave_atlas/m27/*/fit*/m27_table.tex
+- out/wave_atlas/m27/*/fit*/m27_manifest.json
+- wave_atlas.tex: раздел M27 + \clearpage
+
+**Команды:**
+```bash
+# dataset
+PYTHONPATH=code python code/scripts/m26_survival_dataset.py \
+  --p-max 200000 --Q0 100000 \
+  --Q-list 1000000,2000000,5000000,10000000,20000000,50000000 \
+  --mersenne-strict 1 --seed 123 \
+  --label p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict \
+  --out-dir out/wave_atlas/m27
+
+# fit@10M -> eval@1..50M (main extrapolation)
+PYTHONPATH=code python code/scripts/m26_survival_model.py \
+  --dataset-csv out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv \
+  --fit-Q 10000000 \
+  --eval-Q-list 1000000,2000000,5000000,10000000,20000000,50000000 \
+  --model logit+isotonic --seed 123 \
+  --out-dir out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M
+
+# fit@20M (upper-bound reference)
+PYTHONPATH=code python code/scripts/m26_survival_model.py \
+  --dataset-csv out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv \
+  --fit-Q 20000000 \
+  --eval-Q-list 1000000,2000000,5000000,10000000,20000000,50000000 \
+  --model logit+isotonic --seed 123 \
+  --out-dir out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit20M
+
+# extrapolation gap (20M + optional 50M)
+PYTHONPATH=code python code/scripts/m27_extrapolation_gap.py \
+  --fit10-summary out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M/m26_model_summary.json \
+  --fit20-summary out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit20M/m26_model_summary.json \
+  --Q-list 20000000,50000000 \
+  --out-dir out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M
+```

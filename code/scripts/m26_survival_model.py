@@ -110,6 +110,31 @@ def logloss(y_true: np.ndarray, probs: np.ndarray) -> float:
     p = np.clip(probs, eps, 1 - eps)
     return float(-np.mean(y_true * np.log(p) + (1 - y_true) * np.log(1 - p)))
 
+def rankdata(a: np.ndarray) -> np.ndarray:
+    order = np.argsort(a)
+    ranks = np.empty_like(order, dtype=float)
+    i = 0
+    n = len(a)
+    while i < n:
+        j = i + 1
+        while j < n and a[order[j]] == a[order[i]]:
+            j += 1
+        avg_rank = (i + 1 + j) / 2.0
+        ranks[order[i:j]] = avg_rank
+        i = j
+    return ranks
+
+
+def spearman_corr(x: np.ndarray, y: np.ndarray) -> float:
+    rx = rankdata(x)
+    ry = rankdata(y)
+    rx = rx - rx.mean()
+    ry = ry - ry.mean()
+    denom = float(np.sqrt(np.sum(rx ** 2) * np.sum(ry ** 2)))
+    if denom == 0.0:
+        return 0.0
+    return float(np.sum(rx * ry) / denom)
+
 
 def save_line_plot(path: Path, xs: List[float], series: Dict[str, List[float]],
                    title: str, xlabel: str, ylabel: str) -> None:
@@ -221,6 +246,14 @@ def main() -> None:
         np.array([float(r[f"survive_{eval_Qs[-1]}"]) for r in rows], dtype=float),
         f"Calibration vs Q={eval_Qs[-1]}",
     )
+    for Q in eval_Qs:
+        yq = np.array([float(r[f"survive_{Q}"]) for r in rows], dtype=float)
+        save_reliability(
+            out_dir / f"m27_calibration_Q{Q}.png",
+            probs_iso,
+            yq,
+            f"Calibration vs Q={Q}",
+        )
 
     # AUC/Brier/Logloss plots
     save_line_plot(
@@ -244,6 +277,30 @@ def main() -> None:
         [float(Q) for Q in eval_Qs],
         {"LogLoss": [loglosses[Q] for Q in eval_Qs]},
         "LogLoss by Q (M26)",
+        "Q",
+        "LogLoss",
+    )
+    save_line_plot(
+        out_dir / "m27_auc_by_Q.png",
+        [float(Q) for Q in eval_Qs],
+        {"AUC": [aucs[Q] for Q in eval_Qs]},
+        "AUC by Q (M27)",
+        "Q",
+        "AUC",
+    )
+    save_line_plot(
+        out_dir / "m27_brier_by_Q.png",
+        [float(Q) for Q in eval_Qs],
+        {"Brier": [briers[Q] for Q in eval_Qs]},
+        "Brier by Q (M27)",
+        "Q",
+        "Brier",
+    )
+    save_line_plot(
+        out_dir / "m27_logloss_by_Q.png",
+        [float(Q) for Q in eval_Qs],
+        {"LogLoss": [loglosses[Q] for Q in eval_Qs]},
+        "LogLoss by Q (M27)",
         "Q",
         "LogLoss",
     )
@@ -281,6 +338,59 @@ def main() -> None:
         "compute-seconds saved",
     )
 
+    # predicted yield/compute saved for extrapolation Q targets (20M/50M)
+    target_Qs = [Q for Q in eval_Qs if Q in (20000000, 50000000)]
+    for Q in target_Qs:
+        yq = np.array([float(r[f"survive_{Q}"]) for r in rows], dtype=float)
+        pred_yield_q = []
+        for frac in budgets:
+            k = max(1, int(round(frac * len(probs_iso))))
+            pred_yield_q.append(float(probs_iso[order[:k]].mean()))
+        save_line_plot(
+            out_dir / f"m27_predicted_yield_vs_budget_Q{Q}.png",
+            budgets,
+            {"Predicted": pred_yield_q},
+            f"Predicted yield vs budget (Q={Q})",
+            "budget fraction",
+            "predicted survival",
+        )
+        random_rate_q = float(yq.mean())
+        saved_q = []
+        for frac, py in zip(budgets, pred_yield_q):
+            k = max(1, int(round(frac * len(probs_iso))))
+            bad_random = k * (1.0 - random_rate_q)
+            bad_pred = k * (1.0 - py)
+            saved_q.append((bad_random - bad_pred) * 86400.0)
+        save_line_plot(
+            out_dir / f"m27_predicted_compute_saved_1d_Q{Q}.png",
+            budgets,
+            {"Predicted": saved_q},
+            f"Predicted compute saved vs budget (Q={Q}, 1d cost)",
+            "budget fraction",
+            "compute-seconds saved",
+        )
+
+    # rank stability (Spearman) vs survival labels
+    rank_rows = []
+    for Q in eval_Qs:
+        yq = np.array([float(r[f"survive_{Q}"]) for r in rows], dtype=float)
+        rho = spearman_corr(probs_iso, yq)
+        rank_rows.append((Q, rho))
+    rank_csv = out_dir / "m27_rank_stability.csv"
+    with rank_csv.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["Q", "spearman_rho"])
+        for Q, rho in rank_rows:
+            w.writerow([Q, f"{rho:.6f}"])
+    save_line_plot(
+        out_dir / "m27_rank_stability.png",
+        [float(Q) for Q, _ in rank_rows],
+        {"Spearman": [rho for _, rho in rank_rows]},
+        "Rank stability vs Q (M27)",
+        "Q",
+        "Spearman rho",
+    )
+
     # summary table
     table_lines = [
         r"\begin{tabular}{lrrr}\hline",
@@ -292,6 +402,7 @@ def main() -> None:
         )
     table_lines.append(r"\hline\end{tabular}")
     (out_dir / "m26_table.tex").write_text("\n".join(table_lines), encoding="utf-8")
+    (out_dir / "m27_table.tex").write_text("\n".join(table_lines), encoding="utf-8")
 
     summary = {
         "fit_Q": fit_Q,
@@ -302,6 +413,14 @@ def main() -> None:
         "logloss_by_Q": loglosses,
     }
     (out_dir / "m26_model_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+
+    # metrics by Q for M27
+    metrics_csv = out_dir / "m27_metrics_by_Q.csv"
+    with metrics_csv.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["Q", "AUC", "Brier", "LogLoss"])
+        for Q in eval_Qs:
+            w.writerow([Q, f"{aucs[Q]:.6f}", f"{briers[Q]:.6f}", f"{loglosses[Q]:.6f}"])
 
     # manifest
     manifest = {
@@ -316,6 +435,7 @@ def main() -> None:
         if path.is_file():
             manifest["files"][path.name] = sha256_file(path)
     (out_dir / "m26_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    (out_dir / "m27_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     print(f"OK: wrote M26 model artifacts to {out_dir}")
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -62,6 +63,13 @@ def ord_mod_2(q: int, primes: List[int]) -> int:
 
 def parse_int_list(s: str) -> List[int]:
     return [int(x.strip()) for x in s.split(",") if x.strip()]
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def main() -> None:
@@ -158,6 +166,40 @@ def main() -> None:
         "dataset": str(dataset_csv),
     }
     (out_dir / "m26_dataset_meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+
+    # M27 dataset summary (counts + survival rates by Q)
+    summary = {
+        "p_max": args.p_max,
+        "Q0": args.Q0,
+        "Q_list": q_list,
+        "mersenne_strict": mersenne_strict,
+        "n_primes": len(primes_p),
+        "killed_Q0_count": int(sum(killed_q0.values())),
+        "survival_by_Q": {},
+    }
+    for Q in q_list:
+        survive_vals = [row[f"survive_{Q}"] for row in rows]
+        survived = int(sum(survive_vals))
+        total = len(survive_vals)
+        summary["survival_by_Q"][str(Q)] = {
+            "survived": survived,
+            "killed": total - survived,
+            "survival_rate": survived / total if total else 0.0,
+        }
+    (out_dir / "m27_dataset_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+
+    manifest = {
+        "p_max": args.p_max,
+        "Q0": args.Q0,
+        "Q_list": q_list,
+        "mersenne_strict": mersenne_strict,
+        "seed": args.seed,
+        "files": {},
+    }
+    for path in sorted(out_dir.glob("*")):
+        if path.is_file():
+            manifest["files"][path.name] = sha256_file(path)
+    (out_dir / "m27_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     print(f"OK: wrote dataset to {dataset_csv}")
 
