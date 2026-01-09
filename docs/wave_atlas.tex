@@ -385,6 +385,8 @@ M12 & Residual-as-process after 3 layers: gaps, ACF, goodness-of-fit. \\
 M13 & GT wheel-lattice metrics: identify graph features sensitive to layers. \\
 M14 & Candidate generator: layer-based acceleration and survival curves. \\
 M15 & Mersenne wave atlas (optional): ord\_q(2) structure and conditioning. \\
+M16 & Budget model: test-cost bridge for layered survival and throughput. \\
+M17 & Two-stage budget model: cheap filter + expensive test. \\
 \hline
 \end{tabular}
 
@@ -554,5 +556,37 @@ into real savings.
 \input{../out/wave_atlas/m16/m16_savings_table.tex}
 \caption{Illustrative time savings per $10^6$ raw candidates (M16).}
 \end{table}
+
+All time-saved values are aggregate compute-seconds; wallclock savings scale
+by the number of parallel workers.
+For example, 6$\to$150 corresponds to avoiding about 378{,}895 tests per $10^6$
+raw candidates.
+
+\section{M17 Two-stage budget model}
+We extend the budget model to a two-stage pipeline: a cheap filter ($c_1$) with
+pass rate $r_1$, followed by an expensive test ($c_2$). The expected per-raw
+cost is $c_g(L) + s(L)\,(c_1 + r_1 c_2)$, and wallclock savings scale with
+available workers.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m17/m17_total_cost_vs_layers.png}
+\caption{Two-stage total cost per raw candidate vs layers (M17).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m17/m17_time_saved_vs_layers.png}
+\caption{Two-stage time saved vs layers for $N_{\mathrm{raw}}=10^6$ (M17).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m17/m17_break_even_table.tex}
+\caption{Break-even thresholds for $c_2$ by layer block (M17).}
+\end{table}
+
+The marginal survival drop scales roughly as $2/p$, but when the expensive test
+dominates, additional layers still yield direct savings.
 
 \end{document}
