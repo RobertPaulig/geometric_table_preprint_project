@@ -161,3 +161,11 @@ Commit: (tag wave-atlas-v1.14)
 Changes: M24 scale stress-test of M22 at larger (p_max, Q1) and budgets up to 50%.
 PDF size: 2253109 bytes
 PDF SHA256: 6E99109FB060646FBBE440D36ACB8FE6267D5B1E422195C477A4568791BB258B
+
+Wave Atlas v1.15 Release Notes
+
+Tag: wave-atlas-v1.15
+Commit: (tag wave-atlas-v1.15)
+Changes: M25 hard-mode stress test (Q1=10M + strict Mersenne filters).
+PDF size: 2542867 bytes
+PDF SHA256: 0D0EA2C01AB1A343B7CB3B5E64AB720FB126352C8CFB0233B7F1FE44D39A9F9C

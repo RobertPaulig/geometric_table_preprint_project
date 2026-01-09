@@ -1,0 +1,42 @@
+{
+  "label": "p300k_Q0-150k_Q1-10M_strict",
+  "p_max": 300000,
+  "Q0": 150000,
+  "Q1": 10000000,
+  "budgets": [
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.5
+  ],
+  "random_iters": 200,
+  "test_costs": [
+    1.0,
+    3600.0,
+    86400.0
+  ],
+  "hazard_modes": [
+    "binary",
+    "count",
+    "harmonic"
+  ],
+  "mersenne_strict": true,
+  "seed": 123,
+  "files": {
+    "m25_bad_tests_avoided_vs_budget.png": "d00a91feb60de4cd6bca61c8860cd722037bc2139e0b82d6ba7939b8cf7f81ba",
+    "m25_compute_saved_vs_budget_1d.png": "f3044103fd2ec4a16552cb9c77bdaf367b224fc3418643c347629ec3974b1f54",
+    "m25_hardness.json": "73e90ea0dfa6298efafc3f822ace18a8d9305f3a1dcf09588a0563acd66840a0",
+    "m25_hazard_count_hist.png": "cf8dca95b6c02f5dfd2e9708cea1538dd74dce02093183f17c0c7398a9b5c85f",
+    "m25_hazard_vs_survival_bins.png": "2c2b891a32e500736f4a35f39687dbe619d199c6f11c8e1532ad435377e9dce3",
+    "m25_queue.csv": "9628338f45142ef7f0e782f186af120990b158c4f2851e25d0c613afa101d32f",
+    "m25_summary.csv": "9e308c660b9d390a3747563b4b158c7f00963df2aa4b9409b6ba0787f4580dc7",
+    "m25_summary.json": "e6fc3ef094a659e9ed6183f8ade9f95d034092389cd7b7453df1d9ec00d8a3be",
+    "m25_table.tex": "227a94f0e6b1386cbede49ca4e7fd9397a4392b0e1d27c29b8148bf5e0653e6c",
+    "m25_yield_vs_budget.png": "fcb7d51f9d24bb3dd55e252653d8e3afa57c429c392c7be435cf6c524bccacba"
+  }
+}

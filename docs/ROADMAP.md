@@ -383,3 +383,55 @@ PYTHONPATH=code python code/scripts/m24_scale_stress_test.py \
   --label p100k_Q0-50k_Q1-200k \
   --out-dir out/wave_atlas/m24
 ```
+
+## M25 - Hard-mode stress test (Q1=10M + strict filters)
+Status: Done (tag wave-atlas-v1.15)
+
+**Цель:** проверить устойчивость навигатора при Q1=10M и строгих
+Mersenne-совместимых фильтрах в hazard-фичах.
+
+**DoD (артефакты):**
+- out/wave_atlas/m25/*/m25_summary.csv + m25_summary.json
+- out/wave_atlas/m25/*/m25_queue.csv
+- out/wave_atlas/m25/*/m25_hardness.json
+- out/wave_atlas/m25/*/m25_yield_vs_budget.png
+- out/wave_atlas/m25/*/m25_bad_tests_avoided_vs_budget.png
+- out/wave_atlas/m25/*/m25_compute_saved_vs_budget_1d.png
+- out/wave_atlas/m25/*/m25_hazard_count_hist.png
+- out/wave_atlas/m25/*/m25_hazard_vs_survival_bins.png
+- out/wave_atlas/m25/*/m25_table.tex
+- out/wave_atlas/m25/*/m25_manifest.json
+- wave_atlas.tex: раздел M25 (A/B/C)
+
+**Команды:**
+```bash
+# M25-A (hard-mode)
+PYTHONPATH=code python code/scripts/m25_hardmode_stress_test.py \
+  --p-max 200000 --Q0 100000 --Q1 10000000 \
+  --budgets 0.001,0.002,0.005,0.01,0.02,0.05,0.10,0.20,0.50 \
+  --random-iters 200 --test-costs 1,3600,86400 --seed 123 \
+  --hazard-modes binary,count,harmonic \
+  --mersenne-strict 1 \
+  --label p200k_Q0-100k_Q1-10M_strict \
+  --out-dir out/wave_atlas/m25
+
+# M25-B
+PYTHONPATH=code python code/scripts/m25_hardmode_stress_test.py \
+  --p-max 300000 --Q0 150000 --Q1 10000000 \
+  --budgets 0.001,0.002,0.005,0.01,0.02,0.05,0.10,0.20,0.50 \
+  --random-iters 200 --test-costs 1,3600,86400 --seed 123 \
+  --hazard-modes binary,count,harmonic \
+  --mersenne-strict 1 \
+  --label p300k_Q0-150k_Q1-10M_strict \
+  --out-dir out/wave_atlas/m25
+
+# M25-C (baseline)
+PYTHONPATH=code python code/scripts/m25_hardmode_stress_test.py \
+  --p-max 200000 --Q0 100000 --Q1 1000000 \
+  --budgets 0.001,0.002,0.005,0.01,0.02,0.05,0.10,0.20,0.50 \
+  --random-iters 300 --test-costs 1,3600,86400 --seed 123 \
+  --hazard-modes binary,count,harmonic \
+  --mersenne-strict 1 \
+  --label p200k_Q0-100k_Q1-1M_strict \
+  --out-dir out/wave_atlas/m25
+```

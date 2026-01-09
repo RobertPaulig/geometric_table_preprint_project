@@ -395,6 +395,7 @@ M21 & Hazard model for prime $p$ (death in $Q_1\setminus Q_0$). \\
 M22 & Two-stage navigator for prime $p$ (M18 + M21 queue). \\
 M23 & Budgeted search simulation (M18 vs M22 vs random). \\
 M24 & Scale stress-test of M22 at larger $(p_{\max},Q_1)$ and big budgets. \\
+M25 & Hard-mode stress-test: $Q_1$ up to 10M and strict Mersenne filters. \\
 \hline
 \end{tabular}
 
@@ -795,6 +796,70 @@ screening by small primes.
 \centering
 \input{../out/wave_atlas/m24/p100k_Q0-50k_Q1-200k/m24_table.tex}
 \caption{Selected budgets and savings (M24-C).}
+\end{table}
+
+\clearpage
+\section{M25 Hard-mode stress-test}
+\subsection{M25-A: $p_{\max}=200k$, $Q_0=100k$, $Q_1=10M$ (strict)}
+We enforce stricter Mersenne-compatible filters ($q \bmod 8\in\{1,7\}$ and
+$q\equiv 1 \pmod{2p}$ in hazard features) and extend $Q_1$ to 10M.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m25/p200k_Q0-100k_Q1-10M_strict/m25_yield_vs_budget.png}
+\caption{Yield vs budget (M25-A).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m25/p200k_Q0-100k_Q1-10M_strict/m25_compute_saved_vs_budget_1d.png}
+\caption{Compute saved vs budget at 1 day test cost (M25-A).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m25/p200k_Q0-100k_Q1-10M_strict/m25_table.tex}
+\caption{Selected budgets and savings (M25-A).}
+\end{table}
+
+\clearpage
+\subsection{M25-B: $p_{\max}=300k$, $Q_0=150k$, $Q_1=10M$ (strict)}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m25/p300k_Q0-150k_Q1-10M_strict/m25_yield_vs_budget.png}
+\caption{Yield vs budget (M25-B).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m25/p300k_Q0-150k_Q1-10M_strict/m25_compute_saved_vs_budget_1d.png}
+\caption{Compute saved vs budget at 1 day test cost (M25-B).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m25/p300k_Q0-150k_Q1-10M_strict/m25_table.tex}
+\caption{Selected budgets and savings (M25-B).}
+\end{table}
+
+\clearpage
+\subsection{M25-C: baseline ($p_{\max}=200k$, $Q_0=100k$, $Q_1=1M$ strict)}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m25/p200k_Q0-100k_Q1-1M_strict/m25_yield_vs_budget.png}
+\caption{Yield vs budget (M25-C).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m25/p200k_Q0-100k_Q1-1M_strict/m25_compute_saved_vs_budget_1d.png}
+\caption{Compute saved vs budget at 1 day test cost (M25-C).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m25/p200k_Q0-100k_Q1-1M_strict/m25_table.tex}
+\caption{Selected budgets and savings (M25-C).}
 \end{table}
 
 \end{document}

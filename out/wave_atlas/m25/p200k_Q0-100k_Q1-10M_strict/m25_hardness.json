@@ -1,0 +1,8 @@
+{
+  "n_Z": 17434,
+  "fraction_Z_with_ap_count_delta_gt0": 0.951875645290811,
+  "ap_count_delta_mean": 17.924515314901917,
+  "ap_count_delta_median": 3.0,
+  "ap_count_delta_p90": 18.0,
+  "ap_count_delta_p99": 178.0
+}
