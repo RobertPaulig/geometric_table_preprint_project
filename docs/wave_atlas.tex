@@ -501,4 +501,23 @@ expected survival multiplier is $(1-2/p)$ under uniformity.
 Even small additional rejection can be worthwhile when candidate testing
 dominates generation cost.
 
+\section{M15 Mersenne wave atlas}
+For Mersenne numbers, divisibility follows a pure order law:
+$q \mid (2^p-1)$ iff $\mathrm{ord}_q(2)\mid p$.
+We visualize the resulting $p\times q$ divisibility pattern and the histogram
+of multiplicative orders. Filtering out small orders acts as a light
+conditioning layer, revealing the residual structure.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m15/m15_divisibility_heatmap.png}
+\caption{Mersenne divisibility heatmap (M15).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m15/m15_ord_hist.png}
+\caption{Histogram of $\mathrm{ord}_q(2)$ for primes $q\le q_{\max}$ (M15).}
+\end{figure}
+
 \end{document}

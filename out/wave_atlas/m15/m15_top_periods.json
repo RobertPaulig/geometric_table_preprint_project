@@ -1,0 +1,107 @@
+{
+  "p_max": 500,
+  "q_max": 2000,
+  "ord_min": 10,
+  "n_primes": 302,
+  "n_filtered": 295,
+  "top_periods": [
+    {
+      "ord": 52,
+      "count": 3,
+      "example_q": [
+        53,
+        157,
+        1613
+      ]
+    },
+    {
+      "ord": 92,
+      "count": 3,
+      "example_q": [
+        277,
+        1013,
+        1657
+      ]
+    },
+    {
+      "ord": 11,
+      "count": 2,
+      "example_q": [
+        23,
+        89
+      ]
+    },
+    {
+      "ord": 25,
+      "count": 2,
+      "example_q": [
+        601,
+        1801
+      ]
+    },
+    {
+      "ord": 28,
+      "count": 2,
+      "example_q": [
+        29,
+        113
+      ]
+    },
+    {
+      "ord": 29,
+      "count": 2,
+      "example_q": [
+        233,
+        1103
+      ]
+    },
+    {
+      "ord": 36,
+      "count": 2,
+      "example_q": [
+        37,
+        109
+      ]
+    },
+    {
+      "ord": 48,
+      "count": 2,
+      "example_q": [
+        97,
+        673
+      ]
+    },
+    {
+      "ord": 60,
+      "count": 2,
+      "example_q": [
+        61,
+        1321
+      ]
+    },
+    {
+      "ord": 68,
+      "count": 2,
+      "example_q": [
+        137,
+        953
+      ]
+    },
+    {
+      "ord": 76,
+      "count": 2,
+      "example_q": [
+        229,
+        457
+      ]
+    },
+    {
+      "ord": 148,
+      "count": 2,
+      "example_q": [
+        149,
+        593
+      ]
+    }
+  ]
+}
