@@ -1,0 +1,50 @@
+{
+  "p_mode": "prime",
+  "p_max": 50000,
+  "Q0": 50000,
+  "Q1": 200000,
+  "rows": [
+    {
+      "weight": "ones",
+      "overall_survival": 0.858562244301578,
+      "auc": 0.7176308539944903,
+      "enrichment_10": 1.0444043699749335
+    },
+    {
+      "weight": "inv_q",
+      "overall_survival": 0.858562244301578,
+      "auc": 0.7176308539944903,
+      "enrichment_10": 1.0444043699749335
+    },
+    {
+      "weight": "inv_logq",
+      "overall_survival": 0.858562244301578,
+      "auc": 0.7176308539944903,
+      "enrichment_10": 1.0444043699749335
+    },
+    {
+      "weight": "logq",
+      "overall_survival": 0.858562244301578,
+      "auc": 0.7176308539944903,
+      "enrichment_10": 1.0444043699749335
+    },
+    {
+      "weight": "inv_d",
+      "overall_survival": 0.858562244301578,
+      "auc": 0.7176308539944903,
+      "enrichment_10": 1.0444043699749335
+    },
+    {
+      "weight": "inv_logd",
+      "overall_survival": 0.858562244301578,
+      "auc": 0.7176308539944903,
+      "enrichment_10": 1.0444043699749335
+    },
+    {
+      "weight": "logd",
+      "overall_survival": 0.858562244301578,
+      "auc": 0.7176308539944903,
+      "enrichment_10": 1.0444043699749335
+    }
+  ]
+}

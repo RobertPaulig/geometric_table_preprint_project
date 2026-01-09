@@ -189,3 +189,49 @@ PYTHONPATH=code python code/scripts/m18_mersenne_spectral_density.py \
 
 **Риски/заметки:** для оценки не смешивать Q0 (score) и Q1 (survival);
 использовать разделение базиса и проверки.
+
+P6 - Масштабирование и тюнинг весов
+
+## M18b - Scaling/generalization (Q0/Q1/p_max)
+Status: Done (tag wave-atlas-v1.9)
+
+**Цель:** проверить устойчивость качества ранжирования при росте p_max и
+на разных парах (Q0, Q1).
+
+**DoD (артефакты):**
+- out/wave_atlas/m18b/m18b_summary.csv + m18b_summary.json
+- out/wave_atlas/m18b/m18b_auc_vs_pmax.png
+- out/wave_atlas/m18b/m18b_enrichment_vs_pmax.png
+- wave_atlas.tex: раздел M18b
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m18b_mersenne_scaling.py \
+  --p-max-list 20000,50000,100000 \
+  --p-mode prime \
+  --pairs 20000:100000,50000:200000 \
+  --weight inv_q \
+  --out-dir out/wave_atlas/m18b
+```
+
+## M19 - Weight tuning (q-weights vs d-weights)
+Status: Done (tag wave-atlas-v1.9)
+
+**Цель:** сравнить схемы весов по q и по d(q), чтобы увеличить enrichment@10%.
+
+**DoD (артефакты):**
+- out/wave_atlas/m19/m19_weight_summary.csv + m19_weight_summary.json
+- out/wave_atlas/m19/m19_auc_by_weight.png
+- out/wave_atlas/m19/m19_enrichment_by_weight.png
+- wave_atlas.tex: раздел M19
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m19_weight_tuning.py \
+  --p-max 50000 \
+  --p-mode prime \
+  --Q0 50000 \
+  --Q1 200000 \
+  --weights ones,inv_q,inv_logq,logq,inv_d,inv_logd,logd \
+  --out-dir out/wave_atlas/m19
+```

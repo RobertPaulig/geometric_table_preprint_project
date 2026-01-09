@@ -388,6 +388,8 @@ M15 & Mersenne wave atlas (optional): ord\_q(2) structure and conditioning. \\
 M16 & Budget model: test-cost bridge for layered survival and throughput. \\
 M17 & Two-stage budget model: cheap filter + expensive test. \\
 M18 & Mersenne spectral density: rank exponents by resonance density. \\
+M18b & Scaling/generalization of spectral density across $(Q_0,Q_1,p_{\max})$. \\
+M19 & Weight tuning on spectral density (q- vs d-based weights). \\
 \hline
 \end{tabular}
 
@@ -608,6 +610,33 @@ absolute terms even when ranking quality is strong.
 \centering
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m18/m18_enrichment_curve.png}
 \caption{Enrichment@k of survival in the quietest fraction of $p$ (M18).}
+\end{figure}
+
+\section{M18b Scaling and generalization}
+We test the spectral density score across larger $p_{\max}$ and multiple
+$(Q_0,Q_1)$ pairs to confirm that ranking quality persists beyond the
+demonstration range.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m18b/m18b_auc_vs_pmax.png}
+\caption{AUC vs $p_{\max}$ for multiple $(Q_0,Q_1)$ pairs (M18b).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m18b/m18b_enrichment_vs_pmax.png}
+\caption{Enrichment@10\% vs $p_{\max}$ (M18b).}
+\end{figure}
+
+\section{M19 Weight tuning}
+We compare weighting schemes for the resonance score, including weights by
+prime size $q$ and by period $d(q)$, to maximize enrichment in the top slice.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m19/m19_enrichment_by_weight.png}
+\caption{Enrichment@10\% by weight mode (M19).}
 \end{figure}
 
 \end{document}

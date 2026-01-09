@@ -97,3 +97,11 @@ Commit: (tag wave-atlas-v1.8)
 Changes: M18 spectral density (Q0 vs Q1); track M17 artifacts for reproducible PDF builds.
 PDF size: 1593926 bytes
 PDF SHA256: BD66FAC6972AFD31234DA38811A527ADB2BC86A84B822561EC38889916085D1A
+
+Wave Atlas v1.9 Release Notes
+
+Tag: wave-atlas-v1.9
+Commit: (tag wave-atlas-v1.9)
+Changes: M18b scaling/generalization + M19 weight tuning for spectral density.
+PDF size: 1701909 bytes
+PDF SHA256: 3FAB2A7EF7F86B03F350C82FD5A9D05FD7C8F67BAA6FD0BEC78A520087839DBF
