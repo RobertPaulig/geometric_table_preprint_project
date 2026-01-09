@@ -38,3 +38,11 @@ Commit: d2201adb9b0b6a6e6f5ef2e5a6f3b2f3e62d12b7
 Changes: M11 LaTeX table via \input, M12 residual process, M12b inhomogeneous null for dispersion; cleanup raw wheel_scan files.
 PDF size: 1059651 bytes
 PDF SHA256: A46DE0386126BBE31BE6A7AE0E92AC48970FA2507A85D7D8356A111961E26B45
+
+Wave Atlas v1.3 Release Notes
+
+Tag: wave-atlas-v1.3
+Commit: 9cfa74a
+Changes: M13 GT wheel-lattice sensitivity; triangles+isolates detect sieve layers; stable across eps.
+PDF size: 1103519 bytes
+PDF SHA256: 16AE7675EE475E954D825EFED94914E032CAA2A4984F1FAA64CF5DF0214E82C9
