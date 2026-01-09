@@ -289,3 +289,26 @@ PYTHONPATH=code python code/scripts/m21_hazard_model.py \
   --Q1 200000 \
   --out-dir out/wave_atlas/m21
 ```
+
+## M22 - Two-stage Mersenne navigator (M18 + M21 queue)
+Status: Done (tag wave-atlas-v1.12)
+
+**Цель:** построить единую очередь простых p: ранние смерти (Q0) в хвост,
+нулевой слой ранжировать по hazard (M21), и оценить экономию тестов.
+
+**DoD (артефакты):**
+- out/wave_atlas/m22/m22_queue.csv
+- out/wave_atlas/m22/m22_enrichment_curve.png
+- out/wave_atlas/m22/m22_tests_avoided.png
+- out/wave_atlas/m22/m22_summary.json
+- wave_atlas.tex: раздел M22
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m22_two_stage_navigator.py \
+  --p-max 100000 \
+  --Q0 50000 \
+  --Q1 200000 \
+  --test-costs 1,3600,86400 \
+  --out-dir out/wave_atlas/m22
+```

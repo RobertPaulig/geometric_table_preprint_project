@@ -188,8 +188,10 @@ def main() -> None:
     z_rows = [r for r in rows if r["killed_Q0"] == 0]
     y = np.array([r["death_later"] for r in z_rows], dtype=np.uint8)
     hazard = np.array([r["ap_harm_delta"] for r in z_rows], dtype=float)
+    ap_any = np.array([1.0 if r["ap_count_delta"] > 0 else 0.0 for r in z_rows], dtype=float)
 
     auc = auc_score(y, hazard)
+    auc_ap_any = auc_score(y, ap_any)
     base_rate = float(y.mean()) if len(y) else 0.0
 
     order = np.argsort(hazard)[::-1]
@@ -272,6 +274,7 @@ def main() -> None:
         "n_Z": len(z_rows),
         "death_later_rate": base_rate,
         "auc": auc,
+        "auc_ap_count_delta_gt0": auc_ap_any,
         "enrichment_1": enrich_1,
         "enrichment_2": enrich_2,
         "enrichment_10": enrich_10,

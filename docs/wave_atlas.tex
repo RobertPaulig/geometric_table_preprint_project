@@ -392,6 +392,7 @@ M18b & Scaling/generalization of spectral density across $(Q_0,Q_1,p_{\max})$. \
 M19 & Weight tuning on spectral density (q- vs d-based weights). \\
 M20b & Weight effects with all $p$: remove prime-mode degeneracy. \\
 M21 & Hazard model for prime $p$ (death in $Q_1\setminus Q_0$). \\
+M22 & Two-stage navigator for prime $p$ (M18 + M21 queue). \\
 \hline
 \end{tabular}
 
@@ -678,6 +679,23 @@ pressure from $q\equiv 1 \ (\mathrm{mod}\ p)$ in $(Q_0,Q_1]$.
 \centering
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m21/m21_enrichment_curve.png}
 \caption{Enrichment@k for death\_later on $Z$ (M21).}
+\end{figure}
+
+\section{M22 Two-stage Mersenne navigator}
+We combine M18 and M21 into a single queue: early deaths (killed\_Q0) are
+rejected or sent to the tail, and the remaining primes are sorted by hazard.
+This yields a practical ordering of expensive tests.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m22/m22_enrichment_curve.png}
+\caption{Survival enrichment vs tested fraction for the queue (M22).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m22/m22_tests_avoided.png}
+\caption{Bad tests avoided vs tested fraction (M22).}
 \end{figure}
 
 \end{document}

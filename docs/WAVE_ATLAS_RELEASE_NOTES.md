@@ -129,3 +129,11 @@ Commit: (tag wave-atlas-v1.11)
 Changes: M21 hazard model for prime p (death in Q1\Q0).
 PDF size: 1844115 bytes
 PDF SHA256: 6ABAD243DF99952B3E6FD0085EEED7773F1A85095186A4B392E25A2B712E6878
+
+Wave Atlas v1.12 Release Notes
+
+Tag: wave-atlas-v1.12
+Commit: (tag wave-atlas-v1.12)
+Changes: M22 two-stage Mersenne navigator (M18 + M21 queue).
+PDF size: 1890696 bytes
+PDF SHA256: 2403C530FEEA3AE5F4A17DDFB2043E68A1129F848BC4F7F34AA26910EEC14AF6
