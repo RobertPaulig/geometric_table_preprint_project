@@ -312,3 +312,30 @@ PYTHONPATH=code python code/scripts/m22_two_stage_navigator.py \
   --test-costs 1,3600,86400 \
   --out-dir out/wave_atlas/m22
 ```
+
+## M23 - Budgeted search simulation (M18 vs M22 vs random)
+Status: Done (tag wave-atlas-v1.13)
+
+**Цель:** сравнить стратегии очереди при фиксированном бюджете дорогих тестов,
+измерить yield и экономию compute-seconds относительно random.
+
+**DoD (артефакты):**
+- out/wave_atlas/m23/m23_summary.csv + m23_summary.json
+- out/wave_atlas/m23/m23_yield_vs_budget.png
+- out/wave_atlas/m23/m23_bad_tests_avoided_vs_budget.png
+- out/wave_atlas/m23/m23_compute_saved_vs_budget_3600.png
+- out/wave_atlas/m23/m23_table.tex
+- wave_atlas.tex: раздел M23
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m23_budgeted_search_sim.py \
+  --p-max 100000 \
+  --Q0 50000 \
+  --Q1 200000 \
+  --budgets 0.001,0.002,0.005,0.01,0.02,0.05,0.10 \
+  --random-iters 300 \
+  --seed 123 \
+  --test-costs 1,3600,86400 \
+  --out-dir out/wave_atlas/m23
+```

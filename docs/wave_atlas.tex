@@ -393,6 +393,7 @@ M19 & Weight tuning on spectral density (q- vs d-based weights). \\
 M20b & Weight effects with all $p$: remove prime-mode degeneracy. \\
 M21 & Hazard model for prime $p$ (death in $Q_1\setminus Q_0$). \\
 M22 & Two-stage navigator for prime $p$ (M18 + M21 queue). \\
+M23 & Budgeted search simulation (M18 vs M22 vs random). \\
 \hline
 \end{tabular}
 
@@ -704,6 +705,29 @@ This yields a practical ordering of expensive tests.
 \centering
 \input{../out/wave_atlas/m22/m22_savings_table.tex}
 \caption{Compute saved for top-k queue slices (M22).}
+\end{table}
+
+\section{M23 Budgeted search simulation}
+We compare queue strategies under a fixed budget of expensive tests. For each
+budget fraction, we measure the survival rate among selected primes and the
+bad tests avoided versus random, then translate this into compute-seconds saved.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m23/m23_yield_vs_budget.png}
+\caption{Survival yield vs budget for random, M18, M21, and M22 (M23).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m23/m23_compute_saved_vs_budget_3600.png}
+\caption{Compute saved vs budget at test cost 1 hour (M23).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m23/m23_table.tex}
+\caption{Budgeted savings at selected budgets (M23).}
 \end{table}
 
 \end{document}

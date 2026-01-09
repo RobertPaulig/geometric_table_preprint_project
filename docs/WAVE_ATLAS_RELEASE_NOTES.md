@@ -145,3 +145,11 @@ Commit: (tag wave-atlas-v1.12.1)
 Changes: M22 savings table (compute-seconds saved) + M21 interpretation note.
 PDF size: 1891374 bytes
 PDF SHA256: CFCF54311D1BCA54712DBB18EF8BCF694C575130388A02EAB172764DF708245C
+
+Wave Atlas v1.13 Release Notes
+
+Tag: wave-atlas-v1.13
+Commit: (tag wave-atlas-v1.13)
+Changes: M23 budgeted search simulation (random vs M18/M21/M22) + savings table.
+PDF size: 1988103 bytes
+PDF SHA256: 2CDB1BEC86BFA95578EE84726CC4A5FF36547615538F8EFE98AFB7BFA0C82918
