@@ -62,3 +62,11 @@ Commit: 4a6274f
 Changes: M14b segmented layers efficiency table; depth extended to 150 layers.
 PDF size: 1212398 bytes
 PDF SHA256: 460E2EAC391E809C8B442D43BD1A5C9EBCF20337F982D54A8D4574A474AAD3A2
+
+Wave Atlas v1.6 Release Notes
+
+Tag: wave-atlas-v1.6
+Commit: 3f67325
+Changes: M15 Mersenne wave atlas + M16 budget model (test-cost bridge).
+PDF size: 1407362 bytes
+PDF SHA256: 1B8BBA573FC098853EA772E6FC69BD8BD72597835AC9DCB4518DDF47AB758742
