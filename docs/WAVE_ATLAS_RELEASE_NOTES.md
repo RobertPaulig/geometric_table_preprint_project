@@ -54,3 +54,11 @@ Commit: 27fb4fd
 Changes: M14 wave-sieve candidate generator + figs survival/throughput/gaps.
 PDF size: 1162068 bytes
 PDF SHA256: 679866141B5A6E1CD9462E127DE8C96E048231B3C0224F7922A93772A98D5C2E
+
+Wave Atlas v1.5 Release Notes
+
+Tag: wave-atlas-v1.5
+Commit: 4a6274f
+Changes: M14b segmented layers efficiency table; depth extended to 150 layers.
+PDF size: 1212398 bytes
+PDF SHA256: 460E2EAC391E809C8B442D43BD1A5C9EBCF20337F982D54A8D4574A474AAD3A2

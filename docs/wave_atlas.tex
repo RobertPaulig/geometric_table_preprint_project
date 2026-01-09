@@ -477,6 +477,8 @@ the search space.
 We avoid the exploding modulus $L=\prod p$ by applying the same layer filters
 in fixed $t$ segments. This lets us extend to dozens of layers while keeping
 runtime stable, and directly measure acceleration at large depth.
+Each prime layer $p$ removes two forbidden phases in $t \bmod p$, so the
+expected survival multiplier is $(1-2/p)$ under uniformity.
 
 \begin{figure}[h]
 \centering
@@ -489,5 +491,14 @@ runtime stable, and directly measure acceleration at large depth.
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m14b/m14b_throughput_vs_layers.png}
 \caption{Segmented throughput versus number of layers (M14b).}
 \end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m14b/m14b_efficiency_table.tex}
+\caption{Efficiency summary across layers (M14b).}
+\end{table}
+
+Even small additional rejection can be worthwhile when candidate testing
+dominates generation cost.
 
 \end{document}
