@@ -32,16 +32,16 @@ def sigmoid(x: np.ndarray) -> np.ndarray:
 
 
 def fit_logit(X: np.ndarray, y: np.ndarray, lr: float = 0.1, steps: int = 800) -> Tuple[np.ndarray, float]:
-    w = np.zeros(X.shape[1], dtype=float)
+    w_vec = np.zeros(X.shape[1], dtype=float)
     b = 0.0
     for _ in range(steps):
-        z = X @ w + b
+        z = X @ w_vec + b
         p = sigmoid(z)
         grad_w = X.T @ (p - y) / len(y)
         grad_b = float((p - y).mean())
-        w -= lr * grad_w
+        w_vec -= lr * grad_w
         b -= lr * grad_b
-    return w, b
+    return w_vec, b
 
 
 def isotonic_fit(scores: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -216,8 +216,8 @@ def main() -> None:
     X[:, 0] = -X[:, 0]
     X[:, 1] = np.log1p(X[:, 1])
 
-    w, b = fit_logit(X, y, lr=0.2, steps=1200)
-    logits = X @ w + b
+    w_vec, b = fit_logit(X, y, lr=0.2, steps=1200)
+    logits = X @ w_vec + b
     probs = sigmoid(logits)
 
     x_grid, y_grid = isotonic_fit(probs, y)
@@ -378,10 +378,10 @@ def main() -> None:
         rank_rows.append((Q, rho))
     rank_csv = out_dir / "m27_rank_stability.csv"
     with rank_csv.open("w", encoding="utf-8", newline="") as f:
-        w = csv.writer(f)
-        w.writerow(["Q", "spearman_rho"])
+        writer = csv.writer(f)
+        writer.writerow(["Q", "spearman_rho"])
         for Q, rho in rank_rows:
-            w.writerow([Q, f"{rho:.6f}"])
+            writer.writerow([Q, f"{rho:.6f}"])
     save_line_plot(
         out_dir / "m27_rank_stability.png",
         [float(Q) for Q, _ in rank_rows],
@@ -407,7 +407,7 @@ def main() -> None:
     summary = {
         "fit_Q": fit_Q,
         "eval_Qs": eval_Qs,
-        "coefficients": {"w": w.tolist(), "b": b},
+        "coefficients": {"w": w_vec.tolist(), "b": b},
         "auc_by_Q": aucs,
         "brier_by_Q": briers,
         "logloss_by_Q": loglosses,
@@ -417,10 +417,10 @@ def main() -> None:
     # metrics by Q for M27
     metrics_csv = out_dir / "m27_metrics_by_Q.csv"
     with metrics_csv.open("w", encoding="utf-8", newline="") as f:
-        w = csv.writer(f)
-        w.writerow(["Q", "AUC", "Brier", "LogLoss"])
+        writer = csv.writer(f)
+        writer.writerow(["Q", "AUC", "Brier", "LogLoss"])
         for Q in eval_Qs:
-            w.writerow([Q, f"{aucs[Q]:.6f}", f"{briers[Q]:.6f}", f"{loglosses[Q]:.6f}"])
+            writer.writerow([Q, f"{aucs[Q]:.6f}", f"{briers[Q]:.6f}", f"{loglosses[Q]:.6f}"])
 
     # manifest
     manifest = {
