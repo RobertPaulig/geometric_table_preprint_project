@@ -18,6 +18,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--Q0", type=int, default=50000)
     p.add_argument("--Q1", type=int, default=200000)
     p.add_argument("--weights", type=str, required=True)
+    p.add_argument("--seed", type=int, default=123)
     p.add_argument("--out-dir", type=str, required=True)
     return p.parse_args()
 
@@ -65,9 +66,11 @@ def ord_mod_2(q: int, primes: List[int]) -> int:
     return d
 
 
-def weight_fn(q: int, d: int, mode: str) -> float:
+def weight_fn(q: int, d: int, mode: str, rand_map: Dict[int, float]) -> float:
     if mode == "ones":
         return 1.0
+    if mode == "q":
+        return float(q)
     if mode == "inv_q":
         return 1.0 / q
     if mode == "inv_logq":
@@ -80,6 +83,8 @@ def weight_fn(q: int, d: int, mode: str) -> float:
         return 1.0 / math.log(d)
     if mode == "logd":
         return math.log(d)
+    if mode == "rand":
+        return rand_map[q]
     raise ValueError(f"Unknown weight mode: {mode}")
 
 
@@ -161,11 +166,15 @@ def main() -> None:
     rows = []
     for mode in weights:
         weight_by_d: Dict[int, float] = {}
+        rand_map: Dict[int, float] = {}
+        if mode == "rand":
+            rng = np.random.default_rng(args.seed)
+            rand_map = {q: float(rng.random()) for q in primes_q}
         for q in primes_q:
             if q > args.Q0:
                 break
             d = ords[q]
-            weight_by_d[d] = weight_by_d.get(d, 0.0) + weight_fn(q, d, mode)
+            weight_by_d[d] = weight_by_d.get(d, 0.0) + weight_fn(q, d, mode, rand_map)
 
         scores = np.zeros(len(p_vals), dtype=float)
         for d, w in weight_by_d.items():

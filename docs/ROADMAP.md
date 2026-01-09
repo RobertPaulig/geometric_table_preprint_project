@@ -232,6 +232,11 @@ PYTHONPATH=code python code/scripts/m19_weight_tuning.py \
   --p-mode prime \
   --Q0 50000 \
   --Q1 200000 \
-  --weights ones,inv_q,inv_logq,logq,inv_d,inv_logd,logd \
+  --weights ones,inv_q,inv_logq,logq,inv_d,inv_logd,logd,q,rand \
+  --seed 123 \
   --out-dir out/wave_atlas/m19
 ```
+
+**Риски/заметки:** sanity-check показал инвариантность метрик к весам при p-mode=prime,
+поскольку для простого p условие d(q)|p сводится к d(q)=p; для тюнинга весов
+нужна модификация цели или p-mode=all.

@@ -105,3 +105,11 @@ Commit: (tag wave-atlas-v1.9)
 Changes: M18b scaling/generalization + M19 weight tuning for spectral density.
 PDF size: 1701909 bytes
 PDF SHA256: 3FAB2A7EF7F86B03F350C82FD5A9D05FD7C8F67BAA6FD0BEC78A520087839DBF
+
+Wave Atlas v1.9.1 Release Notes
+
+Tag: wave-atlas-v1.9.1
+Commit: (tag wave-atlas-v1.9.1)
+Changes: M19 weight sanity check (q/rand) + M18b baseline-survival note in TeX.
+PDF size: 1704048 bytes
+PDF SHA256: A413EFA225F1C48605A4446B7E31204CBF24668A72E8C02D64A232CB382A513B
