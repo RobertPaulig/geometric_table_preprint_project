@@ -1,0 +1,51 @@
+{
+  "layers_points": [
+    1,
+    6,
+    24,
+    60,
+    100,
+    150
+  ],
+  "test_costs_sec": [
+    1e-06,
+    0.001,
+    1.0,
+    60.0,
+    3600.0,
+    86400.0
+  ],
+  "N_raw": 1000000000.0,
+  "break_even": [
+    {
+      "step": "1->6",
+      "delta_gen_cost": 5.035633318281423e-08,
+      "delta_survival": 0.31489999999999996,
+      "test_cost_threshold_ms": 0.00015991214094256663
+    },
+    {
+      "step": "6->24",
+      "delta_gen_cost": 2.3361933340008057e-07,
+      "delta_survival": 0.22785666666666665,
+      "test_cost_threshold_ms": 0.0010252907532516667
+    },
+    {
+      "step": "24->60",
+      "delta_gen_cost": 5.570151666567351e-07,
+      "delta_survival": 0.09261500000000003,
+      "test_cost_threshold_ms": 0.006014308337275116
+    },
+    {
+      "step": "60->100",
+      "delta_gen_cost": 7.680729999750229e-07,
+      "delta_survival": 0.03594,
+      "test_cost_threshold_ms": 0.021370979409433024
+    },
+    {
+      "step": "100->150",
+      "delta_gen_cost": -1.5789983347834379e-07,
+      "delta_survival": 0.022483333333333327,
+      "test_cost_threshold_ms": -0.0070229725787254475
+    }
+  ]
+}

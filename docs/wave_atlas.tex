@@ -520,4 +520,33 @@ conditioning layer, revealing the residual structure.
 \caption{Histogram of $\mathrm{ord}_q(2)$ for primes $q\le q_{\max}$ (M15).}
 \end{figure}
 
+\section{M16 Budget model (test-cost bridge)}
+We connect layered survival to a realistic testing budget. Generation costs
+remain in the microsecond range, while candidate testing costs span from
+milliseconds to days. The total cost per raw candidate is
+$c_g(L) + s(L)\,c_t$, so any additional rejection directly reduces
+wall-clock time when $c_t$ dominates.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m16/m16_total_cost_vs_layers.png}
+\caption{Total cost per raw candidate vs layers for different test costs (M16).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m16/m16_time_saved_vs_layers.png}
+\caption{Time saved vs layers for $N_{\mathrm{raw}}=10^9$ candidates (M16).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m16/m16_break_even_table.tex}
+\caption{Break-even test cost thresholds by layer block (M16).}
+\end{table}
+
+Each step removes two phases modulo $p$, so the marginal survival drop scales
+as $\approx 2/p$, but when test cost dominates, even small reductions translate
+into real savings.
+
 \end{document}
