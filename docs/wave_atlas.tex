@@ -473,4 +473,21 @@ the search space.
 \caption{Candidate throughput versus number of sieve layers (M14).}
 \end{figure}
 
+\section{M14b Segmented layers (accelerator scaling)}
+We avoid the exploding modulus $L=\prod p$ by applying the same layer filters
+in fixed $t$ segments. This lets us extend to dozens of layers while keeping
+runtime stable, and directly measure acceleration at large depth.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m14b/m14b_survival_vs_layers.png}
+\caption{Segmented survival rate versus number of layers (M14b).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m14b/m14b_throughput_vs_layers.png}
+\caption{Segmented throughput versus number of layers (M14b).}
+\end{figure}
+
 \end{document}

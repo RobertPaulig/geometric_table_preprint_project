@@ -1,0 +1,194 @@
+[
+  {
+    "layers": 1,
+    "primes": "13",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.84615375,
+    "throughput": 34731417.676204436
+  },
+  {
+    "layers": 2,
+    "primes": "13,17",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.74660625,
+    "throughput": 21863299.76413163
+  },
+  {
+    "layers": 3,
+    "primes": "13,17,19",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.66801375,
+    "throughput": 15133171.921880474
+  },
+  {
+    "layers": 4,
+    "primes": "13,17,19,23",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.60993,
+    "throughput": 11241338.902994597
+  },
+  {
+    "layers": 5,
+    "primes": "13,17,19,23,29",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.56786625,
+    "throughput": 9675226.819694178
+  },
+  {
+    "layers": 6,
+    "primes": "13,17,19,23,29,31",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.531235,
+    "throughput": 7918306.825883075
+  },
+  {
+    "layers": 7,
+    "primes": "13,17,19,23,29,31,37",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.50251625,
+    "throughput": 7185495.357371346
+  },
+  {
+    "layers": 8,
+    "primes": "13,17,19,23,29,31,37,41",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.4780375,
+    "throughput": 6502769.768660756
+  },
+  {
+    "layers": 9,
+    "primes": "13,17,19,23,29,31,37,41,43",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.45573,
+    "throughput": 5470324.85305819
+  },
+  {
+    "layers": 10,
+    "primes": "13,17,19,23,29,31,37,41,43,47",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.43633125,
+    "throughput": 2778880.6460028593
+  },
+  {
+    "layers": 11,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.4198,
+    "throughput": 3892866.3696859083
+  },
+  {
+    "layers": 12,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.40561875,
+    "throughput": 3983399.185938646
+  },
+  {
+    "layers": 13,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.39241,
+    "throughput": 4160627.257260401
+  },
+  {
+    "layers": 14,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.38056125,
+    "throughput": 3851655.4164945036
+  },
+  {
+    "layers": 15,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.3698275,
+    "throughput": 3528710.693356601
+  },
+  {
+    "layers": 16,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.3599325,
+    "throughput": 3296232.8596960483
+  },
+  {
+    "layers": 17,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.35068375,
+    "throughput": 3235646.470254556
+  },
+  {
+    "layers": 18,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.34231375,
+    "throughput": 3197117.4792633657
+  },
+  {
+    "layers": 19,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.3346025,
+    "throughput": 2946787.283453621
+  },
+  {
+    "layers": 20,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.32771125,
+    "throughput": 2832720.757311995
+  },
+  {
+    "layers": 21,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.32119625,
+    "throughput": 2649451.413606404
+  },
+  {
+    "layers": 22,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.31487375,
+    "throughput": 2334910.857918786
+  },
+  {
+    "layers": 23,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.30903125,
+    "throughput": 2038183.8456800438
+  },
+  {
+    "layers": 24,
+    "primes": "13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109",
+    "segment_len": 200000,
+    "segments": 4,
+    "survival_rate": 0.3033475,
+    "throughput": 2114671.2185487673
+  }
+]
