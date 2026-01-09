@@ -169,3 +169,11 @@ Commit: (tag wave-atlas-v1.15)
 Changes: M25 hard-mode stress test (Q1=10M + strict Mersenne filters).
 PDF size: 2542867 bytes
 PDF SHA256: 0D0EA2C01AB1A343B7CB3B5E64AB720FB126352C8CFB0233B7F1FE44D39A9F9C
+
+Wave Atlas v1.15.1 Release Notes
+
+Tag: wave-atlas-v1.15.1
+Commit: (tag wave-atlas-v1.15.1)
+Changes: M25 key table (10%/50% yields and savings) added to TeX.
+PDF size: 2543913 bytes
+PDF SHA256: 49C631B481917059FBDA0977DEBB001F98E90DEDC6ACEC76A9829EA473EADC88
