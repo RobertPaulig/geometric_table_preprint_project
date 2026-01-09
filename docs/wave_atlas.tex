@@ -391,6 +391,7 @@ M18 & Mersenne spectral density: rank exponents by resonance density. \\
 M18b & Scaling/generalization of spectral density across $(Q_0,Q_1,p_{\max})$. \\
 M19 & Weight tuning on spectral density (q- vs d-based weights). \\
 M20b & Weight effects with all $p$: remove prime-mode degeneracy. \\
+M21 & Hazard model for prime $p$ (death in $Q_1\setminus Q_0$). \\
 \hline
 \end{tabular}
 
@@ -658,6 +659,25 @@ multi-hit structure and reveals real weight effects.
 \centering
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m20b/m20b_enrichment10_by_weight_composite.png}
 \caption{Enrichment@10\% by weight mode on composite $p$ (M20b).}
+\end{figure}
+
+\clearpage
+\section{M21 Hazard model for prime $p$}
+We model the risk of later death among prime exponents that survived $Q_0$.
+The target is $\text{death\_later}=\mathbf{1}[\mathrm{ord}_q(2)=p \text{ for some } q\le Q_1]$
+within the set $Z=\{p:\text{killed}_{Q_0}=0\}$. Features use only arithmetic
+pressure from $q\equiv 1 \ (\mathrm{mod}\ p)$ in $(Q_0,Q_1]$.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m21/m21_hazard_vs_death_bins.png}
+\caption{Death\_later rate by hazard score bins (M21).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m21/m21_enrichment_curve.png}
+\caption{Enrichment@k for death\_later on $Z$ (M21).}
 \end{figure}
 
 \end{document}

@@ -265,3 +265,27 @@ PYTHONPATH=code python code/scripts/m20b_weight_effect_all_p.py \
   --seed 123 \
   --out-dir out/wave_atlas/m20b
 ```
+
+## M21 - Hazard model for prime p (death in Q1 \ Q0)
+Status: Done (tag wave-atlas-v1.11)
+
+**Цель:** ранжировать простые p из Z (killed_Q0=0) по риску умереть позже
+в Q1\Q0, используя арифметическое давление q ≡ 1 (mod p).
+
+**DoD (артефакты):**
+- out/wave_atlas/m21/m21_dataset.csv
+- out/wave_atlas/m21/m21_summary.csv + m21_summary.json
+- out/wave_atlas/m21/m21_hazard_vs_death_bins.png
+- out/wave_atlas/m21/m21_enrichment_curve.png
+- out/wave_atlas/m21/m21_feature_importance.png
+- out/wave_atlas/m21/m21_scatter_logp_vs_hazard.png
+- wave_atlas.tex: раздел M21
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m21_hazard_model.py \
+  --p-max 100000 \
+  --Q0 50000 \
+  --Q1 200000 \
+  --out-dir out/wave_atlas/m21
+```

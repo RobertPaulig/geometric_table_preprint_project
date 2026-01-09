@@ -121,3 +121,11 @@ Commit: (tag wave-atlas-v1.10)
 Changes: M20b all-p weight effects (resolve prime-mode degeneracy).
 PDF size: 1768925 bytes
 PDF SHA256: 429EA91A25C67CFD7177D267976FAF443EC3C72603AC95B52CA38AEC6B0BCB45
+
+Wave Atlas v1.11 Release Notes
+
+Tag: wave-atlas-v1.11
+Commit: (tag wave-atlas-v1.11)
+Changes: M21 hazard model for prime p (death in Q1\Q0).
+PDF size: 1844115 bytes
+PDF SHA256: 6ABAD243DF99952B3E6FD0085EEED7773F1A85095186A4B392E25A2B712E6878
