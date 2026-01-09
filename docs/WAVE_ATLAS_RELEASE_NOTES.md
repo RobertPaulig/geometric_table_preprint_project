@@ -70,3 +70,11 @@ Commit: 3f67325
 Changes: M15 Mersenne wave atlas + M16 budget model (test-cost bridge).
 PDF size: 1407362 bytes
 PDF SHA256: 1B8BBA573FC098853EA772E6FC69BD8BD72597835AC9DCB4518DDF47AB758742
+
+Wave Atlas v1.6.1 Release Notes
+
+Tag: wave-atlas-v1.6.1
+Commit: b8a7ca7
+Changes: M16 illustrative savings table.
+PDF size: 1408026 bytes
+PDF SHA256: 6EB6DD297248F0411CF7B25AF0A634ACD9ACDFB883E4FCFE741461898195A14E
