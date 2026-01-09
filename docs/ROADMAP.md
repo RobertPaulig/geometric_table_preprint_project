@@ -91,11 +91,11 @@ P4 — Отдельная лаборатория волн
 ```
 **Риски/заметки:** размер матриц, выбор диапазонов p и q.
 
-## M16 ¢?" Budget model / cost-of-testing bridge
-**Goal:** Connect layered survival/throughput to testing cost budgets and show
-when extra sieve layers are cost-effective.
+## M16 — Бюджетная модель / стоимость проверки
+**Цель:** связать survival/throughput со стоимостью теста кандидата и показать,
+когда дополнительные слои сита экономически выгодны.
 **DoD:**
 - out/wave_atlas/m16/m16_total_cost_vs_layers.png
 - out/wave_atlas/m16/m16_time_saved_vs_layers.png
 - out/wave_atlas/m16/m16_break_even.csv + m16_break_even_table.tex
-- wave_atlas.tex: M16 section with 2 figures + break-even table
+- wave_atlas.tex: раздел M16 с 2 графиками и таблицей
