@@ -1,0 +1,35 @@
+{
+  "label": "p100k_Q0-50k_Q1-200k",
+  "p_max": 100000,
+  "Q0": 50000,
+  "Q1": 200000,
+  "budgets": [
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.5
+  ],
+  "random_iters": 300,
+  "test_costs": [
+    1.0,
+    3600.0,
+    86400.0
+  ],
+  "seed": 123,
+  "files": {
+    "m24_bad_tests_avoided_vs_budget.png": "a28be2698e6c8569946c496d7ac4792e8f31fbc11ee8664f18925c046130a517",
+    "m24_compute_saved_vs_budget_1s.png": "4a3660e2bb7c886f942802d4994046bebdca470ca1a30fb8404caa350833f4cb",
+    "m24_compute_saved_vs_budget_3600s.png": "029fe8f6e8fdd553135d380c9736560fcb75cbd1071be2100b01343c86dc21d5",
+    "m24_compute_saved_vs_budget_86400s.png": "c40b8cd334e762549819db770508ee499030e35abd2baf06cca5586f69091424",
+    "m24_queue.csv": "227759c1623ad600bf31a95e7bb7b2d81466cf2a673608d4924a1a32387412d8",
+    "m24_summary.csv": "877d9f2bdcd080c645eb4450d017b5d190fd647099d56cba7d3b0af708939f46",
+    "m24_summary.json": "a6b5f9562c466622f2092ac2cdbdafb98f04efcfb5f12a73c73bd64d7afc3fa5",
+    "m24_table.tex": "fb15381fe87063e0e1c5e04b440370fd5b0c51b598eda2f27c9384c0bc7d86c5",
+    "m24_yield_vs_budget.png": "8e1b54f70687847dc1883c1996fd112a214517e94cf67cd3f4fe06c90547ea1f"
+  }
+}

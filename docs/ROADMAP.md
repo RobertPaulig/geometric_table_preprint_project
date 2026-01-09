@@ -339,3 +339,47 @@ PYTHONPATH=code python code/scripts/m23_budgeted_search_sim.py \
   --test-costs 1,3600,86400 \
   --out-dir out/wave_atlas/m23
 ```
+
+## M24 - Scale stress-test (M22 at larger p_max/Q1)
+Status: Done (tag wave-atlas-v1.14)
+
+**Цель:** проверить устойчивость M22 при больших $p_{\max}$ и $Q_1$ и при
+бюджетах выбора до 50%.
+
+**DoD (артефакты):**
+- out/wave_atlas/m24/*/m24_summary.csv + m24_summary.json
+- out/wave_atlas/m24/*/m24_yield_vs_budget.png
+- out/wave_atlas/m24/*/m24_bad_tests_avoided_vs_budget.png
+- out/wave_atlas/m24/*/m24_compute_saved_vs_budget_1s.png
+- out/wave_atlas/m24/*/m24_compute_saved_vs_budget_1h.png
+- out/wave_atlas/m24/*/m24_compute_saved_vs_budget_1d.png
+- out/wave_atlas/m24/*/m24_table.tex
+- out/wave_atlas/m24/*/m24_manifest.json
+- wave_atlas.tex: раздел M24 (A/B/C)
+
+**Команды:**
+```bash
+# M24-A
+PYTHONPATH=code python code/scripts/m24_scale_stress_test.py \
+  --p-max 200000 --Q0 50000 --Q1 500000 \
+  --budgets 0.001,0.002,0.005,0.01,0.02,0.05,0.10,0.20,0.50 \
+  --random-iters 300 --test-costs 1,3600,86400 --seed 123 \
+  --label p200k_Q0-50k_Q1-500k \
+  --out-dir out/wave_atlas/m24
+
+# M24-B
+PYTHONPATH=code python code/scripts/m24_scale_stress_test.py \
+  --p-max 200000 --Q0 100000 --Q1 1000000 \
+  --budgets 0.001,0.002,0.005,0.01,0.02,0.05,0.10,0.20,0.50 \
+  --random-iters 300 --test-costs 1,3600,86400 --seed 123 \
+  --label p200k_Q0-100k_Q1-1M \
+  --out-dir out/wave_atlas/m24
+
+# M24-C
+PYTHONPATH=code python code/scripts/m24_scale_stress_test.py \
+  --p-max 100000 --Q0 50000 --Q1 200000 \
+  --budgets 0.001,0.002,0.005,0.01,0.02,0.05,0.10,0.20,0.50 \
+  --random-iters 300 --test-costs 1,3600,86400 --seed 123 \
+  --label p100k_Q0-50k_Q1-200k \
+  --out-dir out/wave_atlas/m24
+```

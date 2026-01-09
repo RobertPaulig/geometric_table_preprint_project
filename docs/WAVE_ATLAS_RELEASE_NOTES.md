@@ -153,3 +153,11 @@ Commit: (tag wave-atlas-v1.13)
 Changes: M23 budgeted search simulation (random vs M18/M21/M22) + savings table.
 PDF size: 1988103 bytes
 PDF SHA256: 2CDB1BEC86BFA95578EE84726CC4A5FF36547615538F8EFE98AFB7BFA0C82918
+
+Wave Atlas v1.14 Release Notes
+
+Tag: wave-atlas-v1.14
+Commit: (tag wave-atlas-v1.14)
+Changes: M24 scale stress-test of M22 at larger (p_max, Q1) and budgets up to 50%.
+PDF size: 2253109 bytes
+PDF SHA256: 6E99109FB060646FBBE440D36ACB8FE6267D5B1E422195C477A4568791BB258B
