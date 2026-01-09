@@ -113,3 +113,11 @@ Commit: (tag wave-atlas-v1.9.1)
 Changes: M19 weight sanity check (q/rand) + M18b baseline-survival note in TeX.
 PDF size: 1704048 bytes
 PDF SHA256: A413EFA225F1C48605A4446B7E31204CBF24668A72E8C02D64A232CB382A513B
+
+Wave Atlas v1.10 Release Notes
+
+Tag: wave-atlas-v1.10
+Commit: (tag wave-atlas-v1.10)
+Changes: M20b all-p weight effects (resolve prime-mode degeneracy).
+PDF size: 1768925 bytes
+PDF SHA256: 429EA91A25C67CFD7177D267976FAF443EC3C72603AC95B52CA38AEC6B0BCB45

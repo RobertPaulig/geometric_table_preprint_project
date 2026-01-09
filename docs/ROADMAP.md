@@ -240,3 +240,28 @@ PYTHONPATH=code python code/scripts/m19_weight_tuning.py \
 **Риски/заметки:** sanity-check показал инвариантность метрик к весам при p-mode=prime,
 поскольку для простого p условие d(q)|p сводится к d(q)=p; для тюнинга весов
 нужна модификация цели или p-mode=all.
+
+## M20b - Weight effects with all p (remove prime-mode degeneracy)
+Status: Done (tag wave-atlas-v1.10)
+
+**Цель:** убрать вырождение p-mode=prime и показать, что веса реально меняют
+ранжирование на all/composite subsets.
+
+**DoD (артефакты):**
+- out/wave_atlas/m20b/m20b_summary.csv + m20b_summary.json
+- out/wave_atlas/m20b/m20b_auc_by_weight_(all|prime|composite).png
+- out/wave_atlas/m20b/m20b_enrichment10_by_weight_(all|prime|composite).png
+- out/wave_atlas/m20b/m20b_score_vs_survival_bins_(all|prime|composite).png
+- out/wave_atlas/m20b/m20b_notes.txt
+- wave_atlas.tex: раздел M20b
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m20b_weight_effect_all_p.py \
+  --p-max 50000 \
+  --Q0 50000 \
+  --Q1 200000 \
+  --weights ones,inv_q,inv_logq,logq,q,inv_d,inv_logd,logd,rand_pos,rand_sign \
+  --seed 123 \
+  --out-dir out/wave_atlas/m20b
+```

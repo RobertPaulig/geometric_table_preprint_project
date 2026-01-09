@@ -1,0 +1,1 @@
+Prime subset is degenerate for ord_q(2)|p because p is prime: hits require ord_q(2)=p, so weights do not reorder survivors. Composite p allows multiple periods per p, so weights change scores and ranking.

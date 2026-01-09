@@ -390,6 +390,7 @@ M17 & Two-stage budget model: cheap filter + expensive test. \\
 M18 & Mersenne spectral density: rank exponents by resonance density. \\
 M18b & Scaling/generalization of spectral density across $(Q_0,Q_1,p_{\max})$. \\
 M19 & Weight tuning on spectral density (q- vs d-based weights). \\
+M20b & Weight effects with all $p$: remove prime-mode degeneracy. \\
 \hline
 \end{tabular}
 
@@ -639,6 +640,24 @@ prime size $q$ and by period $d(q)$, to maximize enrichment in the top slice.
 \centering
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m19/m19_enrichment_by_weight.png}
 \caption{Enrichment@10\% by weight mode (M19).}
+\end{figure}
+
+\section{M20b Weight effects with all $p$}
+The prime-only subset is degenerate because $\mathrm{ord}_q(2)\mid p$ implies
+$\mathrm{ord}_q(2)=p$ for prime $p$, so positive weights cannot reorder
+survivors. Using all $p$ (and examining composites separately) restores
+multi-hit structure and reveals real weight effects.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m20b/m20b_auc_by_weight_composite.png}
+\caption{AUC by weight mode on composite $p$ (M20b).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m20b/m20b_enrichment10_by_weight_composite.png}
+\caption{Enrichment@10\% by weight mode on composite $p$ (M20b).}
 \end{figure}
 
 \end{document}
