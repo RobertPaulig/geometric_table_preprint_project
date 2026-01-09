@@ -78,3 +78,11 @@ Commit: b8a7ca7
 Changes: M16 illustrative savings table.
 PDF size: 1408026 bytes
 PDF SHA256: 6EB6DD297248F0411CF7B25AF0A634ACD9ACDFB883E4FCFE741461898195A14E
+
+Wave Atlas v1.7 Release Notes
+
+Tag: wave-atlas-v1.7
+Commit: c4bafeb
+Changes: M17 two-stage budget model (cheap filter + expensive test).
+PDF size: 1523307 bytes
+PDF SHA256: 64FFA1C5ED1048051BA8893BAF4730B58CD5D0ADEE058167840E9A2EC5164286
