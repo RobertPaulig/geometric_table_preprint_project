@@ -137,3 +137,11 @@ Commit: (tag wave-atlas-v1.12)
 Changes: M22 two-stage Mersenne navigator (M18 + M21 queue).
 PDF size: 1890696 bytes
 PDF SHA256: 2403C530FEEA3AE5F4A17DDFB2043E68A1129F848BC4F7F34AA26910EEC14AF6
+
+Wave Atlas v1.12.1 Release Notes
+
+Tag: wave-atlas-v1.12.1
+Commit: (tag wave-atlas-v1.12.1)
+Changes: M22 savings table (compute-seconds saved) + M21 interpretation note.
+PDF size: 1891374 bytes
+PDF SHA256: CFCF54311D1BCA54712DBB18EF8BCF694C575130388A02EAB172764DF708245C

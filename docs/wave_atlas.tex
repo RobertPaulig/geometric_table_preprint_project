@@ -668,6 +668,8 @@ We model the risk of later death among prime exponents that survived $Q_0$.
 The target is $\text{death\_later}=\mathbf{1}[\mathrm{ord}_q(2)=p \text{ for some } q\le Q_1]$
 within the set $Z=\{p:\text{killed}_{Q_0}=0\}$. Features use only arithmetic
 pressure from $q\equiv 1 \ (\mathrm{mod}\ p)$ in $(Q_0,Q_1]$.
+On $Z$, the optimal predictor is effectively binary: whether any $q\in(Q_0,Q_1]$
+satisfies $q\equiv 1 \ (\mathrm{mod}\ p)$.
 
 \begin{figure}[h]
 \centering
@@ -697,5 +699,11 @@ This yields a practical ordering of expensive tests.
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m22/m22_tests_avoided.png}
 \caption{Bad tests avoided vs tested fraction (M22).}
 \end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m22/m22_savings_table.tex}
+\caption{Compute saved for top-k queue slices (M22).}
+\end{table}
 
 \end{document}
