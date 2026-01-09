@@ -431,4 +431,28 @@ the overdispersion, but observed dispersion remains above the null band.
 \caption{Residual gap distribution for m=12 after three layers.}
 \end{figure}
 
+\section{M13 GT wheel-lattice metrics}
+We evaluate additional graph metrics on wheel-lattice rows ($B=L_{12}$) to find
+features that respond to sieve layers beyond core\_edges/gap/entropy.
+We scan $(K,\varepsilon)\in\{120,240\}\times\{10^{-12},10^{-9},10^{-6}\}$ and
+summarize sensitivity by residue class and layer conditioning.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m13/m13_best_metric_mean_by_mod_p0.png}
+\caption{Best GT metric mean by $t \bmod p_0$ (M13).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m13/m13_best_metric_by_layer_box.png}
+\caption{Best GT metric by layer conditioning (M13).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m13/m13_top2_table.tex}
+\caption{Top-2 GT metrics by sensitivity score (M13).}
+\end{table}
+
 \end{document}

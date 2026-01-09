@@ -440,12 +440,56 @@ def compute_core_metrics_from_rows(
     core_comps = connected_components(A, eps=eps)
     core_n_components = len(core_comps)
     core_gc_idx = max(core_comps, key=len) if core_comps else []
+    comp_sizes = sorted((len(c) for c in core_comps), reverse=True)
+    second_gc_size = int(comp_sizes[1]) if len(comp_sizes) > 1 else 0
+
+    # Thresholded adjacency for triangle/spectrum metrics
+    B = (A > eps).astype(float)
+    B_deg = B.sum(axis=1)
+    triplets = float(np.sum(B_deg * (B_deg - 1.0) / 2.0))
+    if core_nodes > 0:
+        B2 = B @ B
+        B3 = B2 @ B
+        tri_diag = np.diag(B3)
+        triangle_count = float(np.trace(B3) / 6.0)
+        if triplets > 0:
+            transitivity = float((3.0 * triangle_count) / triplets)
+        else:
+            transitivity = 0.0
+        with np.errstate(divide="ignore", invalid="ignore"):
+            local_clust = np.where(
+                B_deg >= 2.0,
+                tri_diag / (B_deg * (B_deg - 1.0)),
+                0.0,
+            )
+        avg_clustering = float(np.mean(local_clust)) if core_nodes else 0.0
+        adj_evals = np.linalg.eigvalsh(B)
+        adj_spectral_radius = float(np.max(adj_evals)) if adj_evals.size else 0.0
+        pos = adj_evals[adj_evals > 1e-12]
+        if pos.size:
+            p = pos / float(np.sum(pos))
+            adj_entropy = float(-np.sum(p * np.log(p)))
+        else:
+            adj_entropy = 0.0
+    else:
+        triangle_count = 0.0
+        transitivity = 0.0
+        avg_clustering = 0.0
+        adj_spectral_radius = 0.0
+        adj_entropy = 0.0
 
     metrics: Dict[str, Any] = {
         "core_nodes": int(core_nodes),
         "core_edges": int(core_edges),
         "core_components": int(core_n_components),
         "core_isolated_nodes": core_isolated,
+        "core_second_gc_size": second_gc_size,
+        "core_second_gc_fraction": float(second_gc_size / core_nodes) if core_nodes else 0.0,
+        "core_triangle_count": triangle_count,
+        "core_transitivity": transitivity,
+        "core_avg_clustering": avg_clustering,
+        "core_adj_spectral_radius": adj_spectral_radius,
+        "core_adj_entropy": adj_entropy,
     }
 
     if include_twin and center_value is not None and rows:

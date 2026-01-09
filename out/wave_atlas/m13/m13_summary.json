@@ -1,0 +1,25 @@
+{
+  "best_metric": "triangle_count",
+  "best_K": 240,
+  "best_eps": 1e-12,
+  "best_combined_score": 8771.290299689497,
+  "top2_metrics": [
+    {
+      "metric": "triangle_count",
+      "K": 240,
+      "eps": 1e-12,
+      "combined_score": 8771.290299689497
+    },
+    {
+      "metric": "isolated_nodes",
+      "K": 240,
+      "eps": 1e-12,
+      "combined_score": 0.1941816795822815
+    }
+  ],
+  "sample": {
+    "n_total": 12000,
+    "n_twins": 6000,
+    "n_non": 6000
+  }
+}
