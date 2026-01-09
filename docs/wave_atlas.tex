@@ -396,6 +396,7 @@ M22 & Two-stage navigator for prime $p$ (M18 + M21 queue). \\
 M23 & Budgeted search simulation (M18 vs M22 vs random). \\
 M24 & Scale stress-test of M22 at larger $(p_{\max},Q_1)$ and big budgets. \\
 M25 & Hard-mode stress-test: $Q_1$ up to 10M and strict Mersenne filters. \\
+M26 & Calibrated survival predictor and extrapolation across Q. \\
 \hline
 \end{tabular}
 
@@ -866,6 +867,30 @@ $q\equiv 1 \pmod{2p}$ in hazard features) and extend $Q_1$ to 10M.
 \centering
 \input{../out/wave_atlas/m25/p200k_Q0-100k_Q1-1M_strict/m25_table.tex}
 \caption{Selected budgets and savings (M25-C).}
+\end{table}
+
+\clearpage
+\section{M26 Calibrated survival predictor}
+We fit a calibrated survival predictor using hazard features and validate
+calibration across $Q\in\{1M,2M,5M,10M\}$, then extrapolate expected yield
+and compute savings without full Q1 labeling.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m26/p200k_Q0-100k_Qs-1-2-5-10M_strict/m26_calibration_fitQ.png}
+\caption{Calibration at fit Q=10M (M26-A).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m26/p200k_Q0-100k_Qs-1-2-5-10M_strict/m26_predicted_yield_vs_budget.png}
+\caption{Predicted yield vs budget from calibrated model (M26-A).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m26/p200k_Q0-100k_Qs-1-2-5-10M_strict/m26_table.tex}
+\caption{AUC/Brier/LogLoss across Q for calibrated model (M26-A).}
 \end{table}
 
 \end{document}

@@ -1,0 +1,25 @@
+{
+  "dataset_csv": "out\\wave_atlas\\m26\\p200k_Q0-100k_Qs-1-2-5-10M_strict\\m26_dataset.csv",
+  "fit_Q": 10000000,
+  "eval_Qs": [
+    1000000,
+    2000000,
+    5000000,
+    10000000
+  ],
+  "model": "logit+isotonic",
+  "seed": 123,
+  "files": {
+    "m26_auc_by_Q.png": "32155b26c0cdff6b6064b6fb7f768d7dee03d8bc08fe8eecb6b91b67a4cf9786",
+    "m26_brier_by_Q.png": "372062f3bfa7b98bb2813360db167e73efa13b8bd41f49be2604b4de1c9192cd",
+    "m26_calibration_by_Q.png": "54c2dd70322802d0070a79ba1740021dcc3827df90ae0c79ab502878ebfdd78e",
+    "m26_calibration_fitQ.png": "f8cddc2818fef65e095f7874ac70709a442560aa74d62cc3b72e1f10f705ef99",
+    "m26_dataset.csv": "c1187edc6d2d43370d240dac130aa077b30a454f5cd0e4de8e6573eff94853d3",
+    "m26_dataset_meta.json": "7caa20e1e2bc33297f1bab689a971470cfa74e77914d3a679d94956e282d7de8",
+    "m26_logloss_by_Q.png": "4cb781b99e1531542b588460eb0832628b5130a13bc6383d87ce6e6b9be288fb",
+    "m26_model_summary.json": "dd5391d798ddb07da1675418ef20705c718f367a1f8561e9623c69ce6898fad1",
+    "m26_predicted_compute_saved_1d.png": "a1eb01798d9da570b2c97fbb854646f0ab8e7b853a14ed2e7d1b794c06253603",
+    "m26_predicted_yield_vs_budget.png": "d5a19ed83fcc0ad9fa0e9fb2594a4da054bf4276d45e910fd66c233a82056965",
+    "m26_table.tex": "09eb6ed4d9880f527e62328ba6833bba1cab40dd01be5044ed2e4a9d21f9bb19"
+  }
+}

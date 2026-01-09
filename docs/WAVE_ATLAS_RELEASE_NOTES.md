@@ -177,3 +177,11 @@ Commit: (tag wave-atlas-v1.15.1)
 Changes: M25 key table (10%/50% yields and savings) added to TeX.
 PDF size: 2543913 bytes
 PDF SHA256: 49C631B481917059FBDA0977DEBB001F98E90DEDC6ACEC76A9829EA473EADC88
+
+Wave Atlas v1.16 Release Notes
+
+Tag: wave-atlas-v1.16
+Commit: (tag wave-atlas-v1.16)
+Changes: M26 calibrated survival predictor + extrapolation curve (Q sweep).
+PDF size: 2617846 bytes
+PDF SHA256: 647AAAD927FF7315EDA973418C3464165D6DA57A1F7B85E3148BE001F82A5AE8

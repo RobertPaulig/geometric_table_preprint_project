@@ -435,3 +435,40 @@ PYTHONPATH=code python code/scripts/m25_hardmode_stress_test.py \
   --label p200k_Q0-100k_Q1-1M_strict \
   --out-dir out/wave_atlas/m25
 ```
+
+## M26 - Calibrated survival predictor + extrapolation
+Status: Done (tag wave-atlas-v1.16)
+
+**Цель:** калибровать вероятность survival по hazard-фичам и экстраполировать
+ожидаемый yield/экономию на больших Q без полного Q1-лейблинга.
+
+**DoD (артефакты):**
+- out/wave_atlas/m26/*/m26_dataset.csv + m26_dataset_meta.json
+- out/wave_atlas/m26/*/m26_model_summary.json
+- out/wave_atlas/m26/*/m26_calibration_fitQ.png
+- out/wave_atlas/m26/*/m26_calibration_by_Q.png
+- out/wave_atlas/m26/*/m26_auc_by_Q.png
+- out/wave_atlas/m26/*/m26_brier_by_Q.png
+- out/wave_atlas/m26/*/m26_logloss_by_Q.png
+- out/wave_atlas/m26/*/m26_predicted_yield_vs_budget.png
+- out/wave_atlas/m26/*/m26_predicted_compute_saved_1d.png
+- out/wave_atlas/m26/*/m26_table.tex
+- out/wave_atlas/m26/*/m26_manifest.json
+- wave_atlas.tex: раздел M26
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m26_survival_dataset.py \
+  --p-max 200000 --Q0 100000 \
+  --Q-list 1000000,2000000,5000000,10000000 \
+  --mersenne-strict 1 --seed 123 \
+  --label p200k_Q0-100k_Qs-1-2-5-10M_strict \
+  --out-dir out/wave_atlas/m26
+
+PYTHONPATH=code python code/scripts/m26_survival_model.py \
+  --dataset-csv out/wave_atlas/m26/p200k_Q0-100k_Qs-1-2-5-10M_strict/m26_dataset.csv \
+  --fit-Q 10000000 \
+  --eval-Q-list 1000000,2000000,5000000,10000000 \
+  --model logit+isotonic --seed 123 \
+  --out-dir out/wave_atlas/m26/p200k_Q0-100k_Qs-1-2-5-10M_strict
+```
