@@ -153,3 +153,39 @@ PYTHONPATH=code python code/scripts/m17_two_stage_budget.py \
 ```
 
 **Риски/заметки:** модель агрегированная; значения c1/c2/r1 задаются сценарно и должны интерпретироваться как "compute-seconds".
+
+P5 - Вероятностная навигация по экспонентам Мерсенна
+
+## M18 - Mersenne spectral density (вероятностная навигация по p)
+Status: Done (tag wave-atlas-v1.8)
+
+**Цель:** ранжировать экспоненты p по плотности "убийственных" резонансов
+от малых простых, чтобы дорогие тесты запускались на "тихих" p.
+
+**Гипотеза:** score, построенный по Q0, должен обогащать выживаемость
+против более глубокого Q1 (enrichment@k, AUC).
+
+**DoD (артефакты):**
+- out/wave_atlas/m18/m18_score.csv
+- out/wave_atlas/m18/m18_top_periods.csv + m18_top_periods.json
+- out/wave_atlas/m18/m18_density_heatmap.png
+- out/wave_atlas/m18/m18_enrichment_curve.png
+- out/wave_atlas/m18/m18_score_vs_survival.png
+- out/wave_atlas/m18/m18_summary.json
+- wave_atlas.tex: раздел M18
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m18_mersenne_spectral_density.py \
+  --p-min 2 \
+  --p-max 20000 \
+  --p-mode prime \
+  --Q0 50000 \
+  --Q1 200000 \
+  --weight inv_q \
+  --smooth-window 101 \
+  --out-dir out/wave_atlas/m18
+```
+
+**Риски/заметки:** для оценки не смешивать Q0 (score) и Q1 (survival);
+использовать разделение базиса и проверки.

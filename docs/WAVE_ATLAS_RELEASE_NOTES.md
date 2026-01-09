@@ -89,3 +89,11 @@ PDF SHA256: 64FFA1C5ED1048051BA8893BAF4730B58CD5D0ADEE058167840E9A2EC5164286
 
 Roadmap update note:
 - ROADMAP updated: protocol added, M14b/M17 sections completed.
+
+Wave Atlas v1.8 Release Notes
+
+Tag: wave-atlas-v1.8
+Commit: (tag wave-atlas-v1.8)
+Changes: M18 spectral density (Q0 vs Q1); track M17 artifacts for reproducible PDF builds.
+PDF size: 1593926 bytes
+PDF SHA256: BD66FAC6972AFD31234DA38811A527ADB2BC86A84B822561EC38889916085D1A
