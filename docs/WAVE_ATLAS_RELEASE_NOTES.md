@@ -86,3 +86,6 @@ Commit: c4bafeb
 Changes: M17 two-stage budget model (cheap filter + expensive test).
 PDF size: 1523307 bytes
 PDF SHA256: 64FFA1C5ED1048051BA8893BAF4730B58CD5D0ADEE058167840E9A2EC5164286
+
+Roadmap update note:
+- ROADMAP updated: protocol added, M14b/M17 sections completed.

@@ -1,104 +1,155 @@
-Roadmap (Wave Atlas)
+﻿Roadmap (Wave Atlas)
 
-P0 — Repro/CI polish
+## Протокол документации (обязательный)
 
-## M10 — Repro/CI polish
-**Цель:** воспроизводимость ключевых фигур/таблиц и сборки PDF.
-**Гипотеза:** единая команда сборки снижает риск рассинхронизаций артефактов.
-**DoD (артефакты):**
-- единая команда `make_wave_atlas.sh` или `python -m code.scripts.build_wave_atlas_all`
-- README: как собрать все артефакты и PDF
-- контрольный PDF SHA256 зафиксирован в release notes
+После каждого завершённого шага Mx:
+
+1) В `docs/ROADMAP.md`:
+   - пометить `Status: Done (tag ...)`
+   - дописать/обновить: **Цель**, **DoD**, **Команды**, **Риски/заметки**
+2) В `docs/WAVE_ATLAS_RELEASE_NOTES.md`:
+   - добавить строку "что добавили" + SHA/size PDF (если менялся)
+3) В `docs/wave_atlas.tex`:
+   - добавить/обновить подпункт Mx + `\includegraphics`/таблицу/1 абзац вывода
+4) В `out/wave_atlas/mx/`:
+   - должны лежать: минимум 1 PNG + 1 CSV/JSON (если есть метрики) + (опц.) `.tex` таблица
+5) Команда воспроизводимости:
+   - в ROADMAP должна быть **одна** команда запуска (копипаст-готовая).
+
+P0 - Repro/CI polish
+
+## M10 - Repro/CI polish
+**Цель:** чистые, воспроизводимые сборки PDF.
+**DoD:**
+- скрипты сборки `make_wave_atlas.sh` и `python -m code.scripts.build_wave_atlas_all`
+- README с чёткой инструкцией сборки
+- фиксация SHA256 PDF в release notes
 **Команды:**
 ```bash
 cd docs && lualatex wave_atlas.tex && lualatex wave_atlas.tex
 ```
-**Риски/заметки:** зависимость от локальной среды (MiKTeX/Perl), возможные drift в зависимостях.
 
-P1 — Слои сита как “физика волн”
+P1 - Выбор базы и осей
 
-## M11 — Multi-wheel survey (m=8..14)
-**Цель:** подтвердить, что главный слой соответствует первому невыбитому простому, и измерить затухание энергии по слоям для разных m.
-**Гипотеза:** пики и спад энергии следуют p0, а не случайной периодике.
-**DoD (артефакты):**
+## M11 - Multi-wheel survey (m=8..14)
+Status: Done (tag wave-atlas-v1.2)
+
+**Цель:** сравнить спектры/метрики по колёсам и выбрать p0/модель.
+**DoD:**
 - out/wave_atlas/m11/*.png
 - out/wave_atlas/m11/*.csv
-- wave_atlas.tex: таблица M11 + рисунок M11
-**Команды:**
-```bash
-# шаблон: для каждого m запуск detrend + sequential conditioning
-PYTHONPATH=code python code/scripts/twin_t_axis_detrend.py --wheel-csv ... --B ... --t-max ... --cond-primes ... --max-layer 3 --out-dir out/wave_atlas/m11/mX
-```
-**Риски/заметки:** масштаб t_max, размер wheel-скана, compute budget.
+- wave_atlas.tex: раздел M11
 
-## M12 — Residual-as-process (после 3 слоёв)
-**Цель:** описать остаток после снятия детерминированных слоёв.
-**Гипотеза:** остаток близок к шумовому/разреженному процессу без сильных периодик.
-**DoD (артефакты):**
+## M12 - Residual-as-process (снятие 3 слоёв)
+Status: Done (tag wave-atlas-v1.2)
+
+**Цель:** оценить остатки как процесс после снятия слоёв.
+**DoD:**
 - out/wave_atlas/m12/residual_gaps.png
 - out/wave_atlas/m12/residual_acf.png
 - out/wave_atlas/m12/residual_summary.json
-- wave_atlas.tex: 1 страница с выводом
-**Команды:**
-```bash
-# анализ residue-процесса после conditioning
-```
-**Риски/заметки:** интерпретация без “доказательных” заявлений.
+- wave_atlas.tex: раздел M12
 
-P2 — Мост wave ↔ GT
+P2 - GT-метрики по базовой решётке
 
-## M13 — GT wheel-lattice metrics расширение
-**Цель:** найти GT-метрики, устойчиво реагирующие на слои sieve на wheel-решётке.
-**Гипотеза:** часть граф-метрик (компоненты/кластеры/спектр) отражает слои лучше, чем gap/entropy.
-**DoD (артефакты):**
-- таблица “метрика → чувствительность к layer/mod”
-- 2–3 фигуры с устойчивым эффектом
-- wave_atlas.tex: подпункт M13
-**Команды:**
-```bash
-# сканы по метрикам и eps
-```
-**Риски/заметки:** выбор метрик и параметров, вычислительная нагрузка.
+## M13 - GT wheel-lattice metrics
+Status: Done (tag wave-atlas-v1.3)
 
-P3 — Прикладная выгода: ускорение
+**Цель:** найти граф-метрики на wheel-решётке, чувствительные к слоям.
+**DoD:**
+- сравнение метрик по слоям/mod в CSV/PNG
+- 2-3 визуализации устойчивости
+- wave_atlas.tex: раздел M13
 
-## M14 — Candidate generator (wave-sieve accelerator)
+P3 - Генератор кандидатов
+
+## M14 - Candidate generator (wave-sieve accelerator)
+Status: Done (tag wave-atlas-v1.4)
+
+**Цель:** построить генератор кандидатов t=r+Lq по слоям.
+**DoD:**
+- survival/throughput vs layers
+- CLI генератора
+- wave_atlas.tex: раздел M14
+
+## M14b - Segmented deep layers (ускоритель до 150 слоёв)
 Status: Done (tag wave-atlas-v1.5)
-**Цель:** использовать слои как генератор кандидатов (t=r+Lq).
-**Гипотеза:** throughput растёт, survival rate падает предсказуемо с числом слоёв.
+
+**Цель:** поднять глубину слоёв (десятки-сотни простых) без взрыва модуля/CRT,
+оценить survival/throughput на сегментном приближении.
+
+**Гипотеза:** даже при падении throughput, любое снижение survival выгодно при дорогом тесте (LLR/PRP).
+
 **DoD (артефакты):**
-- график throughput vs layers
-- график survival rate vs layers
-- CLI `generate_candidates.py --B ... --layers ... --count ...`
-- wave_atlas.tex: 1 страница
+- out/wave_atlas/m14b/m14b_survival_vs_layers.png
+- out/wave_atlas/m14b/m14b_throughput_vs_layers.png
+- out/wave_atlas/m14b/m14b_candidate_gap_hist.png
+- out/wave_atlas/m14b/m14b_summary.csv + m14b_summary.json
+- wave_atlas.tex: раздел M14b + таблица эффективности (если включена)
+
 **Команды:**
 ```bash
-# генерация кандидатов по разрешённым residue классам
+PYTHONPATH=code python code/scripts/m14b_segmented_layers.py \
+  --B 27720 \
+  --layer-count 150 \
+  --segment-len 100000 \
+  --segments 6 \
+  --seed 123 \
+  --out-dir out/wave_atlas/m14b
 ```
-**Риски/заметки:** PRP-тестирование и лимиты вычислений.
 
-P4 — Отдельная лаборатория волн
+**Риски/заметки:** это оценка throughput/survival по случайным сегментам t, а не полный CRT-генератор.
 
-## M15 — Mersenne wave atlas (опционально)
+P4 - Связь с "инженерной" стоимостью
+
+## M15 - Mersenne wave atlas
 Status: Done (tag wave-atlas-v1.6)
-**Цель:** построить атлас волн для 2^p-1 через ord_q(2) и conditioning.
-**Гипотеза:** периодики по ord_q(2) дают “идеальные” волны.
-**DoD (артефакты):**
-- heatmap p×q (делимость 2^p-1)
-- таблица ord_q(2)
-- отдельный раздел/appendix в PDF
-**Команды:**
-```bash
-# генерация Mersenne heatmap
-```
-**Риски/заметки:** размер матриц, выбор диапазонов p и q.
 
-## M16 — Бюджетная модель / стоимость проверки
+**Цель:** показать волны на "чистой" системе, где порядок управляет делимостью.
+**DoD:**
+- heatmap p x q по делимости 2^p-1
+- гистограмма ord_q(2)
+- wave_atlas.tex: раздел M15
+
+## M16 - Бюджетная модель / cost-of-testing bridge
 Status: Done (tag wave-atlas-v1.6.1)
-**Цель:** связать survival/throughput со стоимостью теста кандидата и показать,
-когда дополнительные слои сита экономически выгодны.
+
+**Цель:** связать survival/throughput с реальной стоимостью теста кандидатов.
 **DoD:**
 - out/wave_atlas/m16/m16_total_cost_vs_layers.png
 - out/wave_atlas/m16/m16_time_saved_vs_layers.png
 - out/wave_atlas/m16/m16_break_even.csv + m16_break_even_table.tex
-- wave_atlas.tex: раздел M16 с 2 графиками и таблицей
+- wave_atlas.tex: раздел M16 с 2 рисунками и таблицей
+
+## M17 - Двухступенчатая бюджетная модель (cheap + expensive test)
+Status: Done (tag wave-atlas-v1.7)
+
+**Цель:** привязать выгоду от слоёв к реалистичному пайплайну:
+дешёвый фильтр (c1) -> редкие кандидаты на дорогой тест (c2) с pass-rate r1.
+
+**Гипотеза:** при доминирующем дорогом тесте оптимум уходит в глубокие слои;
+при очень малом r1 или дешёвом c2 оптимум может быть на средних слоях.
+
+**DoD (артефакты):**
+- out/wave_atlas/m17/m17_total_cost_vs_layers.png
+- out/wave_atlas/m17/m17_time_saved_vs_layers.png
+- out/wave_atlas/m17/m17_optimal_layers_heatmap.png
+- out/wave_atlas/m17/m17_break_even.csv + m17_break_even_table.tex
+- out/wave_atlas/m17/m17_scenarios.csv + m17_scenarios_table.tex
+- wave_atlas.tex: раздел M17
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m17_two_stage_budget.py \
+  --m14b-summary out/wave_atlas/m14b/m14b_summary.csv \
+  --layers-points 1,6,24,60,100,150 \
+  --N-raw 1e6 \
+  --N-raw-big 1e9 \
+  --workers 1,1024,10000 \
+  --c1-list 1e-6,1e-4,1e-3,1e-2 \
+  --c2-list 1,60,3600,86400 \
+  --r1-list 1e-2,1e-4,1e-6 \
+  --out-dir out/wave_atlas/m17
+```
+
+**Риски/заметки:** модель агрегированная; значения c1/c2/r1 задаются сценарно и должны интерпретироваться как "compute-seconds".
