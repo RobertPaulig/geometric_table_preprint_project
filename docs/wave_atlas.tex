@@ -455,4 +455,22 @@ summarize sensitivity by residue class and layer conditioning.
 \caption{Top-2 GT metrics by sensitivity score (M13).}
 \end{table}
 
+\section{M14 Candidate generator (wave-sieve accelerator)}
+We construct candidate centers by enforcing layered sieve constraints on $t$
+and measure the practical survival rate and generation throughput as layers
+increase. This provides a direct view of how modular filtering accelerates
+the search space.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m14/m14_survival_vs_layers.png}
+\caption{Survival rate versus number of sieve layers (M14).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m14/m14_throughput_vs_layers.png}
+\caption{Candidate throughput versus number of sieve layers (M14).}
+\end{figure}
+
 \end{document}

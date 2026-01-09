@@ -1,0 +1,80 @@
+[
+  {
+    "layers": 1,
+    "primes": "13",
+    "L": 13,
+    "allowed_residues": 11,
+    "survival_rate": 0.8461538461538461,
+    "throughput": 4489505.108174289,
+    "count": 1000000,
+    "mean_gap": 1.1818181818181819,
+    "median_gap": 1.0,
+    "min_gap": 1,
+    "max_gap": 2
+  },
+  {
+    "layers": 2,
+    "primes": "13,17",
+    "L": 221,
+    "allowed_residues": 165,
+    "survival_rate": 0.746606334841629,
+    "throughput": 4882011.545657613,
+    "count": 1000000,
+    "mean_gap": 1.3393933393933395,
+    "median_gap": 1.0,
+    "min_gap": 1,
+    "max_gap": 3
+  },
+  {
+    "layers": 3,
+    "primes": "13,17,19",
+    "L": 4199,
+    "allowed_residues": 2805,
+    "survival_rate": 0.6680161943319838,
+    "throughput": 4131719.208962299,
+    "count": 1000000,
+    "mean_gap": 1.4969694969694969,
+    "median_gap": 1.0,
+    "min_gap": 1,
+    "max_gap": 5
+  },
+  {
+    "layers": 4,
+    "primes": "13,17,19,23",
+    "L": 96577,
+    "allowed_residues": 58905,
+    "survival_rate": 0.6099278296074635,
+    "throughput": 4336729.716950068,
+    "count": 1000000,
+    "mean_gap": 1.6395346395346395,
+    "median_gap": 1.0,
+    "min_gap": 1,
+    "max_gap": 7
+  },
+  {
+    "layers": 5,
+    "primes": "13,17,19,23,29",
+    "L": 2800733,
+    "allowed_residues": 1590435,
+    "survival_rate": 0.5678638413586728,
+    "throughput": 3547460.408599089,
+    "count": 1000000,
+    "mean_gap": 1.760981760981761,
+    "median_gap": 1.0,
+    "min_gap": 1,
+    "max_gap": 10
+  },
+  {
+    "layers": 6,
+    "primes": "13,17,19,23,29,31",
+    "L": 86822723,
+    "allowed_residues": 46122615,
+    "survival_rate": 0.531227464496823,
+    "throughput": 3178557.7041467144,
+    "count": 1000000,
+    "mean_gap": 1.8824368824368825,
+    "median_gap": 2.0,
+    "min_gap": 1,
+    "max_gap": 11
+  }
+]
