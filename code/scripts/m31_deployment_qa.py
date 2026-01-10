@@ -16,6 +16,7 @@ import numpy as np
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
     p.add_argument("--fit-dir", type=str, required=True)
+    p.add_argument("--fit-dirs", type=str, nargs="*", default=[], help="optional per-run fit override: name=path")
     p.add_argument("--Q-targets", type=str, required=True)
     p.add_argument("--budgets", type=str, required=True)
     p.add_argument("--prp-cost-hours", type=str, required=True)
@@ -70,7 +71,7 @@ def save_line_plot(path: Path, xs: List[float], series: Dict[str, List[float]],
 
 def main() -> None:
     args = parse_args()
-    fit_dir = Path(args.fit_dir)
+    default_fit_dir = Path(args.fit_dir)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -80,6 +81,17 @@ def main() -> None:
     if not Q_targets or not budgets or not prp_cost_hours:
         raise ValueError("empty Q-targets/budgets/prp-cost-hours")
 
+    fit_dir_map: Dict[str, Path] = {}
+    for item in args.fit_dirs:
+        if "=" not in item:
+            raise ValueError(f"Bad --fit-dirs entry: {item!r}, expected name=path")
+        name, path = item.split("=", 1)
+        name = name.strip()
+        path = path.strip()
+        if not name or not path:
+            raise ValueError(f"Bad --fit-dirs entry: {item!r}, expected name=path")
+        fit_dir_map[name] = Path(path)
+
     runs = [parse_run(s) for s in args.runs]
     run_dirs: Dict[str, Path] = {}
 
@@ -87,6 +99,7 @@ def main() -> None:
     for name, p_range in runs:
         run_path = out_dir / f"run_{name}"
         run_path.mkdir(parents=True, exist_ok=True)
+        fit_dir = fit_dir_map.get(name, default_fit_dir)
         cmd = [
             sys.executable,
             "code/scripts/m30_deployment_queue.py",
@@ -228,11 +241,20 @@ def main() -> None:
     (out_dir / "m31_table.tex").write_text("\n".join(table_lines), encoding="utf-8")
 
     runs_manifest = {
-        "fit_dir": str(fit_dir),
+        "default_fit_dir": str(default_fit_dir),
+        "fit_dir_overrides": {k: str(v) for k, v in sorted(fit_dir_map.items())},
         "Q_targets": Q_targets,
         "budgets": budgets,
         "prp_cost_hours": prp_cost_hours,
-        "runs": [{"name": name, "p_range": pr, "out_dir": str(run_dirs[name])} for name, pr in runs],
+        "runs": [
+            {
+                "name": name,
+                "fit_dir": str(fit_dir_map.get(name, default_fit_dir)),
+                "p_range": pr,
+                "out_dir": str(run_dirs[name]),
+            }
+            for name, pr in runs
+        ],
         "run_files_sha256": {},
     }
     for name in names:
@@ -256,4 +278,3 @@ if __name__ == "__main__":
     import math
 
     main()
-
