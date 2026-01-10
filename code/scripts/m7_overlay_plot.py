@@ -7,6 +7,8 @@ import csv
 from pathlib import Path
 from typing import List, Tuple
 
+from wave_atlas_io import open_text, resolve_existing_or_gz
+
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
@@ -19,7 +21,8 @@ def parse_args() -> argparse.Namespace:
 def read_spectrum(path: Path, max_points: int = 20000) -> Tuple[List[int], List[float]]:
     xs: List[int] = []
     ys: List[float] = []
-    with path.open("r", encoding="utf-8", newline="") as f:
+    resolved = resolve_existing_or_gz(path)
+    with open_text(resolved, "rt", encoding="utf-8", newline="") as f:
         r = csv.DictReader(f)
         for row in r:
             xs.append(int(row["f_idx"]))

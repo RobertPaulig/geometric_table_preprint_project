@@ -13,6 +13,8 @@ from typing import List, Tuple
 
 import numpy as np
 
+from wave_atlas_io import open_text
+
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
@@ -85,7 +87,7 @@ def save_line(path: Path, xs: List[int], ys: List[float], title: str, xlabel: st
 
 def save_spectrum_csv(path: Path, power: np.ndarray) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8", newline="") as f:
+    with open_text(path, "wt", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
         w.writerow(["f_idx", "power"])
         for i in range(1, len(power)):
@@ -280,8 +282,8 @@ def main() -> None:
               "FFT power (raw)", "f_idx", "power", logy=True)
     save_line(out_dir / "detrend_fft_power_detrended.png", list(range(1, len(power_det))), [float(v) for v in power_det[1:]],
               "FFT power (detrended)", "f_idx", "power", logy=True)
-    save_spectrum_csv(out_dir / "detrend_fft_power_raw.csv", power_raw)
-    save_spectrum_csv(out_dir / "detrend_fft_power_detrended.csv", power_det)
+    save_spectrum_csv(out_dir / "detrend_fft_power_raw.csv.gz", power_raw)
+    save_spectrum_csv(out_dir / "detrend_fft_power_detrended.csv.gz", power_det)
 
     # raw vs detrended autocorr
     max_lag = min(5000, T - 1)
@@ -302,7 +304,7 @@ def main() -> None:
         cond_power[0] = 0.0
         save_line(out_dir / "cond_p0_fft_power.png", list(range(1, len(cond_power))),
                   [float(v) for v in cond_power[1:]], f"Conditional FFT (p0={args.p0})", "f_idx", "power", logy=True)
-        save_spectrum_csv(out_dir / "cond_p0_fft_power.csv", cond_power)
+        save_spectrum_csv(out_dir / "cond_p0_fft_power.csv.gz", cond_power)
         cond_ac = autocorr_fft(cond_y, max_lag)
         save_line(out_dir / "cond_p0_autocorr.png", list(range(1, max_lag + 1)),
                   [float(v) for v in cond_ac[1:]], f"Conditional autocorr (p0={args.p0})", "lag", "corr")
@@ -409,7 +411,7 @@ def main() -> None:
             if power.size == 0:
                 continue
             label = f"layer{layer}"
-            save_spectrum_csv(out_dir / f"m8_cond_power_{label}.csv", power)
+            save_spectrum_csv(out_dir / f"m8_cond_power_{label}.csv.gz", power)
             layer_powers.append((label, [float(v) for v in power[1:]]))
             total_power = float(np.sum(power[1:]))
             top_peak = float(np.max(power[1:])) if len(power) > 1 else 0.0

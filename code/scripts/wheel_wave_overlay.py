@@ -12,6 +12,8 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 
+from wave_atlas_io import open_text
+
 
 def lcm_upto(m: int) -> int:
     v = 1
@@ -27,8 +29,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--K", type=int, default=120)
     p.add_argument("--H", type=int, default=220)
     p.add_argument("--out-dir", type=str, default="out/wave_atlas/m4")
-    p.add_argument("--out-csv", type=str, default="out/wave_atlas/wheel_wave_m12_features.csv")
-    p.add_argument("--out-json", type=str, default="out/wave_atlas/wheel_wave_m12_summary.json")
+    p.add_argument("--out-csv", type=str, default="out/wave_atlas/m4/wheel_wave_m12_features.csv.gz")
+    p.add_argument("--out-json", type=str, default="out/wave_atlas/m4/wheel_wave_m12_summary.json")
     return p.parse_args()
 
 
@@ -83,7 +85,7 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     rows = []
-    with Path(args.wheel_csv).open("r", encoding="utf-8") as f:
+    with open_text(args.wheel_csv, "rt", encoding="utf-8", newline="") as f:
         r = csv.DictReader(f)
         for row in r:
             t = int(row["t"])
@@ -126,7 +128,7 @@ def main() -> None:
 
     out_csv = Path(args.out_csv)
     out_csv.parent.mkdir(parents=True, exist_ok=True)
-    with out_csv.open("w", encoding="utf-8", newline="") as f:
+    with open_text(out_csv, "wt", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()) if rows else [])
         if rows:
             w.writeheader()
