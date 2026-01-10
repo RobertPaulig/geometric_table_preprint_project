@@ -642,3 +642,18 @@ PYTHONPATH=code python code/scripts/m28c_gimps_power.py \
   --prp-cost-hours 1,24,168 \
   --out-dir out/wave_atlas/m28c_gimps
 ```
+
+**Вывод (канон):** в этой post-TF proxy постановке сигнал ранжирования слабый и нестабильный между p-range (CI часто пересекает 1 на enrichment).
+Этого недостаточно для заявлений о добавленной ценности в GIMPS-like режиме; ветку M28--M28c считаем закрытой (negative/unstable result).
+
+## M29 - High-Q robustness via multi-scale features (rank transfer)
+Status: Planned
+
+**Цель:** усилить переносимость/устойчивость ранжирования на больших Q (20M/50M) через multi-scale признаки по бинам Q (multi-wave features),
+чтобы очередь сохраняла смысл при росте глубины.
+
+**DoD (жёстко):**
+- Spearman@50M ↑ минимум на **+0.05** относительно baseline M27 (и sanity не ломаем).
+- Если 50M слишком шумно/дорого: Spearman@20M ↑ **+0.05** и подтверждение на 2 независимых seeds/p-range.
+
+**Команда:** TBD (будет зафиксирована в постановке M29 вместе со структурой артефактов).

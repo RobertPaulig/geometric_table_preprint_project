@@ -232,3 +232,11 @@ Key numbers (CI from bootstrap; conditional task on passes_tf=1):
 - Range 100k-220k @ Q_TF=1M: AUC 0.524 [0.514, 0.533], enrich@5% 1.14 [1.04, 1.26]
 - Range 300k-420k @ Q_TF=10M: AUC 0.505 [0.491, 0.518], enrich@5% 1.07 [0.88, 1.25]
 - Pooled @ Q_TF=1M: AUC 0.519 [0.513, 0.527], enrich@5% 1.22 [1.12, 1.30]
+
+Wave Atlas v1.20.1 Release Notes
+
+Tag: wave-atlas-v1.20.1
+Commit: (tag wave-atlas-v1.20.1)
+Changes: docs-only patch: reflect M28c conclusion (post-TF proxy signal weak/unstable across p-ranges; no added-value claim) + add M29 as next focus; no data/plots regenerated.
+PDF size: 3291911 bytes
+PDF SHA256: 8F26A7E6B72E6476C7B0E5C22583C95C277654D233DA8AF5BBF2F0C913FEC4E0

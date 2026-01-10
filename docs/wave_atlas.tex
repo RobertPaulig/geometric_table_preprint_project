@@ -7,7 +7,7 @@
 
 \title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M28c)}
 \author{Working note}
-\date{Wave Atlas v1.20}
+\date{Wave Atlas v1.20.1}
 
 \begin{document}
 \maketitle
@@ -402,6 +402,7 @@ M27 & Extrapolation stress-test beyond fit Q (10M $\rightarrow$ 20M/50M). \\
 M28 & Smart Mine / GIMPS-mode: value after TF on survivors. \\
 M28b & Smart Mine robustness: proxy TF depth, CI, sanity. \\
 M28c & Smart Mine power: larger N, 10 seeds, CI stability check. \\
+M29 & High-Q robustness: improve rank transfer via multi-scale features. \\
 \hline
 \end{tabular}
 
@@ -937,8 +938,10 @@ ranking stability (Spearman) and the extrapolation gap in AUC/Brier/LogLoss.
 \section{M28 Smart Mine / GIMPS-mode (value after TF)}
 We simulate a post-TF regime by conditioning on candidates that survive up to a TF proxy depth
 $Q_{\mathrm{TF}}$ on the q-axis (a controlled proxy, not literal PrimeNet TF bits) and predicting
-which of those will die later by a deeper horizon $Q_{\mathrm{horizon}}$. The goal is not to reject
-cheap trash, but to prioritize additional factoring to avoid expensive PRP/LL on doomed survivors.
+which of those will die later by a deeper horizon $Q_{\mathrm{horizon}}$. The goal is not to eliminate
+trivial composites that would be removed by shallow factoring anyway, but to prioritize additional
+factoring among TF survivors in order to avoid expensive PRP/LL on candidates that are likely to fail
+later. See M28c for a power analysis of this proxy setting.
 
 \begin{figure}[h]
 \centering
@@ -997,8 +1000,9 @@ We report bootstrap confidence intervals (CI) and a permutation sanity check (sh
 \section{M28c Smart Mine power (post-TF proxy enrichment strength)}
 We expand the post-TF proxy experiment to larger p-ranges and 10 seeds in order to narrow confidence intervals
 for enrichment on the conditional task (dies by horizon among passes\_tf=1). This remains a controlled proxy on the q-axis
-(not literal PrimeNet TF bits). We report bootstrap CI and permutation sanity; in this run enrichment is generally close to baseline
-and CI often crosses 1, suggesting a weak/unstable proxy signal at this scale.
+(not literal PrimeNet TF bits). We report bootstrap CI and permutation sanity. In this run we observe at best a small lift in one
+p-range, but it does not reliably transfer to the other; thus the post-TF proxy ranking signal appears weak/unstable for claims of
+added value in a GIMPS-like setting. We treat this line (M28--M28c) as closed and shift focus to high-Q robustness (M29).
 
 \begin{figure}[h]
 \centering
