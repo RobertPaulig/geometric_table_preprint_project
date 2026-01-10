@@ -529,3 +529,75 @@ PYTHONPATH=code python code/scripts/m27_extrapolation_gap.py \
   --Q-list 20000000,50000000 \
   --out-dir out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M
 ```
+
+## M28 - Smart Mine / GIMPS-mode (value after TF)
+Status: Done (tag wave-atlas-v1.18)
+
+**Цель:** показать добавленную ценность навигатора в режиме "после TF":
+ранжировать выживших после TF по вероятности "умрёт позже" (factor $\le Q_{\mathrm{horizon}}$)
+и переводить это в экономику дорогих PRP/LL.
+
+**DoD (артефакты):**
+- out/wave_atlas/m28_gimps/m28_manifest.json
+- out/wave_atlas/m28_gimps/m28_dataset_summary.json
+- out/wave_atlas/m28_gimps/m28_dataset.csv.gz
+- out/wave_atlas/m28_gimps/m28_metrics_by_tf_bits.csv
+- out/wave_atlas/m28_gimps/m28_savings_by_tf_bits.csv
+- out/wave_atlas/m28_gimps/m28_auc_by_tf_bits.png
+- out/wave_atlas/m28_gimps/m28_enrichment_curves.png
+- out/wave_atlas/m28_gimps/m28_savings_by_tf_bits.png
+- out/wave_atlas/m28_gimps/m28_queue_tf64_top1pct.csv
+- out/wave_atlas/m28_gimps/m28_queue_tf68_top1pct.csv
+- out/wave_atlas/m28_gimps/m28_queue_tf72_top1pct.csv
+- out/wave_atlas/m28_gimps/m28_queue_tf76_top1pct.csv
+- out/wave_atlas/m28_gimps/m28_table.tex
+- wave_atlas.tex: раздел M28 + \clearpage
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m28_gimps_mode.py \
+  --p-range 100000,120000 \
+  --tf-bits-list 64,68,72,76 \
+  --Q0 100000 \
+  --q-horizon 100000000 \
+  --mersenne-strict 1 \
+  --seed 123 \
+  --prp-cost-hours 1,24,168 \
+  --out-dir out/wave_atlas/m28_gimps
+```
+
+**Риски/заметки:** в q-оси модели (как в M26/M27), смерть определяется ord_q(2)=p, поэтому
+для информативности нужно $p < Q_{\mathrm{horizon}}$ (иначе "поздняя смерть" невозможна).
+
+## M28b - Smart Mine robustness (proxy TF depth + CI + sanity)
+Status: Done (tag wave-atlas-v1.19)
+
+**Цель:** сделать M28 "по-взрослому": убрать двусмысленность TF-bits (заменить на TF proxy depth on q-axis),
+добавить устойчивость (multi-seed + bootstrap CI) и permutation sanity.
+
+**DoD (артефакты):**
+- out/wave_atlas/m28b_gimps/m28b_manifest.json
+- out/wave_atlas/m28b_gimps/m28b_dataset.csv.gz + m28b_dataset_summary.json
+- out/wave_atlas/m28b_gimps/m28b_metrics_raw.csv
+- out/wave_atlas/m28b_gimps/m28b_metrics_ci.csv
+- out/wave_atlas/m28b_gimps/m28b_sanity_permutation.csv + m28b_sanity_plot.png
+- out/wave_atlas/m28b_gimps/m28b_savings_raw.csv
+- out/wave_atlas/m28b_gimps/m28b_savings_ci.csv
+- out/wave_atlas/m28b_gimps/m28b_auc_vs_tf_q_limit.png
+- out/wave_atlas/m28b_gimps/m28b_enrichment_vs_tf_q_limit.png
+- out/wave_atlas/m28b_gimps/m28b_savings_vs_tf_q_limit.png
+- out/wave_atlas/m28b_gimps/m28b_table.tex
+- wave_atlas.tex: раздел M28b + \clearpage
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m28b_gimps_robustness.py \
+  --p-ranges 100000,120000 200000,220000 \
+  --tf-q-limit-list 1000000,2000000,5000000,10000000 \
+  --Q0 100000 \
+  --q-horizon 100000000 \
+  --mersenne-strict 1 \
+  --seeds 123,456,789 \
+  --prp-cost-hours 1,24,168 \
+  --out-dir out/wave_atlas/m28b_gimps
+```

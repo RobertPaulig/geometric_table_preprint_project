@@ -5,9 +5,9 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 
-\title{Wave Atlas: Geometric Table Fronts (M1)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M28b)}
 \author{Working note}
-\date{Wave Atlas v1.1}
+\date{Wave Atlas v1.19}
 
 \begin{document}
 \maketitle
@@ -19,6 +19,7 @@ center $N$, define the diagonal profile
 \[
 D_N(k)=N/k-1,\qquad k\le K,\ k\mid N.
 \]
+Intuitively, $D_N(k)$ is a diagonal ``divisor trace'' of the center $N$: which $k$ divide $N$ and how far their values $N/k$ lie along the diagonal scale.
 We visualize three ``wave'' views: occupancy, log-values, and diagonal hits.
 
 \section{Occupancy and values}
@@ -54,7 +55,7 @@ The scroll animation is saved as
 \end{figure}
 
 \section{Wave Metrics (M2)}
-Wave patterns can be decomposed into three interacting structures: periodic combs
+In this regime, the visible wave pattern is well-explained by three interacting structures: periodic combs
 (column densities), rays $n=qk$ (counts by $q$), and diagonal impulses (divisor hits).
 
 \begin{figure}[h]
@@ -78,7 +79,7 @@ Wave patterns can be decomposed into three interacting structures: periodic comb
 \section{Baselines and scaling (M3)}
 Two deterministic baselines serve as controls. First, the expected occupancy density
 over a window is $H_K/K$ where $H_K=\sum_{k\le K}1/k$, and the measured densities
-match this baseline closely. Second, column densities follow the $1/k$ law.
+track this baseline within small absolute error across tested $K$. Second, column densities follow the $1/k$ law.
 
 \begin{figure}[h]
 \centering
@@ -102,13 +103,13 @@ $K$ & $\overline{\text{occ}}$ & $H_K/K$ & $|\Delta|$ \\
 
 \paragraph{Ray-count identity.}
 For each window and $q$, the observed ray count equals the exact formula
-$\max(0, \min(K,\lfloor (a+H-1)/q\rfloor) - \lceil a/q\rceil + 1)$, confirming
-that the $q$-structure is deterministic geometry rather than noise.
+$\max(0, \min(K,\lfloor (a+H-1)/q\rfloor) - \lceil a/q\rceil + 1)$, matching the exact
+counting identity; thus the observed $q$-structure is explained by deterministic window geometry in this setup.
 
 \section{M4 Wheel Overlay}
 Wheel centers $N=t\cdot L_m$ fix a dense diagonal backbone from $L_m$ while $t$ modulates
-local smoothness. We overlay wave-style features on these centers and compare twin
-vs non-twin cases.
+local smoothness. We overlay wave-style features on these centers and check whether
+twin vs non-twin cases exhibit separable differences at this resolution.
 
 \begin{figure}[h]
 \centering
@@ -183,7 +184,7 @@ Peak & $f_{\mathrm{idx}}$ & period $\approx T/f_{\mathrm{idx}}$ & perm-$p$ \\
 \paragraph{Autocorr and modular lifts.}
 Top autocorrelation lags cluster around $\ell\in\{663, 741, \dots\}$ with small magnitude
 ($\approx 0.02$), and modular lifts show mild non-uniformity (e.g.\ $m=420$).
-These signals are structured but not strongly separating at this resolution.
+These signals show nontrivial spectral structure, but they do not yield strong twin/non-twin separation at this resolution.
 
 \section{M6 Wheel-shift control (m=10 vs m=12)}
 We repeat the $t$-axis analysis with $m=10$ (wheel $B=L_{10}=2520$) at comparable $N_{\max}$
@@ -312,14 +313,14 @@ $m=12$ & 3 & 2.04 & $41/(2\cdot 10)$ \\
 
 Sequential conditioning removes successive modular combs induced by the first
 non-wheel primes. Peak energy decays by orders of magnitude across layers, and
-the remaining peaks align with the next prime layer rather than an independent
-periodic mechanism.
+the remaining peaks empirically align with the next prime layer; we do not see
+evidence here for an additional independent periodic mechanism.
 
 \section{M9 Bridge to GT geometry}
 We sample centers $c=B\cdot t$ from the wheel axis and compute GT core metrics
 in the same $K$-window as the wave atlas. Core density varies by $t \bmod p_0$,
 and conditioning on successive layers reshapes the distribution of GT metrics.
-After controlling for layers, the global GC gap remains non-separating, while
+After controlling for layers, the global GC gap does not separate twins from non-twins, while
 local twin-row features stay strongly separated.
 
 \begin{figure}[h]
@@ -374,7 +375,7 @@ a fragile $K$ artifact.
 
 \appendix
 \section{Roadmap / Future Work}
-Planned milestones are listed in \texttt{docs/ROADMAP.md}. We summarize the
+Milestones below summarize the pipeline history and the remaining open items; completed milestones are marked in \texttt{docs/ROADMAP.md} and release notes. We summarize the
 next steps as measurable deliverables (no claims of proof).
 
 \begin{tabular}{lp{0.72\linewidth}}
@@ -398,6 +399,8 @@ M24 & Scale stress-test of M22 at larger $(p_{\max},Q_1)$ and big budgets. \\
 M25 & Hard-mode stress-test: $Q_1$ up to 10M and strict Mersenne filters. \\
 M26 & Calibrated survival predictor and extrapolation across Q. \\
 M27 & Extrapolation stress-test beyond fit Q (10M $\rightarrow$ 20M/50M). \\
+M28 & Smart Mine / GIMPS-mode: value after TF on survivors. \\
+M28b & Smart Mine robustness: proxy TF depth, CI, sanity. \\
 \hline
 \end{tabular}
 
@@ -421,8 +424,7 @@ of magnitude across layers.
 
 \section{M12 Residual-as-process}
 After removing three sieve layers, we study the residual event process on the
-allowed axis. The residual looks weakly structured, closer to noise than to a
-strong periodic signal.
+allowed axis. The residual shows only weak structure; we do not observe a strong periodic component after three layers.
 An inhomogeneous null model with local intensity $\hat p(i)$ explains part of
 the overdispersion, but observed dispersion remains above the null band.
 
@@ -491,7 +493,7 @@ We avoid the exploding modulus $L=\prod p$ by applying the same layer filters
 in fixed $t$ segments. This lets us extend to dozens of layers while keeping
 runtime stable, and directly measure acceleration at large depth.
 Each prime layer $p$ removes two forbidden phases in $t \bmod p$, so the
-expected survival multiplier is $(1-2/p)$ under uniformity.
+expected survival multiplier is $(1-2/p)$ under a uniformity/independence approximation.
 
 \begin{figure}[h]
 \centering
@@ -534,8 +536,8 @@ conditioning layer, revealing the residual structure.
 \end{figure}
 
 \section{M16 Budget model (test-cost bridge)}
-We connect layered survival to a realistic testing budget. Generation costs
-remain in the microsecond range, while candidate testing costs span from
+We connect layered survival to a realistic testing budget. In our current implementation,
+generation costs remain in the microsecond range, while candidate testing costs span from
 milliseconds to days. The total cost per raw candidate is
 $c_g(L) + s(L)\,c_t$, so any additional rejection directly reduces
 wall-clock time when $c_t$ dominates.
@@ -603,8 +605,8 @@ dominates, additional layers still yield direct savings.
 \section{M18 Mersenne spectral density}
 We rank exponents $p$ by a resonance density score built from small-prime
 periods $d(q)=\mathrm{ord}_q(2)$. Scores are computed from a base set $Q_0$
-and evaluated against a deeper $Q_1$, so enrichment reflects nontrivial
-generalization beyond the training primes.
+and evaluated against a deeper $Q_1$, so enrichment measures transfer from the $Q_0$
+scoring set to the deeper $Q_1$ evaluation set.
 Because overall survival is already high, enrichment gains are bounded in
 absolute terms even when ranking quality is strong.
 
@@ -673,8 +675,8 @@ We model the risk of later death among prime exponents that survived $Q_0$.
 The target is $\text{death\_later}=\mathbf{1}[\mathrm{ord}_q(2)=p \text{ for some } q\le Q_1]$
 within the set $Z=\{p:\text{killed}_{Q_0}=0\}$. Features use only arithmetic
 pressure from $q\equiv 1 \ (\mathrm{mod}\ p)$ in $(Q_0,Q_1]$.
-On $Z$, the optimal predictor is effectively binary: whether any $q\in(Q_0,Q_1]$
-satisfies $q\equiv 1 \ (\mathrm{mod}\ p)$.
+On $Z$, within this feature family, performance is dominated by a near-binary indicator:
+whether any $q\in(Q_0,Q_1]$ satisfies $q\equiv 1 \ (\mathrm{mod}\ p)$.
 
 \begin{figure}[h]
 \centering
@@ -928,6 +930,66 @@ ranking stability (Spearman) and the extrapolation gap in AUC/Brier/LogLoss.
 \centering
 \input{../out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M/m27_table.tex}
 \caption{AUC/Brier/LogLoss across Q for fit@10M (M27-A).}
+\end{table}
+
+\clearpage
+\section{M28 Smart Mine / GIMPS-mode (value after TF)}
+We simulate a post-TF regime by conditioning on candidates that survive up to a TF proxy depth
+$Q_{\mathrm{TF}}$ on the q-axis (a controlled proxy, not literal PrimeNet TF bits) and predicting
+which of those will die later by a deeper horizon $Q_{\mathrm{horizon}}$. The goal is not to reject
+cheap trash, but to prioritize additional factoring to avoid expensive PRP/LL on doomed survivors.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28_gimps/m28_auc_by_tf_bits.png}
+\caption{AUC on the conditional task (dies by horizon among passes\_tf=1) versus TF proxy depth.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28_gimps/m28_enrichment_curves.png}
+\caption{Enrichment vs budget on passes\_tf=1 (top-X\% hit-rate relative to random).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28_gimps/m28_savings_by_tf_bits.png}
+\caption{Estimated compute saved (PRP avoided) from targeted additional factoring.}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m28_gimps/m28_table.tex}
+\caption{Post-TF metrics by TF proxy depth (M28).}
+\end{table}
+
+\clearpage
+\section{M28b Smart Mine / GIMPS-mode robustness (proxy TF depth)}
+We repeat the post-TF proxy analysis across two disjoint p-ranges and multiple seeds.
+We report bootstrap confidence intervals (CI) and a permutation sanity check (shuffled scores).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28b_gimps/m28b_auc_vs_tf_q_limit.png}
+\caption{AUC versus TF proxy depth $Q_{\mathrm{TF}}$ on the q-axis (M28b).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28b_gimps/m28b_enrichment_vs_tf_q_limit.png}
+\caption{Enrichment (top-1\% and top-5\%) versus TF proxy depth on the q-axis (M28b).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28b_gimps/m28b_savings_vs_tf_q_limit.png}
+\caption{Savings versus TF proxy depth (top-5\%, PRP cost scenario) (M28b).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m28b_gimps/m28b_table.tex}
+\caption{M28b metrics with CI by TF proxy depth and p-range.}
 \end{table}
 
 \clearpage

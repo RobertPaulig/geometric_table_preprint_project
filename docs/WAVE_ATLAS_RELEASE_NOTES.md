@@ -193,3 +193,30 @@ Commit: (tag wave-atlas-v1.17)
 Changes: M27 extrapolation stress-test (fit@10M vs fit@20M) + TeX section and figures.
 PDF size: 2755894 bytes
 PDF SHA256: A53C81DF400B7FE29602608A4F423BAD1673D0566ABDA71ACA3295349543B64D
+
+Wave Atlas v1.18 Release Notes
+
+Tag: wave-atlas-v1.18
+Commit: (tag wave-atlas-v1.18)
+Changes: M28 Smart Mine / GIMPS-mode (post-TF ranking and savings) + TeX section and figures.
+PDF size: 2891783 bytes
+PDF SHA256: A95737C20D7D51EC77E17B366820D9589DA5D53D63D3B0AA2D41079FA488BF94
+
+Wave Atlas v1.19 Release Notes
+
+Tag: wave-atlas-v1.19
+Commit: (tag wave-atlas-v1.19)
+Changes: M28b robustness for post-TF proxy depth on q-axis (multi-range + multi-seed, bootstrap CI, permutation sanity).
+PDF size: 3049376 bytes
+PDF SHA256: 643D92D0D3F3E16D3E306D66D13A64F98EC3F213ABF3868C80119AA93134174B
+Key numbers (CI from bootstrap):
+- Range 100k-120k @ Q_TF=2M: AUC 0.534 [0.487, 0.582], enrich@5% 1.37 [0.71, 1.89]
+- Range 200k-220k @ Q_TF=5M: AUC 0.518 [0.468, 0.568], enrich@5% 1.18 [0.86, 2.22]
+
+Wave Atlas v1.19.1 Release Notes
+
+Tag: wave-atlas-v1.19.1
+Commit: (tag wave-atlas-v1.19.1)
+Changes: docs-only patch (wording tightening / no-overclaim pass + ROLES protocol clarifications); no data/plots regenerated.
+PDF size: 3051140 bytes
+PDF SHA256: A91CD37F0FE4541EC6308C43077145E958658EF47C976FBC25B66E4646BF5EFA
