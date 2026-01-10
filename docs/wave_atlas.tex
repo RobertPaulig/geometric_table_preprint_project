@@ -5,9 +5,9 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M29)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M30)}
 \author{Working note}
-\date{Wave Atlas v1.21}
+\date{Wave Atlas v1.22}
 
 \begin{document}
 \maketitle
@@ -1058,6 +1058,21 @@ and report AUC and rank transfer (Spearman) at Q=20M/50M, plus a permutation san
 \input{../out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/compare/m29_compare_table.tex}
 \caption{Baseline vs multiscale metrics at Q=20M/50M and extrapolation gaps (fit20M - fit10M) (M29).}
 \end{table}
+
+\clearpage
+\section{M30 Deployment mode (queue + savings)}
+We provide a single-command ``deployment'' wrapper that turns an existing calibrated fit (e.g., M27 fit@10M) into actionable outputs:
+a top queue of candidates (sorted by predicted survival at the fitted depth) and budget-to-savings curves under simple PRP cost scenarios.
+We treat these as operational artifacts (queue.csv + summary.json + savings plots), not new claims about model validity.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m30/m30_savings_by_budget_Q20000000.png}
+\caption{Deployment savings proxy vs budget at Q=20M under PRP cost scenarios (M30).}
+\end{figure}
+
+Queue files are written as CSV under \texttt{out/wave\_atlas/m30/}, e.g.
+\texttt{m30\_queue\_Q20000000\_top1pct.csv} and \texttt{m30\_queue\_Q50000000\_top1pct.csv}.
 
 \clearpage
 \end{document}

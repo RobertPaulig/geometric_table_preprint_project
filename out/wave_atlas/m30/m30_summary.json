@@ -1,0 +1,42 @@
+{
+  "fit_dir": "out\\wave_atlas\\m27\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\fit10M",
+  "dataset_csv": "out\\wave_atlas\\m27\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\m26_dataset.csv",
+  "fit_Q": 10000000,
+  "Q_targets": [
+    20000000,
+    50000000
+  ],
+  "budgets": [
+    0.001,
+    0.005,
+    0.01,
+    0.05,
+    0.1
+  ],
+  "prp_cost_hours": [
+    1.0,
+    24.0,
+    168.0
+  ],
+  "N": 17984,
+  "notes": [
+    "Queue sorts by predicted survival (descending) for the chosen fit model.",
+    "Savings use a simple compute-saved proxy relative to random selection at each Q_target."
+  ],
+  "targets": {
+    "20000000": {
+      "base_survival_rate": 0.7107984875444839,
+      "base_dead_rate": 0.28920151245551606,
+      "queue_top1pct_path": "out\\wave_atlas\\m30\\m30_queue_Q20000000_top1pct.csv",
+      "savings_csv": "out\\wave_atlas\\m30\\m30_savings_by_budget_Q20000000.csv",
+      "savings_png": "out\\wave_atlas\\m30\\m30_savings_by_budget_Q20000000.png"
+    },
+    "50000000": {
+      "base_survival_rate": 0.6733763345195729,
+      "base_dead_rate": 0.3266236654804271,
+      "queue_top1pct_path": "out\\wave_atlas\\m30\\m30_queue_Q50000000_top1pct.csv",
+      "savings_csv": "out\\wave_atlas\\m30\\m30_savings_by_budget_Q50000000.csv",
+      "savings_png": "out\\wave_atlas\\m30\\m30_savings_by_budget_Q50000000.png"
+    }
+  }
+}

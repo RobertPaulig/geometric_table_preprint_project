@@ -715,3 +715,28 @@ PYTHONPATH=code python code/scripts/m29_compare_models.py \
 
 **Результат (канон):** multiscale\_v1 не дал улучшения AUC/Spearman на 20M/50M относительно baseline (ΔSpearman≈0, местами чуть хуже);
 permutation sanity: AUC≈0.5, Spearman≈0.
+
+## M30 - Deployment mode (queue + savings)
+Status: Done (tag wave-atlas-v1.22)
+
+**Цель:** превратить существующий обученный/калиброванный fit (например M27 fit@10M) в "продуктовый" вывод одной командой:
+`queue.csv` (кого тестировать первым) + `summary.json` + savings vs budget графики под PRP cost сценарии.
+
+**DoD (артефакты):**
+- out/wave_atlas/m30/m30_summary.json
+- out/wave_atlas/m30/m30_savings_by_budget_Q20000000.csv + .png
+- out/wave_atlas/m30/m30_savings_by_budget_Q50000000.csv + .png
+- out/wave_atlas/m30/m30_queue_Q20000000_top1pct.csv
+- out/wave_atlas/m30/m30_queue_Q50000000_top1pct.csv
+- out/wave_atlas/m30/m30_manifest.json
+- wave_atlas.tex: раздел M30 + \clearpage
+
+**Команда:**
+```bash
+PYTHONPATH=code python code/scripts/m30_deployment_queue.py \
+  --fit-dir out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M \
+  --Q-targets 20000000,50000000 \
+  --budgets 0.001,0.005,0.01,0.05,0.10 \
+  --prp-cost-hours 1,24,168 \
+  --out-dir out/wave_atlas/m30
+```
