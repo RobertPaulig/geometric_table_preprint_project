@@ -5,9 +5,9 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M28b)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M28c)}
 \author{Working note}
-\date{Wave Atlas v1.19}
+\date{Wave Atlas v1.20}
 
 \begin{document}
 \maketitle
@@ -401,6 +401,7 @@ M26 & Calibrated survival predictor and extrapolation across Q. \\
 M27 & Extrapolation stress-test beyond fit Q (10M $\rightarrow$ 20M/50M). \\
 M28 & Smart Mine / GIMPS-mode: value after TF on survivors. \\
 M28b & Smart Mine robustness: proxy TF depth, CI, sanity. \\
+M28c & Smart Mine power: larger N, 10 seeds, CI stability check. \\
 \hline
 \end{tabular}
 
@@ -990,6 +991,43 @@ We report bootstrap confidence intervals (CI) and a permutation sanity check (sh
 \centering
 \input{../out/wave_atlas/m28b_gimps/m28b_table.tex}
 \caption{M28b metrics with CI by TF proxy depth and p-range.}
+\end{table}
+
+\clearpage
+\section{M28c Smart Mine power (post-TF proxy enrichment strength)}
+We expand the post-TF proxy experiment to larger p-ranges and 10 seeds in order to narrow confidence intervals
+for enrichment on the conditional task (dies by horizon among passes\_tf=1). This remains a controlled proxy on the q-axis
+(not literal PrimeNet TF bits). We report bootstrap CI and permutation sanity; in this run enrichment is generally close to baseline
+and CI often crosses 1, suggesting a weak/unstable proxy signal at this scale.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28c_gimps/m28c_auc_vs_tf_q_limit.png}
+\caption{AUC versus TF proxy depth $Q_{\mathrm{TF}}$ on the q-axis (M28c).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28c_gimps/m28c_enrichment_vs_tf_q_limit.png}
+\caption{Enrichment (top-1\% and top-5\%) versus TF proxy depth on the q-axis (M28c).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28c_gimps/m28c_sanity_plot.png}
+\caption{Permutation sanity check: shuffled scores yield AUC $\approx 0.5$ and enrichment $\approx 1$ (M28c).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28c_gimps/m28c_savings_vs_tf_q_limit.png}
+\caption{Savings versus TF proxy depth (top-5\%, PRP cost scenario) (M28c).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m28c_gimps/m28c_table.tex}
+\caption{M28c metrics with CI by TF proxy depth and p-range.}
 \end{table}
 
 \clearpage

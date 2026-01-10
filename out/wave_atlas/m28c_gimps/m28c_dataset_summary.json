@@ -1,0 +1,441 @@
+{
+  "proxy_note": "TF proxy depth on q-axis (not literal GIMPS TF bits).",
+  "p_ranges": [
+    {
+      "key": "100000-220000",
+      "N_p": 10026
+    },
+    {
+      "key": "300000-420000",
+      "N_p": 9393
+    }
+  ],
+  "tf_q_limit_list": [
+    1000000,
+    2000000,
+    5000000,
+    10000000
+  ],
+  "Q0": 100000,
+  "q_horizon": 100000000,
+  "mersenne_strict": true,
+  "seeds": [
+    123,
+    456,
+    789,
+    101112,
+    131415,
+    161718,
+    192021,
+    222324,
+    252627,
+    282930
+  ],
+  "prp_cost_hours": [
+    1.0,
+    24.0,
+    168.0
+  ],
+  "counts": {
+    "100000-220000|123|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|456|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|789|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|101112|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|131415|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|161718|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|192021|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|222324|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|252627|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|282930|1000000": {
+      "N_total": 10026,
+      "N_passes_tf": 9269,
+      "N_dies_by_horizon_among_passes": 2164
+    },
+    "100000-220000|123|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|456|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|789|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|101112|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|131415|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|161718|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|192021|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|222324|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|252627|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|282930|2000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8837,
+      "N_dies_by_horizon_among_passes": 1732
+    },
+    "100000-220000|123|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|456|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|789|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|101112|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|131415|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|161718|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|192021|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|222324|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|252627|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|282930|5000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8409,
+      "N_dies_by_horizon_among_passes": 1304
+    },
+    "100000-220000|123|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|456|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|789|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|101112|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|131415|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|161718|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|192021|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|222324|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|252627|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "100000-220000|282930|10000000": {
+      "N_total": 10026,
+      "N_passes_tf": 8051,
+      "N_dies_by_horizon_among_passes": 946
+    },
+    "300000-420000|123|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|456|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|789|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|101112|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|131415|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|161718|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|192021|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|222324|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|252627|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|282930|1000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8942,
+      "N_dies_by_horizon_among_passes": 1934
+    },
+    "300000-420000|123|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|456|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|789|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|101112|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|131415|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|161718|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|192021|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|222324|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|252627|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|282930|2000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8863,
+      "N_dies_by_horizon_among_passes": 1855
+    },
+    "300000-420000|123|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|456|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|789|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|101112|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|131415|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|161718|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|192021|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|222324|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|252627|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|282930|5000000": {
+      "N_total": 9393,
+      "N_passes_tf": 8315,
+      "N_dies_by_horizon_among_passes": 1307
+    },
+    "300000-420000|123|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|456|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|789|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|101112|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|131415|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|161718|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|192021|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|222324|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|252627|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    },
+    "300000-420000|282930|10000000": {
+      "N_total": 9393,
+      "N_passes_tf": 7959,
+      "N_dies_by_horizon_among_passes": 951
+    }
+  }
+}

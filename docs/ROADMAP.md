@@ -601,3 +601,44 @@ PYTHONPATH=code python code/scripts/m28b_gimps_robustness.py \
   --prp-cost-hours 1,24,168 \
   --out-dir out/wave_atlas/m28b_gimps
 ```
+
+## M28c - Smart Mine power (post-TF proxy enrichment strength)
+Status: Done (tag wave-atlas-v1.20)
+
+**Цель:** повысить статистическую силу post-TF proxy постановки: расширить p-ranges и увеличить число повторов (10 seeds),
+чтобы CI по enrichment@1\%/@5\% перестали "плавать", и честно ответить "сигнал устойчив или шум".
+
+**DoD (артефакты):**
+- out/wave_atlas/m28c_gimps/m28c_manifest.json
+- out/wave_atlas/m28c_gimps/m28c_dataset.csv.gz + m28c_dataset_summary.json
+- out/wave_atlas/m28c_gimps/m28c_metrics_raw.csv
+- out/wave_atlas/m28c_gimps/m28c_metrics_ci.csv
+- out/wave_atlas/m28c_gimps/m28c_sanity_permutation.csv + m28c_sanity_plot.png
+- out/wave_atlas/m28c_gimps/m28c_savings_raw.csv
+- out/wave_atlas/m28c_gimps/m28c_savings_ci.csv
+- out/wave_atlas/m28c_gimps/m28c_auc_vs_tf_q_limit.png
+- out/wave_atlas/m28c_gimps/m28c_enrichment_vs_tf_q_limit.png
+- out/wave_atlas/m28c_gimps/m28c_savings_vs_tf_q_limit.png
+- out/wave_atlas/m28c_gimps/m28c_table.tex
+- out/wave_atlas/m28c_gimps/m28c_queue_rangeA_tf1M_top5pct.csv
+- out/wave_atlas/m28c_gimps/m28c_queue_rangeA_tf2M_top5pct.csv
+- out/wave_atlas/m28c_gimps/m28c_queue_rangeA_tf5M_top5pct.csv
+- out/wave_atlas/m28c_gimps/m28c_queue_rangeA_tf10M_top5pct.csv
+- out/wave_atlas/m28c_gimps/m28c_queue_rangeB_tf1M_top5pct.csv
+- out/wave_atlas/m28c_gimps/m28c_queue_rangeB_tf2M_top5pct.csv
+- out/wave_atlas/m28c_gimps/m28c_queue_rangeB_tf5M_top5pct.csv
+- out/wave_atlas/m28c_gimps/m28c_queue_rangeB_tf10M_top5pct.csv
+- wave_atlas.tex: раздел M28c + \clearpage
+
+**Команда:**
+```bash
+PYTHONPATH=code python code/scripts/m28c_gimps_power.py \
+  --p-ranges 100000,220000 300000,420000 \
+  --tf-q-limit-list 1000000,2000000,5000000,10000000 \
+  --Q0 100000 \
+  --q-horizon 100000000 \
+  --mersenne-strict 1 \
+  --seeds 123,456,789,101112,131415,161718,192021,222324,252627,282930 \
+  --prp-cost-hours 1,24,168 \
+  --out-dir out/wave_atlas/m28c_gimps
+```

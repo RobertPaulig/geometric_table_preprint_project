@@ -1,0 +1,63 @@
+{
+  "command": "python code/scripts/m28c_gimps_power.py",
+  "params": {
+    "p_ranges": [
+      [
+        100000,
+        220000
+      ],
+      [
+        300000,
+        420000
+      ]
+    ],
+    "tf_q_limit_list": [
+      1000000,
+      2000000,
+      5000000,
+      10000000
+    ],
+    "Q0": 100000,
+    "q_horizon": 100000000,
+    "mersenne_strict": true,
+    "seeds": [
+      123,
+      456,
+      789,
+      101112,
+      131415,
+      161718,
+      192021,
+      222324,
+      252627,
+      282930
+    ],
+    "prp_cost_hours": [
+      1.0,
+      24.0,
+      168.0
+    ]
+  },
+  "files": {
+    "m28c_auc_vs_tf_q_limit.png": "8729581f30697c9b3cd1319ffa28461da72c8bcde5c5351126fa1fa0d5b88514",
+    "m28c_dataset.csv.gz": "8d2b2c45330f4ade7393fda1f2e0914fc7a462e5af98e77e37a5839fe86d3700",
+    "m28c_dataset_summary.json": "135dd09cb5783633357e474a5b86b03aa58fc03d049e91ce7b29f57510adbfda",
+    "m28c_enrichment_vs_tf_q_limit.png": "7cca1857fb97dbdcd585972673cc9ca3332274d46020342e27e1cd4366955374",
+    "m28c_metrics_ci.csv": "3f33337222c1a41c99ec942097d40f3e33f706e121ab103dfbf0ae3728c82a7b",
+    "m28c_metrics_raw.csv": "dd0486244b6ee5c21e359bd5f1da3200f086155aef64676afc27e8a71e689613",
+    "m28c_queue_rangeA_tf10M_top5pct.csv": "a0e7b5bee06ccb570b48b48da08a8b8bb5f5b27f00037e019fae1827450a4309",
+    "m28c_queue_rangeA_tf1M_top5pct.csv": "a3085d8452162f54848ff4dc4e5ed1af5f0b0ef8bd094c007916b845d7f2ba99",
+    "m28c_queue_rangeA_tf2M_top5pct.csv": "f3e70baae094e9b64dec12ab20aec6faeb8b835f6cf3dd9594bba511962c3779",
+    "m28c_queue_rangeA_tf5M_top5pct.csv": "fea249a0e5201dad875b5c7940f2701eb738db7215dcea130db8a43edcf44993",
+    "m28c_queue_rangeB_tf10M_top5pct.csv": "ebc2e27991267537a91c52ffb7c0883e358a0b98f9f61384a89010e16e3cda7c",
+    "m28c_queue_rangeB_tf1M_top5pct.csv": "35f981ca7f5b287073395afa2db023a2efc9c896676c3c6eba0957ec36b74ffc",
+    "m28c_queue_rangeB_tf2M_top5pct.csv": "f3e101f0ac0942b87407b6711b72c355b2f967ea5f88b6e2e8c53a488e015b07",
+    "m28c_queue_rangeB_tf5M_top5pct.csv": "f75aa49628158b8e8636241c8751a3589389153d802bee41ce2e04798de23ec7",
+    "m28c_sanity_permutation.csv": "0beb82f70726661e58402f1958045f4ccf7ecc98ce139b3edd4a3a87b28b0e30",
+    "m28c_sanity_plot.png": "8921b74d593ccd8adb5adc315fd2ef8cb640f78bf43e57aa51d2b6bdac01b8a7",
+    "m28c_savings_ci.csv": "78744f53e3545d94faf0274defa1a2e280b835e3cf95d21a92aa360e0d05d91b",
+    "m28c_savings_raw.csv": "ca640f27cbe5e92ba6143dc037c48d255ac01845477bec390b9e3b65cadbe732",
+    "m28c_savings_vs_tf_q_limit.png": "a996c0fa73ce513bd0f8296e2497f5edd50b78b52890048e3c6a66a3fbe603d2",
+    "m28c_table.tex": "32a135b5f2bf25313ecc9b09a7f6e7d1cc6b516b3dfd440b386fe58c26d41d3d"
+  }
+}
