@@ -1,0 +1,49 @@
+{
+  "params": {
+    "mode": "occupancy",
+    "n_start": 1000000,
+    "frames": 800,
+    "n_step": 1,
+    "window_rows": 512,
+    "k_max": 512,
+    "dt": 5,
+    "method": "phase_corr",
+    "sanity": "none",
+    "seed": 123,
+    "conf_min": 0.15
+  },
+  "runtime_seconds": 22.120720386505127,
+  "n_pairs": 795,
+  "dx_residual_mean": 9.807910469172072e-06,
+  "dx_residual_std": 0.0003231781062765912,
+  "dx_residual_abs_mean": 0.00025930319972827895,
+  "dx_residual_pos_frac": 0.5081761006289308,
+  "confidence_mean": 0.9627993420619518,
+  "confidence_p50": 0.9631828558379387,
+  "confidence_p10": 0.9517487268260234,
+  "confidence_p90": 0.9735362869052342,
+  "valid_pairs": 404,
+  "valid_frac": 0.5081761006289308,
+  "dx_residual_valid_mean": 0.00026478135223635343,
+  "dx_residual_valid_std": 0.00019116164417375402,
+  "dx_residual_valid_abs_mean": 0.00026478135223635343,
+  "confidence_valid_p50": 0.9634569995761882,
+  "q_eff_p10": 9145.970456931193,
+  "q_eff_p50": 22520.85898463467,
+  "q_eff_p90": 104335.48812597473,
+  "q_eff_peaks_rounded": [],
+  "sanity_permute_cols": {
+    "out_dir": "sanity_permute_cols",
+    "metrics": {
+      "n_pairs": 795,
+      "dx_residual_mean": 2.2293096808156334,
+      "dx_residual_std": 148.56135891030652,
+      "dx_residual_abs_mean": 129.82101401374777,
+      "dx_residual_pos_frac": 0.5081761006289308,
+      "q_eff_p10": NaN,
+      "q_eff_p50": NaN,
+      "q_eff_p90": NaN,
+      "q_eff_peaks_rounded": []
+    }
+  }
+}

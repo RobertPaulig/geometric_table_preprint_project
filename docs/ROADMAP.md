@@ -767,3 +767,49 @@ PYTHONPATH=code python code/scripts/m31_deployment_qa.py \
   --runs A:20000,200000 B:20000,200000 C:80000,200000 \
   --out-dir out/wave_atlas/m31
 ```
+
+## M32 - Scroll-flow metric (phase correlation drift)
+Status: Done (tag wave-atlas-v1.24)
+
+**Цель:** измерить "волну как при скролле": оценить вектор сдвига между соседними кадрами (phase correlation),
+отделить ожидаемый вертикальный скролл и получить остаточный горизонтальный дрейф $\Delta k$; перевести это в $q_{\mathrm{eff}} \approx \Delta n/\Delta k$.
+
+**DoD (артефакты):**
+- out/wave_atlas/m32/m32_flow_vectors.csv
+- out/wave_atlas/m32/m32_flow_summary.json
+- out/wave_atlas/m32/m32_dx_residual_by_t.png
+- out/wave_atlas/m32/m32_qeff_hist.png
+- out/wave_atlas/m32/m32_sanity_compare.png
+- out/wave_atlas/m32/m32_table.tex
+- out/wave_atlas/m32/m32_manifest.json (sha256 каждого файла + параметры + git sha)
+- out/wave_atlas/m32/sanity_permute_cols/m32_flow_vectors.csv + m32_qeff_hist.png
+- wave_atlas.tex: раздел M32 + \clearpage
+
+**Команды:**
+```bash
+# main
+PYTHONPATH=code python code/scripts/m32_scroll_flow.py \
+  --mode occupancy \
+  --n-start 1000000 \
+  --frames 800 \
+  --n-step 1 \
+  --window-rows 512 \
+  --k-max 512 \
+  --dt 5 \
+  --method phase_corr \
+  --sanity none \
+  --out-dir out/wave_atlas/m32
+
+# sanity: permute columns (должно "убить" q_eff / дрейф)
+PYTHONPATH=code python code/scripts/m32_scroll_flow.py \
+  --mode occupancy \
+  --n-start 1000000 \
+  --frames 800 \
+  --n-step 1 \
+  --window-rows 512 \
+  --k-max 512 \
+  --dt 5 \
+  --method phase_corr \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m32/sanity_permute_cols
+```

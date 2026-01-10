@@ -9,6 +9,7 @@ import math
 import subprocess
 import time
 from dataclasses import dataclass
+from collections import deque
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
 
@@ -27,6 +28,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--method", type=str, default="phase_corr", choices=["phase_corr"])
     p.add_argument("--sanity", type=str, default="none", choices=["none", "permute_cols", "permute_rows"])
     p.add_argument("--seed", type=int, default=123)
+    p.add_argument("--conf-min", type=float, default=0.15)
     p.add_argument("--out-dir", type=str, required=True)
     return p.parse_args()
 
@@ -70,14 +72,23 @@ def occupancy_frame(n_top: int, H: int, K: int) -> np.ndarray:
 
 def normalize_frame(x: np.ndarray) -> np.ndarray:
     xf = x.astype(np.float32, copy=False)
-    mu = float(xf.mean())
+    xf = xf - float(xf.mean())
+    xf = xf - xf.mean(axis=0, keepdims=True)
+    xf = xf - xf.mean(axis=1, keepdims=True)
     sigma = float(xf.std())
     if not np.isfinite(sigma) or sigma <= 1e-8:
-        return xf - mu
-    return (xf - mu) / sigma
+        return xf
+    return xf / sigma
 
 
-def phase_corr_shift(a: np.ndarray, b: np.ndarray) -> Tuple[int, int, float]:
+def _parabolic_subpixel(c_m1: float, c_0: float, c_p1: float) -> float:
+    denom = (c_m1 - 2.0 * c_0 + c_p1)
+    if denom == 0.0:
+        return 0.0
+    return 0.5 * (c_m1 - c_p1) / denom
+
+
+def phase_corr_shift(a: np.ndarray, b: np.ndarray) -> Tuple[float, float, float]:
     fa = np.fft.rfft2(a)
     fb = np.fft.rfft2(b)
     cps = fa * np.conj(fb)
@@ -91,12 +102,20 @@ def phase_corr_shift(a: np.ndarray, b: np.ndarray) -> Tuple[int, int, float]:
     peak_val = float(corr_abs[peak_y, peak_x])
 
     H, W = corr_abs.shape
-    dy = int(peak_y)
-    dx = int(peak_x)
-    if dy > H // 2:
-        dy -= H
-    if dx > W // 2:
-        dx -= W
+    y_m1 = (peak_y - 1) % H
+    y_p1 = (peak_y + 1) % H
+    x_m1 = (peak_x - 1) % W
+    x_p1 = (peak_x + 1) % W
+
+    off_y = _parabolic_subpixel(float(corr_abs[y_m1, peak_x]), float(corr_abs[peak_y, peak_x]), float(corr_abs[y_p1, peak_x]))
+    off_x = _parabolic_subpixel(float(corr_abs[peak_y, x_m1]), float(corr_abs[peak_y, peak_x]), float(corr_abs[peak_y, x_p1]))
+
+    dy = float(peak_y) + float(off_y)
+    dx = float(peak_x) + float(off_x)
+    if dy > H / 2.0:
+        dy -= float(H)
+    if dx > W / 2.0:
+        dx -= float(W)
     return dy, dx, peak_val
 
 
@@ -117,10 +136,10 @@ class FlowRow:
     t: int
     n_top: int
     dt: int
-    dy: int
-    dx: int
-    dy_residual: int
-    dx_residual: int
+    dy: float
+    dx: float
+    dy_residual: float
+    dx_residual: float
     confidence: float
     q_eff: Optional[float]
 
@@ -135,35 +154,40 @@ def compute_flow(
     dt: int,
     sanity: str,
     seed: int,
+    conf_min: float,
 ) -> List[FlowRow]:
     rng = np.random.default_rng(seed)
 
-    prepared: List[np.ndarray] = []
-    n_tops: List[int] = []
-    for t in range(frames):
+    rows: List[FlowRow] = []
+    expected_dy = float(-(dt * n_step))
+    delta_n = float(dt * n_step)
+
+    def make_frame(t: int) -> Tuple[int, np.ndarray]:
         n_top = n_start + t * n_step
         f = occupancy_frame(n_top, H, K)
         f = maybe_permute(f, sanity, rng)
-        prepared.append(normalize_frame(f))
-        n_tops.append(n_top)
+        return n_top, normalize_frame(f)
 
-    rows: List[FlowRow] = []
-    expected_dy = -(dt * n_step)
-    delta_n = dt * n_step
+    buf_n: deque[int] = deque()
+    buf_f: deque[np.ndarray] = deque()
+    for t in range(dt + 1):
+        n_top, f = make_frame(t)
+        buf_n.append(n_top)
+        buf_f.append(f)
 
     for t in range(frames - dt):
-        a = prepared[t]
-        b = prepared[t + dt]
+        a = buf_f[0]
+        b = buf_f[-1]
         dy, dx, conf = phase_corr_shift(a, b)
-        dy_res = int(dy - expected_dy)
-        dx_res = int(dx)
+        dy_res = float(dy - expected_dy)
+        dx_res = float(dx)
         q_eff: Optional[float] = None
-        if dx_res > 0:
+        if conf >= conf_min and dx_res > 0:
             q_eff = float(delta_n) / float(dx_res)
         rows.append(
             FlowRow(
                 t=t,
-                n_top=n_tops[t],
+                n_top=int(buf_n[0]),
                 dt=dt,
                 dy=dy,
                 dx=dx,
@@ -173,6 +197,14 @@ def compute_flow(
                 q_eff=q_eff,
             )
         )
+
+        buf_n.popleft()
+        buf_f.popleft()
+        next_t = t + dt + 1
+        if next_t < frames:
+            n_top_next, f_next = make_frame(next_t)
+            buf_n.append(n_top_next)
+            buf_f.append(f_next)
     return rows
 
 
@@ -187,10 +219,10 @@ def write_flow_csv(path: Path, rows: List[FlowRow]) -> None:
                     r.t,
                     r.n_top,
                     r.dt,
-                    r.dy,
-                    r.dx,
-                    r.dy_residual,
-                    r.dx_residual,
+                    f"{r.dy:.8g}",
+                    f"{r.dx:.8g}",
+                    f"{r.dy_residual:.8g}",
+                    f"{r.dx_residual:.8g}",
                     f"{r.confidence:.8g}",
                     "" if r.q_eff is None else f"{r.q_eff:.8g}",
                 ]
@@ -222,7 +254,7 @@ def make_plots(out_dir: Path, rows: List[FlowRow], *, title_suffix: str = "") ->
     import matplotlib.pyplot as plt
 
     ts = [r.t for r in rows]
-    dxr = [r.dx_residual for r in rows]
+    dxr = [float(r.dx_residual) for r in rows]
     conf = [r.confidence for r in rows]
     qeff = [r.q_eff for r in rows if r.q_eff is not None and np.isfinite(r.q_eff)]
 
@@ -269,22 +301,26 @@ def make_plots(out_dir: Path, rows: List[FlowRow], *, title_suffix: str = "") ->
 
 
 def write_table_tex(path: Path, summary: Dict[str, object], sanity_summary: Optional[Dict[str, object]]) -> None:
-    dx_mu = summary["dx_residual_mean"]
-    dx_sd = summary["dx_residual_std"]
+    dx_mu = summary["dx_residual_valid_mean"]
+    dx_sd = summary["dx_residual_valid_std"]
     q_med = summary["q_eff_p50"]
     q_p90 = summary["q_eff_p90"]
+    valid_frac = summary.get("valid_frac", float("nan"))
     dx_mu_s = None
     q_med_s = None
+    valid_frac_s = None
     if sanity_summary is not None:
-        dx_mu_s = sanity_summary["dx_residual_mean"]
+        dx_mu_s = sanity_summary.get("dx_residual_valid_mean", sanity_summary.get("dx_residual_mean"))
         q_med_s = sanity_summary["q_eff_p50"]
+        valid_frac_s = sanity_summary.get("valid_frac", float("nan"))
 
     lines = []
     lines.append("\\begin{tabular}{lrrrr}\\hline")
-    lines.append("run & mean dx$_{res}$ & std dx$_{res}$ & median $q_{eff}$ & $q_{eff}$ p90 \\\\ \\hline")
-    lines.append(f"real & {dx_mu:.3g} & {dx_sd:.3g} & {q_med:.3g} & {q_p90:.3g} \\\\")
+    lines.append("run & valid frac & mean dx$_{res}$ & std dx$_{res}$ & median $q_{eff}$ \\\\ \\hline")
+    lines.append(f"real & {valid_frac:.3g} & {dx_mu:.3g} & {dx_sd:.3g} & {q_med:.3g} \\\\")
     if dx_mu_s is not None and q_med_s is not None:
-        lines.append(f"permute\\_cols & {dx_mu_s:.3g} & {sanity_summary['dx_residual_std']:.3g} & {q_med_s:.3g} & {sanity_summary['q_eff_p90']:.3g} \\\\")
+        dx_sd_s = sanity_summary.get("dx_residual_valid_std", sanity_summary.get("dx_residual_std"))
+        lines.append(f"permute\\_cols & {valid_frac_s:.3g} & {dx_mu_s:.3g} & {dx_sd_s:.3g} & {q_med_s:.3g} \\\\")
     lines.append("\\hline\\end{tabular}")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -301,10 +337,10 @@ def read_flow_csv(path: Path) -> List[FlowRow]:
                     t=int(row["t"]),
                     n_top=int(row["n_top"]),
                     dt=int(row["dt"]),
-                    dy=int(row["dy"]),
-                    dx=int(row["dx"]),
-                    dy_residual=int(row["dy_residual"]),
-                    dx_residual=int(row["dx_residual"]),
+                    dy=float(row["dy"]),
+                    dx=float(row["dx"]),
+                    dy_residual=float(row["dy_residual"]),
+                    dx_residual=float(row["dx_residual"]),
                     confidence=float(row["confidence"]),
                     q_eff=q_eff,
                 )
@@ -314,13 +350,32 @@ def read_flow_csv(path: Path) -> List[FlowRow]:
 
 def summarize(rows: List[FlowRow]) -> Dict[str, object]:
     dxr = [float(r.dx_residual) for r in rows]
+    dxr_abs = [abs(v) for v in dxr]
+    conf = [float(r.confidence) for r in rows]
     qeff = [float(r.q_eff) for r in rows if r.q_eff is not None and np.isfinite(r.q_eff)]
     pos_frac = float(sum(1 for r in rows if r.dx_residual > 0) / len(rows)) if rows else float("nan")
+
+    valid = [r for r in rows if r.q_eff is not None and np.isfinite(r.q_eff)]
+    dxv = [float(r.dx_residual) for r in valid]
+    dxv_abs = [abs(v) for v in dxv]
+    conf_v = [float(r.confidence) for r in valid]
+    valid_frac = float(len(valid) / len(rows)) if rows else float("nan")
     return {
         "n_pairs": len(rows),
         "dx_residual_mean": float(np.mean(dxr)) if dxr else float("nan"),
         "dx_residual_std": float(np.std(dxr)) if dxr else float("nan"),
+        "dx_residual_abs_mean": float(np.mean(dxr_abs)) if dxr_abs else float("nan"),
         "dx_residual_pos_frac": pos_frac,
+        "confidence_mean": float(np.mean(conf)) if conf else float("nan"),
+        "confidence_p50": percentile(conf, 50),
+        "confidence_p10": percentile(conf, 10),
+        "confidence_p90": percentile(conf, 90),
+        "valid_pairs": len(valid),
+        "valid_frac": valid_frac,
+        "dx_residual_valid_mean": float(np.mean(dxv)) if dxv else float("nan"),
+        "dx_residual_valid_std": float(np.std(dxv)) if dxv else float("nan"),
+        "dx_residual_valid_abs_mean": float(np.mean(dxv_abs)) if dxv_abs else float("nan"),
+        "confidence_valid_p50": percentile(conf_v, 50),
         "q_eff_p10": percentile(qeff, 10),
         "q_eff_p50": percentile(qeff, 50),
         "q_eff_p90": percentile(qeff, 90),
@@ -353,6 +408,40 @@ def make_sanity_compare(parent_out_dir: Path, real_rows: List[FlowRow], sanity_d
     plt.close(fig)
 
 
+def _maybe_update_parent_outputs(parent: Path, sanity_out: Path) -> None:
+    real_csv = parent / "m32_flow_vectors.csv"
+    real_summary_json = parent / "m32_flow_summary.json"
+    sanity_summary_json = sanity_out / "m32_flow_summary.json"
+    if not (real_csv.exists() and real_summary_json.exists() and sanity_summary_json.exists()):
+        return
+
+    real_rows = read_flow_csv(real_csv)
+    make_sanity_compare(parent, real_rows, sanity_out)
+
+    real_summary = json.loads(real_summary_json.read_text(encoding="utf-8"))
+    sanity_summary = json.loads(sanity_summary_json.read_text(encoding="utf-8"))
+    real_summary["sanity_permute_cols"] = {
+        "out_dir": str(sanity_out.relative_to(parent)).replace("\\", "/"),
+        "metrics": {k: sanity_summary.get(k) for k in [
+            "n_pairs",
+            "dx_residual_mean",
+            "dx_residual_std",
+            "dx_residual_abs_mean",
+            "dx_residual_pos_frac",
+            "q_eff_p10",
+            "q_eff_p50",
+            "q_eff_p90",
+            "q_eff_peaks_rounded",
+        ]},
+    }
+    real_summary_json.write_text(json.dumps(real_summary, indent=2), encoding="utf-8")
+
+    write_table_tex(parent / "m32_table.tex", real_summary, sanity_summary)
+    params = dict(real_summary.get("params", {}))
+    params["runtime_seconds"] = float(real_summary.get("runtime_seconds", float("nan")))
+    write_manifest(parent, params=params)
+
+
 def main() -> None:
     args = parse_args()
     out_dir = Path(args.out_dir)
@@ -368,6 +457,7 @@ def main() -> None:
         dt=args.dt,
         sanity=args.sanity,
         seed=args.seed,
+        conf_min=args.conf_min,
     )
     runtime_s = float(time.time() - started)
 
@@ -388,38 +478,31 @@ def main() -> None:
             "method": args.method,
             "sanity": args.sanity,
             "seed": args.seed,
+            "conf_min": args.conf_min,
         },
         "runtime_seconds": runtime_s,
         **summary,
     }
     (out_dir / "m32_flow_summary.json").write_text(json.dumps(summary_json, indent=2), encoding="utf-8")
 
-    sanity_summary: Optional[Dict[str, object]] = None
-    if args.sanity == "none":
-        sanity_dir = out_dir / "sanity_permute_cols"
-        sanity_json = sanity_dir / "m32_flow_summary.json"
-        if sanity_json.exists():
-            sanity_summary = json.loads(sanity_json.read_text(encoding="utf-8"))
-        else:
-            sanity_csv = sanity_dir / "m32_flow_vectors.csv"
-            if sanity_csv.exists():
-                sanity_summary = summarize(read_flow_csv(sanity_csv))
-        write_table_tex(out_dir / "m32_table.tex", summary, sanity_summary)
-
-        if sanity_dir.exists():
-            make_sanity_compare(out_dir, rows, sanity_dir)
-    elif args.sanity == "permute_cols":
-        parent = out_dir.parent
-        real_csv = parent / "m32_flow_vectors.csv"
-        if real_csv.exists():
-            make_sanity_compare(parent, read_flow_csv(real_csv), out_dir)
-
     params = summary_json["params"]
     params["runtime_seconds"] = runtime_s
     write_manifest(out_dir, params=params)
+
+    if args.sanity == "none":
+        sanity_dir = out_dir / "sanity_permute_cols"
+        sanity_json = sanity_dir / "m32_flow_summary.json"
+        sanity_summary: Optional[Dict[str, object]] = None
+        if sanity_json.exists():
+            sanity_summary = json.loads(sanity_json.read_text(encoding="utf-8"))
+        write_table_tex(out_dir / "m32_table.tex", summary_json, sanity_summary)
+        if sanity_dir.exists():
+            make_sanity_compare(out_dir, rows, sanity_dir)
+            write_manifest(out_dir, params=params)
+    elif args.sanity == "permute_cols":
+        _maybe_update_parent_outputs(out_dir.parent, out_dir)
     print(f"OK: wrote M32 flow to {out_dir}")
 
 
 if __name__ == "__main__":
     main()
-

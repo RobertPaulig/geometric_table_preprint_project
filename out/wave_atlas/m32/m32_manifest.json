@@ -1,0 +1,33 @@
+{
+  "params": {
+    "mode": "occupancy",
+    "n_start": 1000000,
+    "frames": 800,
+    "n_step": 1,
+    "window_rows": 512,
+    "k_max": 512,
+    "dt": 5,
+    "method": "phase_corr",
+    "sanity": "none",
+    "seed": 123,
+    "conf_min": 0.15,
+    "runtime_seconds": 22.120720386505127
+  },
+  "git_sha": "c07ad25cdb5b2ee4519af70c8cbfe95d31293f63",
+  "files": {
+    "m32_angle_hist.png": "48e400c4424037ce0c912cf1fb6ae8d8970710161b87961cf9b16673ea847c54",
+    "m32_confidence_by_t.png": "343d2618f5f260afb841858e0febe37dfd1a59af58fe571fd7760f0d913a1bc4",
+    "m32_dx_residual_by_t.png": "de734e3466d3a47ed421e04c98038a9ac8871497f492adefd28317bfe54bc74a",
+    "m32_flow_summary.json": "fcfc2399b4cb91c83e9370d1efc24ba156146a9c6047678cd619cfd161496898",
+    "m32_flow_vectors.csv": "9f4a311d463d4fcc7c49280d8d7c793588d579a75b6e75499bc9ec3616a7be6b",
+    "m32_qeff_hist.png": "3f8a13b6f6ed13dd3b7476f0ff771dab70532373dd6864919d528cd3bc79ce1b",
+    "m32_sanity_compare.png": "b796c8352983a1055480ab6ccceea969c522f38cf4bd93848f274268f89e7b4f",
+    "m32_table.tex": "3b88bc2258e93caf443c17955091c3c08f2c323189dd57ae71c989adb62cd825",
+    "sanity_permute_cols/m32_angle_hist.png": "819b12e5baced6e7a7c9e82785874a5b19720435625c5737eea51416f6530c0e",
+    "sanity_permute_cols/m32_confidence_by_t.png": "21e80902d9151e2cce6b3916b40badc3c1695414fdf8359698b64e704c9aaf31",
+    "sanity_permute_cols/m32_dx_residual_by_t.png": "1026864a90b9ce6247a11f169d31142db064c81bd5e7b4cc9ef7d3e3a65e07a8",
+    "sanity_permute_cols/m32_flow_summary.json": "6fdc66eec674e85708d77662bc5048225f1ae8b3aada6faa98cd16e1f3cd3853",
+    "sanity_permute_cols/m32_flow_vectors.csv": "6d382d7c003c205efd7c4c315d2d4e63f652968311e6cc8490ec674e47bcf065",
+    "sanity_permute_cols/m32_qeff_hist.png": "2e67f6aa948dc308bca37fdb59b390b79f236ffd8477ee9cabfa541111ebba78"
+  }
+}
