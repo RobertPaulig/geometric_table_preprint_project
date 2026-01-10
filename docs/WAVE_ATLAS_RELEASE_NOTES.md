@@ -271,3 +271,14 @@ PDF SHA256: F811349C75ED6891E41B69C414B06C8768BBE867A692D62316099A4C21CECB56
 Key numbers (budget=1%, PRP cost=24h; 3 runs):
 - Q=20M: mean saved 3,110,354s (std 699,948s); mean Jaccard@top1% 0.076
 - Q=50M: mean saved 3,571,868s (std 786,671s); mean Jaccard@top1% 0.076
+
+Wave Atlas v1.24 Release Notes
+
+Tag: wave-atlas-v1.24
+Commit: (tag wave-atlas-v1.24)
+Changes: M32 scroll-flow metric (phase correlation drift): estimate residual horizontal drift under vertical scroll and map to effective q_eff; includes permute-cols sanity + artifacts/manifest + TeX section.
+PDF size: 3885299 bytes
+PDF SHA256: B801B70EE77E634EA49BF01AB87F98132C08737D540A63AE6723F3ECCE5F5AAE
+Key numbers (M32; dt=5, H=512, K=512; conf_min=0.15):
+- real: valid frac 0.508, mean dx_residual 2.65e-4 columns, median q_eff 2.25e4
+- sanity (permute_cols): valid frac 0.0 (q_eff suppressed by confidence filter)

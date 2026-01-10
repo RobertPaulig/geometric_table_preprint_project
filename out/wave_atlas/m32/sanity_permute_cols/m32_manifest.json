@@ -1,0 +1,25 @@
+{
+  "params": {
+    "mode": "occupancy",
+    "n_start": 1000000,
+    "frames": 800,
+    "n_step": 1,
+    "window_rows": 512,
+    "k_max": 512,
+    "dt": 5,
+    "method": "phase_corr",
+    "sanity": "permute_cols",
+    "seed": 123,
+    "conf_min": 0.15,
+    "runtime_seconds": 23.27598810195923
+  },
+  "git_sha": "c07ad25cdb5b2ee4519af70c8cbfe95d31293f63",
+  "files": {
+    "m32_angle_hist.png": "819b12e5baced6e7a7c9e82785874a5b19720435625c5737eea51416f6530c0e",
+    "m32_confidence_by_t.png": "21e80902d9151e2cce6b3916b40badc3c1695414fdf8359698b64e704c9aaf31",
+    "m32_dx_residual_by_t.png": "1026864a90b9ce6247a11f169d31142db064c81bd5e7b4cc9ef7d3e3a65e07a8",
+    "m32_flow_summary.json": "6fdc66eec674e85708d77662bc5048225f1ae8b3aada6faa98cd16e1f3cd3853",
+    "m32_flow_vectors.csv": "6d382d7c003c205efd7c4c315d2d4e63f652968311e6cc8490ec674e47bcf065",
+    "m32_qeff_hist.png": "2e67f6aa948dc308bca37fdb59b390b79f236ffd8477ee9cabfa541111ebba78"
+  }
+}

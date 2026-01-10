@@ -4,10 +4,11 @@
 \usepackage{amsmath, amssymb}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{alphalph}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M31)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M32)}
 \author{Working note}
-\date{Wave Atlas v1.23}
+\date{Wave Atlas v1.24}
 
 \begin{document}
 \maketitle
@@ -374,6 +375,8 @@ a fragile $K$ artifact.
 \end{figure}
 
 \appendix
+\renewcommand{\thesection}{\AlphAlph{\value{section}}}
+\renewcommand{\theHsection}{\AlphAlph{\value{section}}}
 \section{Roadmap / Future Work}
 Milestones below summarize the pipeline history and the remaining open items; completed milestones are marked in \texttt{docs/ROADMAP.md} and release notes. We summarize the
 next steps as measurable deliverables (no claims of proof).
@@ -1090,6 +1093,36 @@ as QA diagnostics (not as claims of improved prediction).
 \centering
 \input{../out/wave_atlas/m31/m31_table.tex}
 \caption{M31 summary: mean/std savings across runs and mean queue overlap (Jaccard@top1\%).}
+\end{table}
+
+\clearpage
+\section{M32 Scroll-flow metric (phase correlation drift)}
+We estimate the perceived drift of the occupancy wavefront under scrolling by measuring the best aligning translation
+between frames using phase correlation. With a vertical scroll step $\Delta n$ and an observed horizontal drift $\Delta k$,
+the effective $q$ relation is $\Delta k \approx \Delta n / q$ so $q_{\mathrm{eff}} \approx \Delta n / \Delta k$.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m32/m32_dx_residual_by_t.png}
+\caption{Residual horizontal drift $\Delta k$ (columns) across frame pairs (M32).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m32/m32_qeff_hist.png}
+\caption{Histogram of $q_{\mathrm{eff}}$ from frame-to-frame drift estimates (M32).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m32/m32_sanity_compare.png}
+\caption{Sanity check: dx\_residual for real frames vs permute\_cols (M32).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m32/m32_table.tex}
+\caption{M32 summary (confidence-filtered drift / $q_{\mathrm{eff}}$; real vs sanity).}
 \end{table}
 
 \clearpage
