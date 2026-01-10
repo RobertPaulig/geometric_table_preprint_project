@@ -220,3 +220,15 @@ Commit: (tag wave-atlas-v1.19.1)
 Changes: docs-only patch (wording tightening / no-overclaim pass + ROLES protocol clarifications); no data/plots regenerated.
 PDF size: 3051140 bytes
 PDF SHA256: A91CD37F0FE4541EC6308C43077145E958658EF47C976FBC25B66E4646BF5EFA
+
+Wave Atlas v1.20 Release Notes
+
+Tag: wave-atlas-v1.20
+Commit: (tag wave-atlas-v1.20)
+Changes: M28c power analysis for post-TF proxy depth on the q-axis (larger p-ranges, 10 seeds, bootstrap CI, permutation sanity, queues) + TeX section and figures.
+PDF size: 3291413 bytes
+PDF SHA256: A720BBD65272D7EFBEA90D745D8D3A33A69A56EA5B7CFC54AB3F4B2F745084B0
+Key numbers (CI from bootstrap; conditional task on passes_tf=1):
+- Range 100k-220k @ Q_TF=1M: AUC 0.524 [0.514, 0.533], enrich@5% 1.14 [1.04, 1.26]
+- Range 300k-420k @ Q_TF=10M: AUC 0.505 [0.491, 0.518], enrich@5% 1.07 [0.88, 1.25]
+- Pooled @ Q_TF=1M: AUC 0.519 [0.513, 0.527], enrich@5% 1.22 [1.12, 1.30]
