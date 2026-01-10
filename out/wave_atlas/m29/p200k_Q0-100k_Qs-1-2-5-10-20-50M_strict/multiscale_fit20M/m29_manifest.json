@@ -1,0 +1,43 @@
+{
+  "dataset_csv": "out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv",
+  "fit_Q": 20000000,
+  "eval_Qs": [
+    1000000,
+    2000000,
+    5000000,
+    10000000,
+    20000000,
+    50000000
+  ],
+  "bin_Qs": [
+    1000000,
+    2000000,
+    5000000,
+    10000000,
+    20000000
+  ],
+  "model": "m29_multiscale_v1",
+  "seed": 123,
+  "flags": {
+    "use_count": true,
+    "use_diff": true,
+    "use_shape": true
+  },
+  "files": {
+    "m29_auc_by_Q.png": "6e2f51d61b0dea7f2b485f605a907d23a3ddea36119dd14a0dc5da470440ee65",
+    "m29_brier_by_Q.png": "6abc1cfb4633228b6b3f562ec18935be3f164b9e3480372ad6f40f23c39e90b7",
+    "m29_calibration_Q1000000.png": "9cd8465b236e2d3da5c697f78072fd1732294e57a56306af577b400bb28657e0",
+    "m29_calibration_Q10000000.png": "32d69dd6e514abb0173cc30b0e672fd2d40479663308a87fde1f2fb48540e7a8",
+    "m29_calibration_Q2000000.png": "3694eda3d10a0c5eeff3a98a36973b14d7017b48e3ab6ee2096104026da9491d",
+    "m29_calibration_Q20000000.png": "5245f5472de4a0655d8d56c1bd81eb2e0f49cf8f8d14ba490ea49b167720ba2d",
+    "m29_calibration_Q5000000.png": "59ab6c77ca9f6b2304531b8ea8ac3871ead4728d7e6e3e622cad963bb8b2d56a",
+    "m29_calibration_Q50000000.png": "e0d5eeacf6b919d02c370c35e2348ec9caa3301efdd7ddf48116454104bf80e0",
+    "m29_logloss_by_Q.png": "0ad4d0b1c0e7c0d9c84b18e7dfe7ed34be18276f425c895b36517ef40b5eeab4",
+    "m29_metrics_by_Q.csv": "67cc9d24bc53addd5668d6b5bb572bc37f80c36ccdfa0f051e72f569b182f4ae",
+    "m29_model_summary.json": "881235fca2428941ce6c10b899ef9067fc8438279c6b3aa26957ed19eb350dc9",
+    "m29_predictions.csv": "530b122e63136d1cb69c7dfaa90c5176d93dfd5c9928e052b16efc1781327f35",
+    "m29_rank_stability.csv": "5354fdf25ff8f45ded8c8f23494c9df05eb434fdd82a95eba4bf97fcc5072c76",
+    "m29_rank_stability.png": "73ef7f3c7de380c7bed33ac5f430c0b1ece3aefa695ff67d622f21b982539e9b",
+    "m29_table.tex": "23c84dcf9863e12ada91e44183576c6e84e908497a22b2ee2ddb05e8decd2a49"
+  }
+}

@@ -5,9 +5,9 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M28c)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M29)}
 \author{Working note}
-\date{Wave Atlas v1.20.1}
+\date{Wave Atlas v1.21}
 
 \begin{document}
 \maketitle
@@ -1032,6 +1032,31 @@ added value in a GIMPS-like setting. We treat this line (M28--M28c) as closed an
 \centering
 \input{../out/wave_atlas/m28c_gimps/m28c_table.tex}
 \caption{M28c metrics with CI by TF proxy depth and p-range.}
+\end{table}
+
+\clearpage
+\section{M29 Multiscale cube features (high-Q robustness)}
+We test a multiscale ``multi-wave'' feature cube built from per-bin deltas on the Q-axis:
+harmonic/count hazard increments across Q bins, plus simple difference and shape channels, with a strict leakage guard
+that disallows using bins above the fit depth. We compare against the M27 baseline model (killed\_Q0 + log1p harm\_delta at fit-Q),
+and report AUC and rank transfer (Spearman) at Q=20M/50M, plus a permutation sanity check (shuffled probabilities yield AUC$\approx$0.5, Spearman$\approx$0).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/compare/m29_compare_auc_by_Q.png}
+\caption{Baseline vs multiscale AUC across Q for fit@10M (M29).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/compare/m29_compare_rank_stability.png}
+\caption{Baseline vs multiscale rank transfer (Spearman) across Q for fit@10M (M29).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/compare/m29_compare_table.tex}
+\caption{Baseline vs multiscale metrics at Q=20M/50M and extrapolation gaps (fit20M - fit10M) (M29).}
 \end{table}
 
 \clearpage

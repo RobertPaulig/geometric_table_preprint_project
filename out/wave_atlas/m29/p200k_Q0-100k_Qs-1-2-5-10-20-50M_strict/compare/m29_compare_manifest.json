@@ -1,0 +1,25 @@
+{
+  "inputs": {
+    "baseline_fit10M": "out\\wave_atlas\\m29\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\baseline_fit10M",
+    "baseline_fit20M": "out\\wave_atlas\\m29\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\baseline_fit20M",
+    "multiscale_fit10M": "out\\wave_atlas\\m29\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\multiscale_fit10M",
+    "multiscale_fit20M": "out\\wave_atlas\\m29\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\multiscale_fit20M",
+    "dataset_csv": "out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv"
+  },
+  "params": {
+    "Q_targets": [
+      20000000,
+      50000000
+    ],
+    "permutations": 200,
+    "seed": 123
+  },
+  "files": {
+    "m29_compare_auc_by_Q.png": "b0c343733aa53ce6a459a08bec5c6d50e864bfb6f13f3f0be2e3f75be3ec0eee",
+    "m29_compare_metrics_by_Q.csv": "794f8f950e427e26b777486230559b5aff6c8cb8c7a7e3f47908d192afc769b6",
+    "m29_compare_rank_stability.png": "fb685577bb7e83879013e4534fde58ef646560d376bc05030da73c2d1de9c38f",
+    "m29_compare_table.tex": "806c222825b68d9cfd74dba3a3d2f2fd4003f792d882e57b0ad0546350f0e354",
+    "m29_sanity_permutation.csv": "9dc4aa3bcc0a5224177af9b2e32a33c5d9a3a6e3db5bfa6689901ca110df9933",
+    "m29_sanity_plot.png": "c27b69eec84f09e2696b10f074e41a1e450e06d895bf96be40f6a7c2d63b8b53"
+  }
+}

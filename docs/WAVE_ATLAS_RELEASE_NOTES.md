@@ -240,3 +240,15 @@ Commit: (tag wave-atlas-v1.20.1)
 Changes: docs-only patch: reflect M28c conclusion (post-TF proxy signal weak/unstable across p-ranges; no added-value claim) + add M29 as next focus; no data/plots regenerated.
 PDF size: 3291911 bytes
 PDF SHA256: 8F26A7E6B72E6476C7B0E5C22583C95C277654D233DA8AF5BBF2F0C913FEC4E0
+
+Wave Atlas v1.21 Release Notes
+
+Tag: wave-atlas-v1.21
+Commit: (tag wave-atlas-v1.21)
+Changes: M29 multiscale cube features (bin-deltas + diff/shape channels with leakage guard) + baseline comparison (AUC/Spearman at 20M/50M) + permutation sanity + TeX section and figures.
+PDF size: 3381993 bytes
+PDF SHA256: E47CAD2BBAC8AEF3B1C2C1A296C41B192CB482B7AD03D7E668EBB3F10A2AE965
+Key numbers (fit@10M):
+- Q=20M: baseline AUC 0.765, Spearman 0.420; multiscale AUC 0.765, Spearman 0.419
+- Q=50M: baseline AUC 0.734, Spearman 0.384; multiscale AUC 0.734, Spearman 0.382
+Sanity: permutation of multiscale probabilities yields AUC≈0.5 and Spearman≈0 at Q=20M/50M.

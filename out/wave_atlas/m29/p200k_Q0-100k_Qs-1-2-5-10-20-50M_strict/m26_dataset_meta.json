@@ -1,0 +1,15 @@
+{
+  "p_max": 200000,
+  "Q0": 100000,
+  "Q_list": [
+    1000000,
+    2000000,
+    5000000,
+    10000000,
+    20000000,
+    50000000
+  ],
+  "mersenne_strict": true,
+  "n_primes": 17984,
+  "dataset": "out\\wave_atlas\\m29\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\m26_dataset.csv"
+}
