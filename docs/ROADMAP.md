@@ -646,14 +646,72 @@ PYTHONPATH=code python code/scripts/m28c_gimps_power.py \
 **Вывод (канон):** в этой post-TF proxy постановке сигнал ранжирования слабый и нестабильный между p-range (CI часто пересекает 1 на enrichment).
 Этого недостаточно для заявлений о добавленной ценности в GIMPS-like режиме; ветку M28--M28c считаем закрытой (negative/unstable result).
 
-## M29 - High-Q robustness via multi-scale features (rank transfer)
-Status: Planned
+## M29 - Multiscale cube features (high-Q robustness)
+Status: Done (tag wave-atlas-v1.21)
 
-**Цель:** усилить переносимость/устойчивость ранжирования на больших Q (20M/50M) через multi-scale признаки по бинам Q (multi-wave features),
-чтобы очередь сохраняла смысл при росте глубины.
+**Цель:** проверить, дают ли multiscale "multi-wave / 3D cube" признаки улучшение переносимости на больших Q (20M/50M)
+относительно базовой M27-модели (killed\_Q0 + log1p(ap\_harm\_delta\_fitQ)).
 
-**DoD (жёстко):**
-- Spearman@50M ↑ минимум на **+0.05** относительно baseline M27 (и sanity не ломаем).
-- Если 50M слишком шумно/дорого: Spearman@20M ↑ **+0.05** и подтверждение на 2 независимых seeds/p-range.
+**DoD (артефакты):**
+- out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv + m27_dataset_summary.json + m27_manifest.json
+- out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/baseline_fit10M/ (m27_metrics_by_Q.csv + m27_rank_stability.csv + figs + manifest)
+- out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/baseline_fit20M/ (upper depth reference)
+- out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/multiscale_fit10M/ (m29_* + m29_manifest.json)
+- out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/multiscale_fit20M/ (m29_* + m29_manifest.json)
+- out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/compare/ (m29_compare_* + sanity + manifest)
+- wave_atlas.tex: раздел M29 + \clearpage
 
-**Команда:** TBD (будет зафиксирована в постановке M29 вместе со структурой артефактов).
+**Команды:**
+```bash
+# dataset
+PYTHONPATH=code python code/scripts/m26_survival_dataset.py \
+  --p-max 200000 --Q0 100000 --mersenne-strict 1 --seed 123 \
+  --Q-list 1000000,2000000,5000000,10000000,20000000,50000000 \
+  --out-dir out/wave_atlas/m29 \
+  --label p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict
+
+# baseline (M27-style)
+PYTHONPATH=code python code/scripts/m26_survival_model.py \
+  --dataset-csv out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv \
+  --fit-Q 10000000 \
+  --eval-Q-list 1000000,2000000,5000000,10000000,20000000,50000000 \
+  --model baseline_m27 --seed 123 \
+  --out-dir out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/baseline_fit10M
+
+PYTHONPATH=code python code/scripts/m26_survival_model.py \
+  --dataset-csv out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv \
+  --fit-Q 20000000 \
+  --eval-Q-list 1000000,2000000,5000000,10000000,20000000,50000000 \
+  --model baseline_m27 --seed 123 \
+  --out-dir out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/baseline_fit20M
+
+# multiscale cube model
+PYTHONPATH=code python code/scripts/m29_multiscale_model.py \
+  --dataset-csv out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv \
+  --fit-Q 10000000 \
+  --eval-Q-list 1000000,2000000,5000000,10000000,20000000,50000000 \
+  --bin-Q-list 1000000,2000000,5000000,10000000 \
+  --model m29_multiscale_v1 --use-count 1 --use-diff 1 --use-shape 1 --seed 123 \
+  --out-dir out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/multiscale_fit10M
+
+PYTHONPATH=code python code/scripts/m29_multiscale_model.py \
+  --dataset-csv out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv \
+  --fit-Q 20000000 \
+  --eval-Q-list 1000000,2000000,5000000,10000000,20000000,50000000 \
+  --bin-Q-list 1000000,2000000,5000000,10000000,20000000 \
+  --model m29_multiscale_v1 --use-count 1 --use-diff 1 --use-shape 1 --seed 123 \
+  --out-dir out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/multiscale_fit20M
+
+# compare + sanity
+PYTHONPATH=code python code/scripts/m29_compare_models.py \
+  --baseline-fit10M out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/baseline_fit10M \
+  --baseline-fit20M out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/baseline_fit20M \
+  --multiscale-fit10M out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/multiscale_fit10M \
+  --multiscale-fit20M out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/multiscale_fit20M \
+  --dataset-csv out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/m26_dataset.csv \
+  --Q-target-list 20000000,50000000 --permutations 200 --seed 123 \
+  --out-dir out/wave_atlas/m29/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/compare
+```
+
+**Результат (канон):** multiscale\_v1 не дал улучшения AUC/Spearman на 20M/50M относительно baseline (ΔSpearman≈0, местами чуть хуже);
+permutation sanity: AUC≈0.5, Spearman≈0.

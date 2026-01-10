@@ -1,0 +1,47 @@
+{
+  "p_max": 200000,
+  "Q0": 100000,
+  "Q_list": [
+    1000000,
+    2000000,
+    5000000,
+    10000000,
+    20000000,
+    50000000
+  ],
+  "mersenne_strict": true,
+  "n_primes": 17984,
+  "killed_Q0_count": 550,
+  "survival_by_Q": {
+    "1000000": {
+      "survived": 15466,
+      "killed": 2518,
+      "survival_rate": 0.8599866548042705
+    },
+    "2000000": {
+      "survived": 14747,
+      "killed": 3237,
+      "survival_rate": 0.8200066725978647
+    },
+    "5000000": {
+      "survived": 13930,
+      "killed": 4054,
+      "survival_rate": 0.7745774021352313
+    },
+    "10000000": {
+      "survived": 13315,
+      "killed": 4669,
+      "survival_rate": 0.7403803380782918
+    },
+    "20000000": {
+      "survived": 12783,
+      "killed": 5201,
+      "survival_rate": 0.7107984875444839
+    },
+    "50000000": {
+      "survived": 12110,
+      "killed": 5874,
+      "survival_rate": 0.6733763345195729
+    }
+  }
+}
