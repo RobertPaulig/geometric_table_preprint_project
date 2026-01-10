@@ -398,6 +398,7 @@ M24 & Scale stress-test of M22 at larger $(p_{\max},Q_1)$ and big budgets. \\
 M25 & Hard-mode stress-test: $Q_1$ up to 10M and strict Mersenne filters. \\
 M26 & Calibrated survival predictor and extrapolation across Q. \\
 M27 & Extrapolation stress-test beyond fit Q (10M $\rightarrow$ 20M/50M). \\
+M28 & Smart Mine / GIMPS-mode: value after TF on survivors. \\
 \hline
 \end{tabular}
 
@@ -928,6 +929,37 @@ ranking stability (Spearman) and the extrapolation gap in AUC/Brier/LogLoss.
 \centering
 \input{../out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M/m27_table.tex}
 \caption{AUC/Brier/LogLoss across Q for fit@10M (M27-A).}
+\end{table}
+
+\clearpage
+\section{M28 Smart Mine / GIMPS-mode (value after TF)}
+We simulate a post-TF regime by conditioning on candidates that survive up to a TF-dependent
+limit $Q_{\mathrm{TF}}$ and predicting which of those will die later by a deeper horizon
+$Q_{\mathrm{horizon}}$. The goal is not to reject cheap trash, but to prioritize additional
+factoring to avoid expensive PRP/LL on doomed survivors.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28_gimps/m28_auc_by_tf_bits.png}
+\caption{AUC on the conditional task (dies by horizon among passes\_tf=1) versus TF depth.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28_gimps/m28_enrichment_curves.png}
+\caption{Enrichment vs budget on passes\_tf=1 (top-X\% hit-rate relative to random).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28_gimps/m28_savings_by_tf_bits.png}
+\caption{Estimated compute saved (PRP avoided) from targeted additional factoring.}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m28_gimps/m28_table.tex}
+\caption{Post-TF metrics by TF depth (M28).}
 \end{table}
 
 \clearpage

@@ -193,3 +193,11 @@ Commit: (tag wave-atlas-v1.17)
 Changes: M27 extrapolation stress-test (fit@10M vs fit@20M) + TeX section and figures.
 PDF size: 2755894 bytes
 PDF SHA256: A53C81DF400B7FE29602608A4F423BAD1673D0566ABDA71ACA3295349543B64D
+
+Wave Atlas v1.18 Release Notes
+
+Tag: wave-atlas-v1.18
+Commit: (tag wave-atlas-v1.18)
+Changes: M28 Smart Mine / GIMPS-mode (post-TF ranking and savings) + TeX section and figures.
+PDF size: 2891783 bytes
+PDF SHA256: A95737C20D7D51EC77E17B366820D9589DA5D53D63D3B0AA2D41079FA488BF94

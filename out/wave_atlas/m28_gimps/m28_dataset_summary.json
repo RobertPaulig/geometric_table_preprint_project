@@ -1,0 +1,46 @@
+{
+  "p_range": [
+    100000,
+    120000
+  ],
+  "tf_bits_list": [
+    64,
+    68,
+    72,
+    76
+  ],
+  "Q0": 100000,
+  "q_horizon": 100000000,
+  "mersenne_strict": true,
+  "seed": 123,
+  "n_p_candidates": 1709,
+  "n_rows": 6836,
+  "skipped_due_to_runtime": false,
+  "notes": [],
+  "counts_by_tf_bits": {
+    "64": {
+      "N_total": 1709,
+      "N_passes_tf": 1501,
+      "N_dies_by_horizon_among_passes": 299,
+      "base_rate_dies_by_horizon_among_passes": 0.19920053297801465
+    },
+    "68": {
+      "N_total": 1709,
+      "N_passes_tf": 1449,
+      "N_dies_by_horizon_among_passes": 247,
+      "base_rate_dies_by_horizon_among_passes": 0.1704623878536922
+    },
+    "72": {
+      "N_total": 1709,
+      "N_passes_tf": 1382,
+      "N_dies_by_horizon_among_passes": 180,
+      "base_rate_dies_by_horizon_among_passes": 0.13024602026049203
+    },
+    "76": {
+      "N_total": 1709,
+      "N_passes_tf": 1319,
+      "N_dies_by_horizon_among_passes": 117,
+      "base_rate_dies_by_horizon_among_passes": 0.0887035633055345
+    }
+  }
+}
