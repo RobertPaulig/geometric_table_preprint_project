@@ -260,3 +260,14 @@ Commit: (tag wave-atlas-v1.22)
 Changes: M30 deployment mode: one-command queue.csv + summary.json + savings vs budget plots for Q targets using existing M27 fit artifacts (no dataset regeneration).
 PDF size: 3434627 bytes
 PDF SHA256: 24F54D1F16F6EE09F93F6A10594AF724EA6DC8C28B93F203893F133D1E1D431E
+
+Wave Atlas v1.23 Release Notes
+
+Tag: wave-atlas-v1.23
+Commit: (tag wave-atlas-v1.23)
+Changes: M31 deployment QA / robustness: run-grid analysis for M30 (p-range + fit-dir variations), savings dispersion and top-queue overlap (Jaccard@top1%) + manifests + TeX section.
+PDF size: 3483915 bytes
+PDF SHA256: F811349C75ED6891E41B69C414B06C8768BBE867A692D62316099A4C21CECB56
+Key numbers (budget=1%, PRP cost=24h; 3 runs):
+- Q=20M: mean saved 3,110,354s (std 699,948s); mean Jaccard@top1% 0.076
+- Q=50M: mean saved 3,571,868s (std 786,671s); mean Jaccard@top1% 0.076

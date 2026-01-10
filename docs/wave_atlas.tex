@@ -5,9 +5,9 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M30)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M31)}
 \author{Working note}
-\date{Wave Atlas v1.22}
+\date{Wave Atlas v1.23}
 
 \begin{document}
 \maketitle
@@ -1073,6 +1073,24 @@ We treat these as operational artifacts (queue.csv + summary.json + savings plot
 
 Queue files are written as CSV under \texttt{out/wave\_atlas/m30/}, e.g.
 \texttt{m30\_queue\_Q20000000\_top1pct.csv} and \texttt{m30\_queue\_Q50000000\_top1pct.csv}.
+
+\clearpage
+\section{M31 Deployment QA / Robustness (savings + queue stability)}
+We validate the deployment outputs by running M30 across several independent runs (different p-slices and/or fit directories)
+and measuring dispersion in savings as well as overlap stability of the top-1\% queue via Jaccard similarity. We report these
+as QA diagnostics (not as claims of improved prediction).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m31/m31_savings_summary.png}
+\caption{Dispersion of savings across M31 runs (fixed budget and PRP cost scenario).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m31/m31_table.tex}
+\caption{M31 summary: mean/std savings across runs and mean queue overlap (Jaccard@top1\%).}
+\end{table}
 
 \clearpage
 \end{document}

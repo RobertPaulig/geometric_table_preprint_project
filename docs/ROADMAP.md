@@ -740,3 +740,30 @@ PYTHONPATH=code python code/scripts/m30_deployment_queue.py \
   --prp-cost-hours 1,24,168 \
   --out-dir out/wave_atlas/m30
 ```
+
+## M31 - Deployment QA / Robustness (savings + queue stability)
+Status: Done (tag wave-atlas-v1.23)
+
+**Цель:** показать, что M30 вывод (savings/queue) не "один удачный прогон": измерить разброс savings на независимых run'ах
+и устойчивость очереди (overlap) для top-1\% очереди.
+
+**DoD (артефакты):**
+- out/wave_atlas/m31/run_*/m30_summary.json + m30_queue_Q*_top1pct.csv + m30_savings_by_budget_Q*.csv/.png
+- out/wave_atlas/m31/m31_runs_manifest.json
+- out/wave_atlas/m31/m31_savings_summary.csv + m31_savings_summary.png
+- out/wave_atlas/m31/m31_queue_overlap.csv
+- out/wave_atlas/m31/m31_table.tex
+- out/wave_atlas/m31/m31_manifest.json
+- wave_atlas.tex: раздел M31 + \clearpage
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m31_deployment_qa.py \
+  --fit-dir out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit10M \
+  --fit-dirs B=out/wave_atlas/m27/p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict/fit20M \
+  --Q-targets 20000000,50000000 \
+  --budgets 0.001,0.01,0.05 \
+  --prp-cost-hours 1,24,168 \
+  --runs A:20000,200000 B:20000,200000 C:80000,200000 \
+  --out-dir out/wave_atlas/m31
+```
