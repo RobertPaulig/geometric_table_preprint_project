@@ -1,0 +1,66 @@
+{
+  "default_fit_dir": "out\\wave_atlas\\m27\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\fit10M",
+  "fit_dir_overrides": {
+    "B": "out\\wave_atlas\\m27\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\fit20M"
+  },
+  "Q_targets": [
+    20000000,
+    50000000
+  ],
+  "budgets": [
+    0.001,
+    0.01,
+    0.05
+  ],
+  "prp_cost_hours": [
+    1.0,
+    24.0,
+    168.0
+  ],
+  "runs": [
+    {
+      "name": "A",
+      "fit_dir": "out\\wave_atlas\\m27\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\fit10M",
+      "p_range": "20000,200000",
+      "out_dir": "out\\wave_atlas\\m31\\run_A"
+    },
+    {
+      "name": "B",
+      "fit_dir": "out\\wave_atlas\\m27\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\fit20M",
+      "p_range": "20000,200000",
+      "out_dir": "out\\wave_atlas\\m31\\run_B"
+    },
+    {
+      "name": "C",
+      "fit_dir": "out\\wave_atlas\\m27\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\fit10M",
+      "p_range": "80000,200000",
+      "out_dir": "out\\wave_atlas\\m31\\run_C"
+    }
+  ],
+  "run_files_sha256": {
+    "run_A/m30_manifest.json": "162ec3a3a9963268804de33874a81e1fa3e6aad122a5468e61ecf5d730eae48f",
+    "run_A/m30_queue_Q20000000_top1pct.csv": "25546de0a5dda3ff5887df8581ff5df5d87c2e3de2e7c69ff0ae4e3fe66a77ba",
+    "run_A/m30_queue_Q50000000_top1pct.csv": "25546de0a5dda3ff5887df8581ff5df5d87c2e3de2e7c69ff0ae4e3fe66a77ba",
+    "run_A/m30_savings_by_budget_Q20000000.csv": "3bbcb6ab70684ffc2b3ff026daa282bb25fe063e299db8b2c32baa1b68e08e39",
+    "run_A/m30_savings_by_budget_Q20000000.png": "c377fd8735222dafc654f79f54e850de9977b6ba7596f47651fb3a940e7539c7",
+    "run_A/m30_savings_by_budget_Q50000000.csv": "7565dbe9717471a39006f240e8db523bb347304ff988a148f9696681082f3f50",
+    "run_A/m30_savings_by_budget_Q50000000.png": "736079bb65698dabbf6d8945f131e1ed5e43ad124dd230d167e823dfe509e6ed",
+    "run_A/m30_summary.json": "9c9e6e6034f4887846853e98c1e258ed1a6b6b8a330a72662cf6bf957036339f",
+    "run_B/m30_manifest.json": "65a1625c2f2f366b35f44da1f3ac94a2ee8182d753dae3c5636497035b409835",
+    "run_B/m30_queue_Q20000000_top1pct.csv": "9d48ced255f69c7576afe55a35e96746c71a25217a0ddcd55f688ad05eacb7b3",
+    "run_B/m30_queue_Q50000000_top1pct.csv": "9d48ced255f69c7576afe55a35e96746c71a25217a0ddcd55f688ad05eacb7b3",
+    "run_B/m30_savings_by_budget_Q20000000.csv": "c5376fba81b4549834910272b725a5842933771dc0cfc6e2df4e6541c8e8dd3b",
+    "run_B/m30_savings_by_budget_Q20000000.png": "f46548c48bc97a385184da852983128540a0d0174ff69ca27477e59969a287ff",
+    "run_B/m30_savings_by_budget_Q50000000.csv": "19f86d4686984716e7f3f891a6bb93e4ca94a148f3e4802d7f6c016329b16747",
+    "run_B/m30_savings_by_budget_Q50000000.png": "2670ffce771af19500fb9ea36669cb55b7d6705a9d5a7ee9df3c4750588ad0ab",
+    "run_B/m30_summary.json": "6f01f8eafb70846f88cdd1657fa1e52b0484077640ecb4474e5dabafda97c625",
+    "run_C/m30_manifest.json": "ee17f3aa10f49ca76016ad791d9c0593cfb807462d6b78e6f949f331457c54d7",
+    "run_C/m30_queue_Q20000000_top1pct.csv": "2e4e312ad140df7f2b9ba3ea1eca563be7efd967950527ed7dc47ceba6dcb0b1",
+    "run_C/m30_queue_Q50000000_top1pct.csv": "2e4e312ad140df7f2b9ba3ea1eca563be7efd967950527ed7dc47ceba6dcb0b1",
+    "run_C/m30_savings_by_budget_Q20000000.csv": "eee08eb330c1255282ba57a121443330ef8e77d19284c87c69f4b413fe9918c5",
+    "run_C/m30_savings_by_budget_Q20000000.png": "4bd1b15a38fdfb7dda51c3cd6e2e373520409457865ea772080c680ff616910c",
+    "run_C/m30_savings_by_budget_Q50000000.csv": "f34a186d556bdf63572dd6d13b2e8491ea336052d60bd3407cc3876dcd7dcd51",
+    "run_C/m30_savings_by_budget_Q50000000.png": "c04b5fe9135c83a7e6503bbaedd9d875c501df18595f1d9519d79fb3cb37b06b",
+    "run_C/m30_summary.json": "af2668370390ad7298682630c2c848d1e8ae6b58c86ef6ec0c31eb43e568eb51"
+  }
+}

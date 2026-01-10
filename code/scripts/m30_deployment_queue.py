@@ -15,6 +15,8 @@ import numpy as np
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
     p.add_argument("--fit-dir", type=str, required=True, help="M27/M26 fit dir with m26_model_summary.json")
+    p.add_argument("--dataset-csv", type=str, default="", help="optional override; otherwise taken from fit dir manifest")
+    p.add_argument("--p-range", type=str, default="", help="optional inclusive p-range filter: a,b")
     p.add_argument("--Q-targets", type=str, required=True, help="comma-separated, e.g. 20000000,50000000")
     p.add_argument("--budgets", type=str, required=True, help="comma-separated fractions, e.g. 0.001,0.01,0.05")
     p.add_argument("--prp-cost-hours", type=str, required=True, help="comma-separated, e.g. 1,24,168")
@@ -28,6 +30,16 @@ def parse_int_list(s: str) -> List[int]:
 
 def parse_float_list(s: str) -> List[float]:
     return [float(x.strip()) for x in s.split(",") if x.strip()]
+
+
+def parse_range_pair(s: str) -> Tuple[int, int]:
+    parts = [x.strip() for x in s.split(",") if x.strip()]
+    if len(parts) != 2:
+        raise ValueError(f"Bad p-range: {s!r}, expected a,b")
+    a, b = int(parts[0]), int(parts[1])
+    if a > b:
+        a, b = b, a
+    return a, b
 
 
 def sha256_file(path: Path) -> str:
@@ -126,13 +138,22 @@ def main() -> None:
     b = float(model_summary["coefficients"]["b"])
 
     fit_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    dataset_csv = Path(fit_manifest["dataset_csv"])
+    if args.dataset_csv.strip():
+        dataset_csv = Path(args.dataset_csv)
+    else:
+        dataset_csv = Path(fit_manifest["dataset_csv"])
     if not dataset_csv.exists():
         raise FileNotFoundError(f"dataset_csv from manifest does not exist: {dataset_csv}")
 
     rows = list(csv.DictReader(dataset_csv.open(encoding="utf-8")))
     if not rows:
         raise ValueError("Dataset is empty")
+
+    if args.p_range.strip():
+        p_lo, p_hi = parse_range_pair(args.p_range)
+        rows = [r for r in rows if p_lo <= int(r["p"]) <= p_hi]
+        if not rows:
+            raise ValueError(f"p-range filter left empty dataset: {p_lo},{p_hi}")
 
     # Reconstruct the baseline feature pipeline (M26/M27): X = [-killed_Q0, log1p(ap_harm_delta_fitQ)]
     feat_name = f"ap_harm_delta_{fit_Q}"
@@ -163,6 +184,7 @@ def main() -> None:
     summary: Dict[str, object] = {
         "fit_dir": str(fit_dir),
         "dataset_csv": str(dataset_csv),
+        "p_range": args.p_range.strip() or None,
         "fit_Q": fit_Q,
         "Q_targets": Q_targets,
         "budgets": budgets,
@@ -259,6 +281,8 @@ def main() -> None:
         "command": "python code/scripts/m30_deployment_queue.py",
         "params": {
             "fit_dir": str(fit_dir),
+            "dataset_csv": str(dataset_csv),
+            "p_range": args.p_range.strip() or None,
             "Q_targets": Q_targets,
             "budgets": budgets,
             "prp_cost_hours": prp_cost_hours,
