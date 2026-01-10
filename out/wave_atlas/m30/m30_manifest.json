@@ -1,0 +1,31 @@
+{
+  "command": "python code/scripts/m30_deployment_queue.py",
+  "params": {
+    "fit_dir": "out\\wave_atlas\\m27\\p200k_Q0-100k_Qs-1-2-5-10-20-50M_strict\\fit10M",
+    "Q_targets": [
+      20000000,
+      50000000
+    ],
+    "budgets": [
+      0.001,
+      0.005,
+      0.01,
+      0.05,
+      0.1
+    ],
+    "prp_cost_hours": [
+      1.0,
+      24.0,
+      168.0
+    ]
+  },
+  "files": {
+    "m30_queue_Q20000000_top1pct.csv": "46e546cf16aab37f1acdb8f8a01bebb6e732c22a022c1453e04ba9586077a028",
+    "m30_queue_Q50000000_top1pct.csv": "46e546cf16aab37f1acdb8f8a01bebb6e732c22a022c1453e04ba9586077a028",
+    "m30_savings_by_budget_Q20000000.csv": "4bc6cf45b6f32368c6645738dda93f199624d79086861a140f6fdae568b0aae5",
+    "m30_savings_by_budget_Q20000000.png": "100c070aace6975a1c618483c5650243725d820950256afe5890cdcaa4099269",
+    "m30_savings_by_budget_Q50000000.csv": "f7801f091c952af194e8ed0bbf5f3708ad81ae3f74aeb9c8b619bd7eb3f96119",
+    "m30_savings_by_budget_Q50000000.png": "bfb37f1d7a72a19466b2d00cc1c42a6b4269dba488d76856f1deded9ef9af2c6",
+    "m30_summary.json": "66c8a4f0ff639aecab049975eeef85d8b983ca6a1898b1b28481c73ad20d9b14"
+  }
+}

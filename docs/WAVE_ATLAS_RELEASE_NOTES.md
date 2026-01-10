@@ -252,3 +252,11 @@ Key numbers (fit@10M):
 - Q=20M: baseline AUC 0.765, Spearman 0.420; multiscale AUC 0.765, Spearman 0.419
 - Q=50M: baseline AUC 0.734, Spearman 0.384; multiscale AUC 0.734, Spearman 0.382
 Sanity: permutation of multiscale probabilities yields AUC≈0.5 and Spearman≈0 at Q=20M/50M.
+
+Wave Atlas v1.22 Release Notes
+
+Tag: wave-atlas-v1.22
+Commit: (tag wave-atlas-v1.22)
+Changes: M30 deployment mode: one-command queue.csv + summary.json + savings vs budget plots for Q targets using existing M27 fit artifacts (no dataset regeneration).
+PDF size: 3434627 bytes
+PDF SHA256: 24F54D1F16F6EE09F93F6A10594AF724EA6DC8C28B93F203893F133D1E1D431E
