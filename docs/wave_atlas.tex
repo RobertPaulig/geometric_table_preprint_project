@@ -933,15 +933,15 @@ ranking stability (Spearman) and the extrapolation gap in AUC/Brier/LogLoss.
 
 \clearpage
 \section{M28 Smart Mine / GIMPS-mode (value after TF)}
-We simulate a post-TF regime by conditioning on candidates that survive up to a TF-dependent
-limit $Q_{\mathrm{TF}}$ and predicting which of those will die later by a deeper horizon
-$Q_{\mathrm{horizon}}$. The goal is not to reject cheap trash, but to prioritize additional
-factoring to avoid expensive PRP/LL on doomed survivors.
+We simulate a post-TF regime by conditioning on candidates that survive up to a TF proxy depth
+$Q_{\mathrm{TF}}$ on the q-axis (a controlled proxy, not literal PrimeNet TF bits) and predicting
+which of those will die later by a deeper horizon $Q_{\mathrm{horizon}}$. The goal is not to reject
+cheap trash, but to prioritize additional factoring to avoid expensive PRP/LL on doomed survivors.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28_gimps/m28_auc_by_tf_bits.png}
-\caption{AUC on the conditional task (dies by horizon among passes\_tf=1) versus TF depth.}
+\caption{AUC on the conditional task (dies by horizon among passes\_tf=1) versus TF proxy depth.}
 \end{figure}
 
 \begin{figure}[h]
@@ -959,7 +959,36 @@ factoring to avoid expensive PRP/LL on doomed survivors.
 \begin{table}[h]
 \centering
 \input{../out/wave_atlas/m28_gimps/m28_table.tex}
-\caption{Post-TF metrics by TF depth (M28).}
+\caption{Post-TF metrics by TF proxy depth (M28).}
+\end{table}
+
+\clearpage
+\section{M28b Smart Mine / GIMPS-mode robustness (proxy TF depth)}
+We repeat the post-TF proxy analysis across two disjoint p-ranges and multiple seeds.
+We report bootstrap confidence intervals (CI) and a permutation sanity check (shuffled scores).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28b_gimps/m28b_auc_vs_tf_q_limit.png}
+\caption{AUC versus TF proxy depth $Q_{\mathrm{TF}}$ on the q-axis (M28b).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28b_gimps/m28b_enrichment_vs_tf_q_limit.png}
+\caption{Enrichment (top-1\% and top-5\%) versus TF proxy depth on the q-axis (M28b).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m28b_gimps/m28b_savings_vs_tf_q_limit.png}
+\caption{Savings versus TF proxy depth (top-5\%, PRP cost scenario) (M28b).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m28b_gimps/m28b_table.tex}
+\caption{M28b metrics with CI by TF proxy depth and p-range.}
 \end{table}
 
 \clearpage

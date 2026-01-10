@@ -1,0 +1,49 @@
+{
+  "command": "python code/scripts/m28b_gimps_robustness.py",
+  "params": {
+    "p_ranges": [
+      [
+        100000,
+        120000
+      ],
+      [
+        200000,
+        220000
+      ]
+    ],
+    "tf_q_limit_list": [
+      1000000,
+      2000000,
+      5000000,
+      10000000
+    ],
+    "Q0": 100000,
+    "q_horizon": 100000000,
+    "mersenne_strict": true,
+    "seeds": [
+      123,
+      456,
+      789
+    ],
+    "prp_cost_hours": [
+      1.0,
+      24.0,
+      168.0
+    ]
+  },
+  "files": {
+    "m28b_auc_vs_tf_q_limit.png": "5fd3bcf3ef0176efe9fa41bedaa626afc2014de210c36b30f14c28e055c5272d",
+    "m28b_dataset.csv.gz": "51d4e653bc7ef0ff7d9871ab7c7c3a6719fbeb19fa838d5d1f34220fc75c3511",
+    "m28b_dataset_summary.json": "e2e420b44e794ce2f48de4c934d2c4e9f192b742930fad9032eea5974b42db8c",
+    "m28b_enrichment_vs_tf_q_limit.png": "52bed8c37897e5d5b255c97ccc63cfc522484b4ff308d4d1bb9cfeae46647a0c",
+    "m28b_manifest.json": "692ab86e6bcde30f0743c569d1d1ee3fc44298f6bba77dbec8685ba8d09aa9c6",
+    "m28b_metrics_ci.csv": "1bbf8b9e9022a72fcdcc80585c036cd9d809eaf61502eef0c3d3adb6397d2e4b",
+    "m28b_metrics_raw.csv": "1a5854e9ba03094dbccc734fc5e678afa41a22a10f4748dc41e0d7c5ac492323",
+    "m28b_sanity_permutation.csv": "16c00dc1db764a899adb2934144101cd63efc4151bc8ee6c2eae94f7fc28581d",
+    "m28b_sanity_plot.png": "80fd82b25f2e2597ae8f5c59776aeb4d7afe48acf35e78c6c0eb8bb0fd4d15c1",
+    "m28b_savings_ci.csv": "3b7ad907f904f03b56fbbb1723dbbc9250a820e05a1a63f48febd19b20dc0cf4",
+    "m28b_savings_raw.csv": "ef34a9c3c952fdfb4f203591e33bf4e11681aa113565b14a1669832831a28cbb",
+    "m28b_savings_vs_tf_q_limit.png": "fd4628e953654989bdb1fbb6e6600e20ef225659cca62241acfdfc72856d0aa8",
+    "m28b_table.tex": "c8cccf12bdf6ae81d1be31614ddc0c0d2eff8d847f8f9e6d58e2957f38b5e225"
+  }
+}

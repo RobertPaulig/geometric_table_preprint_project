@@ -568,3 +568,36 @@ PYTHONPATH=code python code/scripts/m28_gimps_mode.py \
 
 **Риски/заметки:** в q-оси модели (как в M26/M27), смерть определяется ord_q(2)=p, поэтому
 для информативности нужно $p < Q_{\mathrm{horizon}}$ (иначе "поздняя смерть" невозможна).
+
+## M28b - Smart Mine robustness (proxy TF depth + CI + sanity)
+Status: Done (tag wave-atlas-v1.19)
+
+**Цель:** сделать M28 "по-взрослому": убрать двусмысленность TF-bits (заменить на TF proxy depth on q-axis),
+добавить устойчивость (multi-seed + bootstrap CI) и permutation sanity.
+
+**DoD (артефакты):**
+- out/wave_atlas/m28b_gimps/m28b_manifest.json
+- out/wave_atlas/m28b_gimps/m28b_dataset.csv.gz + m28b_dataset_summary.json
+- out/wave_atlas/m28b_gimps/m28b_metrics_raw.csv
+- out/wave_atlas/m28b_gimps/m28b_metrics_ci.csv
+- out/wave_atlas/m28b_gimps/m28b_sanity_permutation.csv + m28b_sanity_plot.png
+- out/wave_atlas/m28b_gimps/m28b_savings_raw.csv
+- out/wave_atlas/m28b_gimps/m28b_savings_ci.csv
+- out/wave_atlas/m28b_gimps/m28b_auc_vs_tf_q_limit.png
+- out/wave_atlas/m28b_gimps/m28b_enrichment_vs_tf_q_limit.png
+- out/wave_atlas/m28b_gimps/m28b_savings_vs_tf_q_limit.png
+- out/wave_atlas/m28b_gimps/m28b_table.tex
+- wave_atlas.tex: раздел M28b + \clearpage
+
+**Команды:**
+```bash
+PYTHONPATH=code python code/scripts/m28b_gimps_robustness.py \
+  --p-ranges 100000,120000 200000,220000 \
+  --tf-q-limit-list 1000000,2000000,5000000,10000000 \
+  --Q0 100000 \
+  --q-horizon 100000000 \
+  --mersenne-strict 1 \
+  --seeds 123,456,789 \
+  --prp-cost-hours 1,24,168 \
+  --out-dir out/wave_atlas/m28b_gimps
+```

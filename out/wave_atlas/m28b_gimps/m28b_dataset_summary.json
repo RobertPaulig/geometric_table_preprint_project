@@ -1,0 +1,154 @@
+{
+  "proxy_note": "TF proxy depth on q-axis (not literal GIMPS TF bits).",
+  "p_ranges": [
+    {
+      "key": "100000-120000",
+      "N_p": 1709
+    },
+    {
+      "key": "200000-220000",
+      "N_p": 1634
+    }
+  ],
+  "tf_q_limit_list": [
+    1000000,
+    2000000,
+    5000000,
+    10000000
+  ],
+  "Q0": 100000,
+  "q_horizon": 100000000,
+  "mersenne_strict": true,
+  "seeds": [
+    123,
+    456,
+    789
+  ],
+  "prp_cost_hours": [
+    1.0,
+    24.0,
+    168.0
+  ],
+  "counts": {
+    "100000-120000|123|1000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1524,
+      "N_dies_by_horizon_among_passes": 322
+    },
+    "100000-120000|456|1000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1524,
+      "N_dies_by_horizon_among_passes": 322
+    },
+    "100000-120000|789|1000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1524,
+      "N_dies_by_horizon_among_passes": 322
+    },
+    "100000-120000|123|2000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1474,
+      "N_dies_by_horizon_among_passes": 272
+    },
+    "100000-120000|456|2000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1474,
+      "N_dies_by_horizon_among_passes": 272
+    },
+    "100000-120000|789|2000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1474,
+      "N_dies_by_horizon_among_passes": 272
+    },
+    "100000-120000|123|5000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1410,
+      "N_dies_by_horizon_among_passes": 208
+    },
+    "100000-120000|456|5000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1410,
+      "N_dies_by_horizon_among_passes": 208
+    },
+    "100000-120000|789|5000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1410,
+      "N_dies_by_horizon_among_passes": 208
+    },
+    "100000-120000|123|10000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1350,
+      "N_dies_by_horizon_among_passes": 148
+    },
+    "100000-120000|456|10000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1350,
+      "N_dies_by_horizon_among_passes": 148
+    },
+    "100000-120000|789|10000000": {
+      "N_total": 1709,
+      "N_passes_tf": 1350,
+      "N_dies_by_horizon_among_passes": 148
+    },
+    "200000-220000|123|1000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1557,
+      "N_dies_by_horizon_among_passes": 352
+    },
+    "200000-220000|456|1000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1557,
+      "N_dies_by_horizon_among_passes": 352
+    },
+    "200000-220000|789|1000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1557,
+      "N_dies_by_horizon_among_passes": 352
+    },
+    "200000-220000|123|2000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1479,
+      "N_dies_by_horizon_among_passes": 274
+    },
+    "200000-220000|456|2000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1479,
+      "N_dies_by_horizon_among_passes": 274
+    },
+    "200000-220000|789|2000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1479,
+      "N_dies_by_horizon_among_passes": 274
+    },
+    "200000-220000|123|5000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1415,
+      "N_dies_by_horizon_among_passes": 210
+    },
+    "200000-220000|456|5000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1415,
+      "N_dies_by_horizon_among_passes": 210
+    },
+    "200000-220000|789|5000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1415,
+      "N_dies_by_horizon_among_passes": 210
+    },
+    "200000-220000|123|10000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1360,
+      "N_dies_by_horizon_among_passes": 155
+    },
+    "200000-220000|456|10000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1360,
+      "N_dies_by_horizon_among_passes": 155
+    },
+    "200000-220000|789|10000000": {
+      "N_total": 1634,
+      "N_passes_tf": 1360,
+      "N_dies_by_horizon_among_passes": 155
+    }
+  }
+}

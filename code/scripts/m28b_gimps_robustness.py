@@ -395,17 +395,29 @@ def main() -> None:
         writer.writerows(dataset_rows)
 
     budgets = [0.01, 0.05]
-    metrics_raw = []
-    sanity_rows = []
-    savings_raw = []
+    metrics_raw: List[Dict[str, object]] = []
+    sanity_rows: List[Dict[str, object]] = []
+    savings_raw: List[Dict[str, object]] = []
 
-    # Evaluate per (range, seed, tf_q_limit) on held-out subset.
+    # Evaluate per (range, seed, tf_q_limit) on held-out subset and retain out-of-sample predictions for CI.
+    B = 500
+    P = 200  # permutations for sanity
+    rng_ci = np.random.default_rng(0)
+    metrics_ci: List[Dict[str, object]] = []
+    savings_ci: List[Dict[str, object]] = []
+
     for range_key in sorted(p_by_range.keys()):
         for tf_q_limit in tf_q_limits:
+            y_all_tests = []
+            s_all_tests = []
+
             for seed in seeds:
                 sub = [
                     r for r in dataset_rows
-                    if r["p_range"] == range_key and int(r["tf_q_limit"]) == tf_q_limit and int(r["seed"]) == seed and int(r["passes_tf"]) == 1
+                    if r["p_range"] == range_key
+                    and int(r["tf_q_limit"]) == tf_q_limit
+                    and int(r["seed"]) == seed
+                    and int(r["passes_tf"]) == 1
                 ]
                 n_pass = len(sub)
                 if n_pass < 50:
@@ -476,23 +488,10 @@ def main() -> None:
                     }
                 )
 
-                # permutation sanity
-                perm = rng.permutation(len(probs_iso_test))
-                probs_perm = probs_iso_test[perm]
-                base_rate_p, enrich_p = enrichment_at_budgets(y_test, probs_perm, budgets=budgets)
-                sanity_rows.append(
-                    {
-                        "p_range": range_key,
-                        "seed": seed,
-                        "tf_q_limit": tf_q_limit,
-                        "auc_perm": auc_score(y_test, probs_perm),
-                        "enrichment@1pct_perm": enrich_p[0.01],
-                        "enrichment@5pct_perm": enrich_p[0.05],
-                        "base_rate": base_rate_p,
-                    }
-                )
+                y_all_tests.append(y_test)
+                s_all_tests.append(probs_iso_test)
 
-                # savings (relative to random baseline)
+                # per-seed savings (relative to random baseline) on test
                 for frac in budgets:
                     k = max(1, int(round(frac * len(y_test))))
                     top = float(y_test[np.argsort(probs_iso_test)[::-1][:k]].mean())
@@ -510,6 +509,117 @@ def main() -> None:
                             }
                         )
 
+            if not y_all_tests:
+                continue
+
+            y_comb = np.concatenate(y_all_tests)
+            s_comb = np.concatenate(s_all_tests)
+
+            # permutation sanity on combined test set
+            auc_perm = []
+            e1_perm = []
+            e5_perm = []
+            for _ in range(P):
+                perm = rng_ci.permutation(len(s_comb))
+                s_perm = s_comb[perm]
+                auc_perm.append(auc_score(y_comb, s_perm))
+                _, enrich_p = enrichment_at_budgets(y_comb, s_perm, budgets=budgets)
+                e1_perm.append(enrich_p[0.01])
+                e5_perm.append(enrich_p[0.05])
+            sanity_rows.append(
+                {
+                    "p_range": range_key,
+                    "tf_q_limit": tf_q_limit,
+                    "auc_perm_mean": float(np.mean(auc_perm)),
+                    "auc_perm_ci_low": float(np.quantile(auc_perm, 0.025)),
+                    "auc_perm_ci_high": float(np.quantile(auc_perm, 0.975)),
+                    "enrichment@1pct_perm_mean": float(np.nanmean(e1_perm)),
+                    "enrichment@1pct_perm_ci_low": float(np.nanquantile(e1_perm, 0.025)),
+                    "enrichment@1pct_perm_ci_high": float(np.nanquantile(e1_perm, 0.975)),
+                    "enrichment@5pct_perm_mean": float(np.nanmean(e5_perm)),
+                    "enrichment@5pct_perm_ci_low": float(np.nanquantile(e5_perm, 0.025)),
+                    "enrichment@5pct_perm_ci_high": float(np.nanquantile(e5_perm, 0.975)),
+                }
+            )
+
+            # observed metrics on combined test set + bootstrap CI over observations
+            base_rate_obs, enrich_obs = enrichment_at_budgets(y_comb, s_comb, budgets=budgets)
+            auc_obs = auc_score(y_comb, s_comb)
+
+            idxs = rng_ci.integers(0, len(y_comb), size=(B, len(y_comb)))
+            auc_boot = []
+            e1_boot = []
+            e5_boot = []
+            br_boot = []
+            for b_idx in idxs:
+                yb = y_comb[b_idx]
+                sb = s_comb[b_idx]
+                br, enr = enrichment_at_budgets(yb, sb, budgets=budgets)
+                br_boot.append(br)
+                auc_boot.append(auc_score(yb, sb))
+                e1_boot.append(enr[0.01])
+                e5_boot.append(enr[0.05])
+            auc_boot = np.array(auc_boot, dtype=float)
+            e1_boot = np.array(e1_boot, dtype=float)
+            e5_boot = np.array(e5_boot, dtype=float)
+            br_boot = np.array(br_boot, dtype=float)
+            auc_lo, auc_hi = bootstrap_ci(auc_boot)
+            e1_lo, e1_hi = bootstrap_ci(e1_boot)
+            e5_lo, e5_hi = bootstrap_ci(e5_boot)
+            br_lo, br_hi = bootstrap_ci(br_boot)
+
+            metrics_ci.append(
+                {
+                    "p_range": range_key,
+                    "tf_q_limit": tf_q_limit,
+                    "N_seeds": len(seeds),
+                    "N_test_total": int(len(y_comb)),
+                    "base_rate_mean": base_rate_obs,
+                    "base_rate_ci_low": br_lo,
+                    "base_rate_ci_high": br_hi,
+                    "auc_mean": auc_obs,
+                    "auc_ci_low": auc_lo,
+                    "auc_ci_high": auc_hi,
+                    "enrichment@1pct_mean": enrich_obs[0.01],
+                    "enrichment@1pct_ci_low": e1_lo,
+                    "enrichment@1pct_ci_high": e1_hi,
+                    "enrichment@5pct_mean": enrich_obs[0.05],
+                    "enrichment@5pct_ci_low": e5_lo,
+                    "enrichment@5pct_ci_high": e5_hi,
+                }
+            )
+
+            # savings CI on combined observations (top-k by score)
+            for frac in budgets:
+                k = max(1, int(round(frac * len(y_comb))))
+                order = np.argsort(s_comb)[::-1]
+                top_rate = float(y_comb[order[:k]].mean())
+                delta = top_rate - base_rate_obs
+                for cost_h in prp_cost_hours:
+                    saved_obs = delta * k * cost_h * 3600.0
+                    saved_boot = []
+                    for b_idx in idxs:
+                        yb = y_comb[b_idx]
+                        sb = s_comb[b_idx]
+                        br, _ = enrichment_at_budgets(yb, sb, budgets=[frac])
+                        order_b = np.argsort(sb)[::-1]
+                        k_b = max(1, int(round(frac * len(yb))))
+                        top_b = float(yb[order_b[:k_b]].mean())
+                        saved_boot.append((top_b - br) * k_b * cost_h * 3600.0)
+                    saved_boot = np.array(saved_boot, dtype=float)
+                    lo, hi = bootstrap_ci(saved_boot)
+                    savings_ci.append(
+                        {
+                            "p_range": range_key,
+                            "tf_q_limit": tf_q_limit,
+                            "budget_fraction": frac,
+                            "prp_cost_hours": cost_h,
+                            "saved_compute_seconds_mean": saved_obs,
+                            "saved_compute_seconds_ci_low": lo,
+                            "saved_compute_seconds_ci_high": hi,
+                        }
+                    )
+
     # Save raw metrics
     raw_path = out_dir / "m28b_metrics_raw.csv"
     with raw_path.open("w", encoding="utf-8", newline="") as f:
@@ -520,7 +630,19 @@ def main() -> None:
 
     sanity_path = out_dir / "m28b_sanity_permutation.csv"
     with sanity_path.open("w", encoding="utf-8", newline="") as f:
-        fieldnames = ["p_range", "seed", "tf_q_limit", "base_rate", "auc_perm", "enrichment@1pct_perm", "enrichment@5pct_perm"]
+        fieldnames = [
+            "p_range",
+            "tf_q_limit",
+            "auc_perm_mean",
+            "auc_perm_ci_low",
+            "auc_perm_ci_high",
+            "enrichment@1pct_perm_mean",
+            "enrichment@1pct_perm_ci_low",
+            "enrichment@1pct_perm_ci_high",
+            "enrichment@5pct_perm_mean",
+            "enrichment@5pct_perm_ci_low",
+            "enrichment@5pct_perm_ci_high",
+        ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(sanity_rows)
@@ -532,55 +654,13 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(savings_raw)
 
-    # CI via bootstrap over concatenated per-seed rows (within each p_range, tf_q_limit)
-    rng_ci = np.random.default_rng(0)
-    B = 500
-    metrics_ci = []
-    for range_key in sorted(p_by_range.keys()):
-        for tf_q_limit in tf_q_limits:
-            vals = [r for r in metrics_raw if r["p_range"] == range_key and int(r["tf_q_limit"]) == tf_q_limit and r.get("auc") not in ("", None)]
-            if not vals:
-                continue
-            aucs = np.array([float(r["auc"]) for r in vals], dtype=float)
-            e1 = np.array([float(r["enrichment@1pct"]) for r in vals], dtype=float)
-            e5 = np.array([float(r["enrichment@5pct"]) for r in vals], dtype=float)
-            base_rates = np.array([float(r["base_rate"]) for r in vals], dtype=float)
-            # bootstrap over seeds (rows)
-            idxs = rng_ci.integers(0, len(vals), size=(B, len(vals)))
-            auc_boot = aucs[idxs].mean(axis=1)
-            e1_boot = e1[idxs].mean(axis=1)
-            e5_boot = e5[idxs].mean(axis=1)
-            br_boot = base_rates[idxs].mean(axis=1)
-            auc_lo, auc_hi = bootstrap_ci(auc_boot)
-            e1_lo, e1_hi = bootstrap_ci(e1_boot)
-            e5_lo, e5_hi = bootstrap_ci(e5_boot)
-            br_lo, br_hi = bootstrap_ci(br_boot)
-            metrics_ci.append(
-                {
-                    "p_range": range_key,
-                    "tf_q_limit": tf_q_limit,
-                    "N_seeds": len(vals),
-                    "auc_mean": float(aucs.mean()),
-                    "auc_ci_low": auc_lo,
-                    "auc_ci_high": auc_hi,
-                    "enrichment@1pct_mean": float(e1.mean()),
-                    "enrichment@1pct_ci_low": e1_lo,
-                    "enrichment@1pct_ci_high": e1_hi,
-                    "enrichment@5pct_mean": float(e5.mean()),
-                    "enrichment@5pct_ci_low": e5_lo,
-                    "enrichment@5pct_ci_high": e5_hi,
-                    "base_rate_mean": float(base_rates.mean()),
-                    "base_rate_ci_low": br_lo,
-                    "base_rate_ci_high": br_hi,
-                }
-            )
-
     metrics_ci_path = out_dir / "m28b_metrics_ci.csv"
     with metrics_ci_path.open("w", encoding="utf-8", newline="") as f:
         fieldnames = [
             "p_range",
             "tf_q_limit",
             "N_seeds",
+            "N_test_total",
             "base_rate_mean",
             "base_rate_ci_low",
             "base_rate_ci_high",
@@ -597,36 +677,6 @@ def main() -> None:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(metrics_ci)
-
-    savings_ci = []
-    for range_key in sorted(p_by_range.keys()):
-        for tf_q_limit in tf_q_limits:
-            for frac in budgets:
-                for cost_h in prp_cost_hours:
-                    vals = [
-                        r for r in savings_raw
-                        if r["p_range"] == range_key
-                        and int(r["tf_q_limit"]) == tf_q_limit
-                        and float(r["budget_fraction"]) == frac
-                        and float(r["prp_cost_hours"]) == float(cost_h)
-                    ]
-                    if not vals:
-                        continue
-                    arr = np.array([float(r["saved_compute_seconds"]) for r in vals], dtype=float)
-                    idxs = rng_ci.integers(0, len(arr), size=(B, len(arr)))
-                    boot = arr[idxs].mean(axis=1)
-                    lo, hi = bootstrap_ci(boot)
-                    savings_ci.append(
-                        {
-                            "p_range": range_key,
-                            "tf_q_limit": tf_q_limit,
-                            "budget_fraction": frac,
-                            "prp_cost_hours": cost_h,
-                            "saved_compute_seconds_mean": float(arr.mean()),
-                            "saved_compute_seconds_ci_low": lo,
-                            "saved_compute_seconds_ci_high": hi,
-                        }
-                    )
 
     savings_ci_path = out_dir / "m28b_savings_ci.csv"
     with savings_ci_path.open("w", encoding="utf-8", newline="") as f:
@@ -698,18 +748,14 @@ def main() -> None:
         "compute-seconds saved",
     )
 
-    # Sanity plot: collect per range, mean over seeds for each tf_q_limit
-    sanity_auc = {}
-    sanity_e1 = {}
+    # Sanity plot: per range, use permutation means
+    sanity_auc = {k: [] for k in sorted(p_by_range.keys())}
+    sanity_e1 = {k: [] for k in sorted(p_by_range.keys())}
     for range_key in sorted(p_by_range.keys()):
-        aucs = []
-        e1s = []
         for L in tf_q_limits:
-            rows = [r for r in sanity_rows if r["p_range"] == range_key and int(r["tf_q_limit"]) == L]
-            aucs.append(float(np.mean([float(r["auc_perm"]) for r in rows])) if rows else float("nan"))
-            e1s.append(float(np.mean([float(r["enrichment@1pct_perm"]) for r in rows])) if rows else float("nan"))
-        sanity_auc[range_key] = aucs
-        sanity_e1[range_key] = e1s
+            row = next((r for r in sanity_rows if r["p_range"] == range_key and int(r["tf_q_limit"]) == L), None)
+            sanity_auc[range_key].append(float(row["auc_perm_mean"]) if row else float("nan"))
+            sanity_e1[range_key].append(float(row["enrichment@1pct_perm_mean"]) if row else float("nan"))
     save_sanity_plot(out_dir / "m28b_sanity_plot.png", sanity_auc, sanity_e1)
 
     # TeX table: show mean +/- CI for enrichment@5% and AUC, per range

@@ -26,6 +26,7 @@ __pycache__/
 # Experiment outputs
 code/out/
 out/wave_atlas/m27_smoke/
+out/wave_atlas/m28b_gimps_smoke/
 
 # OS/editor junk
 .DS_Store
