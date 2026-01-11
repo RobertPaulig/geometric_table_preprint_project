@@ -971,3 +971,23 @@ PYTHONPATH=code python code/scripts/m35_scale_sweep.py \
   --seed 123 \
   --out-dir out/wave_atlas/m35
 ```
+
+## M36 - Scale law (analysis from M35)
+Status: Done (tag wave-atlas-v1.27.1)
+
+**Цель:** превратить M35 в правило/вывод: best-конфиг по $n_{\mathrm{start}}$ и простой scaling-fit для wave\_strength, без новых прогонов.
+
+**DoD (артефакты):**
+- out/wave_atlas/m36/m36_best_config_by_nstart.csv
+- out/wave_atlas/m36/m36_scaling_fit.json
+- out/wave_atlas/m36/m36_plots/* (минимум: wave\_strength best vs n\_start + best K vs n\_start)
+- out/wave_atlas/m36/m36_table.tex
+- out/wave_atlas/m36/m36_manifest.json (sha256 всех ключевых файлов + параметры + git sha)
+- wave_atlas.tex: раздел M36 + \clearpage
+
+**Команда:**
+```bash
+PYTHONPATH=code python code/scripts/m36_scale_law.py \
+  --m35-summary-csv out/wave_atlas/m35/m35_summary.csv \
+  --out-dir out/wave_atlas/m36
+```

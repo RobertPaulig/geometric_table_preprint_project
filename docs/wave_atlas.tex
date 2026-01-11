@@ -1200,4 +1200,28 @@ and select a best configuration (by a visibility score combining wave\_strength,
 \end{table}
 
 \clearpage
+\section{M36 Scale law (analysis from M35)}
+We measure the wave as a tracked wavefront peak $k_{\mathrm{peak}}(t)$ (M33/M34b) and its visibility via wave\_strength (median peak prominence normalized by MAD) from the per-column profile.
+Across the M35 sweep, the best-performing regime for the largest tested $n_{\mathrm{start}}$ uses $K=1024$ with invq weighting; the best-of overlay is visually consistent with a coherent tail track, while permute-columns sanity degrades it.
+A simple fit of best-per-$n_{\mathrm{start}}$ wave\_strength versus $\ln(n_{\mathrm{start}})$ yields a near-zero slope ($b\approx-0.02$, $R^2\approx0.02$) in this sweep, suggesting no strong monotone scaling with $n_{\mathrm{start}}$ under the tested grid.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m36/m36_plots/m36_wave_strength_best_vs_nstart.png}
+\caption{Best wave\_strength per $n_{\mathrm{start}}$ with a linear fit versus $\ln(n_{\mathrm{start}})$ (M36).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m36/m36_plots/m36_best_K_vs_nstart.png}
+\caption{Best window size $K$ selected per $n_{\mathrm{start}}$ (M36).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m36/m36_table.tex}
+\caption{Best configuration per $n_{\mathrm{start}}$ (M36).}
+\end{table}
+
+\clearpage
 \end{document}

@@ -1,0 +1,13 @@
+{
+  "params": {
+    "m35_summary_csv": "out/wave_atlas/m35/m35_summary.csv"
+  },
+  "git_sha": "00d747e79e61796e3cb1072ce97a4692964fe836",
+  "files": {
+    "m36_best_config_by_nstart.csv": "2fbfc6b3baaec8a5274ba7520a493ee1e436bd08de021502def86ebaa37ae701",
+    "m36_plots/m36_best_K_vs_nstart.png": "2cbf5eccfe51641362956980bc51f3b60472300bf1b4a5c0dfb6abba6e3eeef5",
+    "m36_plots/m36_wave_strength_best_vs_nstart.png": "5822f0ee8f3b5880a55992ee1139d9c73ffaacaf2aab7b40f64f9514929f437f",
+    "m36_scaling_fit.json": "0f923a1c35bcad1f7628d5f722d8887164a842df4091da10105f52fcf27fd3df",
+    "m36_table.tex": "188131ac0881b6ac3fefb8fb24016262012031d61be90dacc5c6b728f5ee47e2"
+  }
+}
