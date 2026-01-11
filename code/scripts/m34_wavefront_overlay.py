@@ -29,6 +29,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--mode", type=str, default="values", choices=["values", "occupancy"])
     p.add_argument("--weights", type=str, default="invq", choices=["invq"])
     p.add_argument("--peaks", type=int, default=3)
+    p.add_argument("--overlay", type=str, default="tail", choices=["tail", "vlines"])
     p.add_argument("--fps", type=int, default=30)
     p.add_argument("--format", type=str, default="mp4", choices=["mp4", "gif"])
     p.add_argument("--sanity", type=str, default="none", choices=["none", "permute_cols"])
@@ -180,6 +181,10 @@ def render_video_for_nstart(
         )
         for i in range(min(args.peaks, 3))
     ]
+    tails = [
+        ax.plot([], [], color=colors[i], linewidth=1.6, alpha=0.95, label=f"peak{i+1}")[0]
+        for i in range(min(args.peaks, 3))
+    ]
 
     mean_dx = float(summary.get("mean_dx", float("nan")))
     slope = float(summary.get("slope_kpeak", float("nan")))
@@ -214,13 +219,36 @@ def render_video_for_nstart(
         ax.set_title(f"M34 overlay ({args.sanity})  n_start={n_start}  t={t}")
 
         peaks_here = tracks.get(t, {})
-        for pid, vl in enumerate(vlines):
+        for pid in range(min(args.peaks, 3)):
             k_peak = peaks_here.get(pid)
-            if k_peak is None or k_peak <= 0:
-                vl.set_visible(False)
-                continue
-            vl.set_xdata([k_peak - 1, k_peak - 1])
-            vl.set_visible(True)
+            if args.overlay == "vlines":
+                vl = vlines[pid]
+                if k_peak is None or k_peak <= 0:
+                    vl.set_visible(False)
+                else:
+                    vl.set_xdata([k_peak - 1, k_peak - 1])
+                    vl.set_visible(True)
+                tails[pid].set_visible(False)
+            else:
+                xs: List[float] = []
+                ys: List[float] = []
+                for y in range(args.H):
+                    tt = t - y
+                    if tt < 0:
+                        break
+                    k_hist = tracks.get(tt, {}).get(pid)
+                    if k_hist is None or k_hist <= 0:
+                        continue
+                    xs.append(float(k_hist - 1))
+                    ys.append(float(y))
+
+                tail = tails[pid]
+                if len(xs) < 2:
+                    tail.set_visible(False)
+                else:
+                    tail.set_data(xs, ys)
+                    tail.set_visible(True)
+                vlines[pid].set_visible(False)
 
         frame_path = frames_dir / f"frame_{t:04d}.png"
         fig.savefig(frame_path)
@@ -234,7 +262,7 @@ def render_video_for_nstart(
 
     # Encode video
     if args.format == "mp4":
-        out_video = out_dir / "m34_overlay.mp4"
+        out_video = out_dir / ("m34b_overlay_tail.mp4" if args.overlay == "tail" else "m34_overlay.mp4")
         cmd = [
             "ffmpeg",
             "-y",
@@ -253,7 +281,7 @@ def render_video_for_nstart(
         subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
         # gif via ffmpeg as well (smaller codepath)
-        out_video = out_dir / "m34_overlay.gif"
+        out_video = out_dir / ("m34b_overlay_tail.gif" if args.overlay == "tail" else "m34_overlay.gif")
         cmd = [
             "ffmpeg",
             "-y",
@@ -374,6 +402,7 @@ def main() -> None:
             "dt": args.dt,
             "smooth": args.smooth,
             "peaks": args.peaks,
+            "overlay": args.overlay,
             "fps": args.fps,
             "format": args.format,
             "sanity": args.sanity,

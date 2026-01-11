@@ -898,3 +898,42 @@ PYTHONPATH=code python code/scripts/m34_wavefront_overlay.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m34/sanity_permute_cols
 ```
+
+## M34b - Wavefront overlay tail tracks (viz patch)
+Status: Done (tag wave-atlas-v1.26.1)
+
+**Цель:** сделать “волну как глаз видит” видимой: вместо вертикальных маркеров текущего пика рисуем tail-трек $k_{\mathrm{peak}}(t-y)$ в координатах кадра (диагональная траектория фронта). Используем треки из M33, без пересчёта M33.
+
+**DoD (артефакты):**
+- out/wave_atlas/m34b/real/n*/m34b_overlay_tail.mp4 + keyframes
+- out/wave_atlas/m34b/sanity_permute_cols/n*/m34b_overlay_tail.mp4 + keyframes
+- out/wave_atlas/m34b/m34_preview_grid.png (для PDF)
+- out/wave_atlas/m34b/m34_manifest.json (sha256 всех ключевых файлов + параметры + git sha)
+- wave_atlas.tex: preview использует out/wave_atlas/m34b/m34_preview_grid.png
+
+**Команды:**
+```bash
+# real (tail overlay)
+PYTHONPATH=code python code/scripts/m34_wavefront_overlay.py \
+  --m33-dir out/wave_atlas/m33 \
+  --n-start-list 1000000,10000000,50000000 \
+  --frames 300 --n-step 1 --H 512 --K 512 \
+  --dt 5 --smooth 9 \
+  --mode values --weights invq --peaks 3 \
+  --overlay tail \
+  --fps 30 --format mp4 \
+  --sanity none \
+  --out-dir out/wave_atlas/m34b/real
+
+# sanity (tail overlay + permute columns)
+PYTHONPATH=code python code/scripts/m34_wavefront_overlay.py \
+  --m33-dir out/wave_atlas/m33 \
+  --n-start-list 1000000,10000000,50000000 \
+  --frames 300 --n-step 1 --H 512 --K 512 \
+  --dt 5 --smooth 9 \
+  --mode values --weights invq --peaks 3 \
+  --overlay tail \
+  --fps 30 --format mp4 \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m34b/sanity_permute_cols
+```

@@ -1,0 +1,37 @@
+{
+  "params": {
+    "mode": "values",
+    "weights": "invq",
+    "n_start_list": [
+      1000000,
+      10000000,
+      50000000
+    ],
+    "frames": 300,
+    "n_step": 1,
+    "H": 512,
+    "K": 512,
+    "dt": 5,
+    "smooth": 9,
+    "peaks": 3,
+    "overlay": "tail",
+    "fps": 30,
+    "format": "mp4",
+    "sanity": "permute_cols",
+    "seed": 123,
+    "runtime_seconds": 268.64992356300354
+  },
+  "git_sha": "f3fd00e7e9237cc3332d82592d0b32fa465e1f80",
+  "files": {
+    "m34_summary.json": "745805d14d6446905524f314564910cce74e84ac5e71a690acd21e7d08900ba3",
+    "n10e6/keyframe_t000.png": "91d88cd93f4f3169acc5c3a152b87bd1da64931101be5f2319785a4be25cdabf",
+    "n10e6/keyframe_t150.png": "011b97c1ba3b3930247ccd6b6f0ce71bbc7738d765489d6d2635e521e6b97324",
+    "n10e6/m34b_overlay_tail.mp4": "ea6c2f08d1cfcbccdf2d02ca8d0fdbc168953dee4dc02d9a4d95e0c6e3800ca7",
+    "n1e6/keyframe_t000.png": "2ced711e0af3efd4b2e2e197fa6fb959e7f16e07f0da051f9fc89dfe9138ad72",
+    "n1e6/keyframe_t150.png": "8341f60c295b107d5e2bfa9080868a8e1d8b2dc262349ec1e293a077a567d89d",
+    "n1e6/m34b_overlay_tail.mp4": "e9729ff740fd4abe8470933f977223ad5a8e1c0fab6b6560f6d3aecbe9ea568b",
+    "n50e6/keyframe_t000.png": "19cbfb59f10ff95cd7e83c58a3463c8f02628805f5ba043d919adeea234bcb9e",
+    "n50e6/keyframe_t150.png": "97f092ad8ba6e020e0b9a8d493131dfe4352002ed343b5cc0c7c4b0d67bc6447",
+    "n50e6/m34b_overlay_tail.mp4": "f32ea6959be221115b24d51f99c99abee08986050159c642179ebc404716d0b3"
+  }
+}

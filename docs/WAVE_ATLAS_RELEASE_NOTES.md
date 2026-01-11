@@ -301,3 +301,11 @@ Commit: (tag wave-atlas-v1.26)
 Changes: M34 wavefront overlay video (visual confirmation): MP4 overlays (values-mode heatmap, W=1/q) with k_peak(t) tracks for real vs permute-cols sanity, plus preview grid in TeX. Video SHA256 is recorded in out/wave_atlas/m34/m34_manifest.json.
 PDF size: 4148888 bytes
 PDF SHA256: 0C7E5E28E085C93FE16468C17E9AA93900EED105E4035266B6668B580A83397F
+
+Wave Atlas v1.26.1 Release Notes
+
+Tag: wave-atlas-v1.26.1
+Commit: (tag wave-atlas-v1.26.1)
+Changes: M34b docs+viz-only patch: replace vertical peak markers with an in-frame tail track overlay so the wavefront appears as a diagonal trajectory; still uses M33 tracks (no recomputation). Updated TeX preview to use out/wave_atlas/m34b/m34_preview_grid.png. Video SHA256 is recorded in out/wave_atlas/m34b/m34_manifest.json.
+PDF size: 4273751 bytes
+PDF SHA256: 98550076AE0B9B93D275649C2236BA530312E7E415346C220AE1F63B023230B0
