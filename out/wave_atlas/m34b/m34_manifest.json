@@ -1,0 +1,29 @@
+{
+  "params": {
+    "note": "parent manifest includes preview grid across real vs sanity"
+  },
+  "git_sha": "f3fd00e7e9237cc3332d82592d0b32fa465e1f80",
+  "files": {
+    "m34_preview_grid.png": "0039228b6ee830bd50b9e3f64724a709dec42f55cc8d05783f766c5c2e6fcb87",
+    "real/m34_summary.json": "5dae62c6330f4807badd306cb0a2955558cabc26420c8cc3f3e6dfbbe3c2040f",
+    "real/n10e6/keyframe_t000.png": "7b6af806e2a1b196473cdc1c9a69f1f7d79afe7ed6e6bace9307287f4719b0cd",
+    "real/n10e6/keyframe_t150.png": "c1f5132cf38982b8d204068917795f050bb5aacf118429b3e5562cb2f3dae959",
+    "real/n10e6/m34b_overlay_tail.mp4": "0b9f142223b95ef54dbb985aba797f9cfeb25bac54a96a6367d934b1d8e32cd6",
+    "real/n1e6/keyframe_t000.png": "be0614a4d2b2f1e2b519f68277aa4e610d08b50195c2e3634090485b5164cef8",
+    "real/n1e6/keyframe_t150.png": "c9cd5f38baf38e7b9bddf9d3cddde4d9fdcd745aa5b2389ba8c98680856f6b6a",
+    "real/n1e6/m34b_overlay_tail.mp4": "f43ed054f3bd7e4169614a895090f8ea1f7f85082e839913e0cf1fe9426eb4a3",
+    "real/n50e6/keyframe_t000.png": "54824b074c8380e2ff0ce1a53595b17f979a63ee397f3aa7017f29bdf20d25bb",
+    "real/n50e6/keyframe_t150.png": "0cd97b9cfa2d6f8b4e5874897060c46d90e9a6042444c5e1425a8c48021534a2",
+    "real/n50e6/m34b_overlay_tail.mp4": "1673252e99f1c7d1ddae70498c608ce1af6ad6b01bc48ac2a2f20c4e50bed791",
+    "sanity_permute_cols/m34_summary.json": "745805d14d6446905524f314564910cce74e84ac5e71a690acd21e7d08900ba3",
+    "sanity_permute_cols/n10e6/keyframe_t000.png": "91d88cd93f4f3169acc5c3a152b87bd1da64931101be5f2319785a4be25cdabf",
+    "sanity_permute_cols/n10e6/keyframe_t150.png": "011b97c1ba3b3930247ccd6b6f0ce71bbc7738d765489d6d2635e521e6b97324",
+    "sanity_permute_cols/n10e6/m34b_overlay_tail.mp4": "ea6c2f08d1cfcbccdf2d02ca8d0fdbc168953dee4dc02d9a4d95e0c6e3800ca7",
+    "sanity_permute_cols/n1e6/keyframe_t000.png": "2ced711e0af3efd4b2e2e197fa6fb959e7f16e07f0da051f9fc89dfe9138ad72",
+    "sanity_permute_cols/n1e6/keyframe_t150.png": "8341f60c295b107d5e2bfa9080868a8e1d8b2dc262349ec1e293a077a567d89d",
+    "sanity_permute_cols/n1e6/m34b_overlay_tail.mp4": "e9729ff740fd4abe8470933f977223ad5a8e1c0fab6b6560f6d3aecbe9ea568b",
+    "sanity_permute_cols/n50e6/keyframe_t000.png": "19cbfb59f10ff95cd7e83c58a3463c8f02628805f5ba043d919adeea234bcb9e",
+    "sanity_permute_cols/n50e6/keyframe_t150.png": "97f092ad8ba6e020e0b9a8d493131dfe4352002ed343b5cc0c7c4b0d67bc6447",
+    "sanity_permute_cols/n50e6/m34b_overlay_tail.mp4": "f32ea6959be221115b24d51f99c99abee08986050159c642179ebc404716d0b3"
+  }
+}
