@@ -282,3 +282,14 @@ PDF SHA256: B801B70EE77E634EA49BF01AB87F98132C08737D540A63AE6723F3ECCE5F5AAE
 Key numbers (M32; dt=5, H=512, K=512; conf_min=0.15):
 - real: valid frac 0.508, mean dx_residual 2.65e-4 columns, median q_eff 2.25e4
 - sanity (permute_cols): valid frac 0.0 (q_eff suppressed by confidence filter)
+
+Wave Atlas v1.25 Release Notes
+
+Tag: wave-atlas-v1.25
+Commit: (tag wave-atlas-v1.25)
+Changes: M33 wavefront drift (scroll-perceived wave): per-column energy profile (values-mode, W=1/q), peak tracking k_peak(t), drift slope Δk/Δn, n_start sweep + permute-cols sanity + artifacts/manifest + TeX section.
+PDF size: 4058967 bytes
+PDF SHA256: 6EFFD40550CD4FF9B4268FA60B173F1B3BA28F404443F7C23DB55214A95EF2BE
+Key numbers (M33; dt=5, H=512, K=512, smooth=9; values-mode):
+- n_start=1e6: mean dx_profile 0.665, slope_kpeak 0.0508
+- n_start=5e7: mean dx_profile 0.533, slope_kpeak 0.0333
