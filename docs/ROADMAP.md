@@ -857,3 +857,44 @@ PYTHONPATH=code python code/scripts/m33_wavefront_drift.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m33/sanity_permute_cols
 ```
+
+## M34 - Wavefront overlay video (visual confirmation)
+Status: Done (tag wave-atlas-v1.26)
+
+**Цель:** визуально подтвердить M33: поверх values-heatmap (W=1/q) рисуем треки гребня $k_{\mathrm{peak}}(t)$ (1--3 пика) и сравниваем с sanity `permute_cols`.
+
+**DoD (артефакты):**
+- out/wave_atlas/m34/real/n1e6/m34_overlay.mp4 + keyframe_t000.png + keyframe_t150.png
+- out/wave_atlas/m34/real/n10e6/m34_overlay.mp4 + keyframes
+- out/wave_atlas/m34/real/n50e6/m34_overlay.mp4 + keyframes
+- out/wave_atlas/m34/sanity_permute_cols/* (то же для sanity)
+- out/wave_atlas/m34/m34_preview_grid.png (для PDF)
+- out/wave_atlas/m34/real/m34_summary.json + m34_manifest.json
+- out/wave_atlas/m34/sanity_permute_cols/m34_summary.json + m34_manifest.json
+- out/wave_atlas/m34/m34_manifest.json (sha256 каждого файла + параметры + git sha)
+- wave_atlas.tex: раздел M34 + \clearpage
+
+**Команды:**
+```bash
+# real (MP4 overlay)
+PYTHONPATH=code python code/scripts/m34_wavefront_overlay.py \
+  --m33-dir out/wave_atlas/m33 \
+  --n-start-list 1000000,10000000,50000000 \
+  --frames 300 --n-step 1 --H 512 --K 512 \
+  --dt 5 --smooth 9 \
+  --mode values --weights invq --peaks 3 \
+  --fps 30 --format mp4 \
+  --sanity none \
+  --out-dir out/wave_atlas/m34/real
+
+# sanity (permute columns)
+PYTHONPATH=code python code/scripts/m34_wavefront_overlay.py \
+  --m33-dir out/wave_atlas/m33 \
+  --n-start-list 1000000,10000000,50000000 \
+  --frames 300 --n-step 1 --H 512 --K 512 \
+  --dt 5 --smooth 9 \
+  --mode values --weights invq --peaks 3 \
+  --fps 30 --format mp4 \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m34/sanity_permute_cols
+```

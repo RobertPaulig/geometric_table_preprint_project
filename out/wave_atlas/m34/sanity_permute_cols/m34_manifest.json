@@ -1,0 +1,36 @@
+{
+  "params": {
+    "mode": "values",
+    "weights": "invq",
+    "n_start_list": [
+      1000000,
+      10000000,
+      50000000
+    ],
+    "frames": 300,
+    "n_step": 1,
+    "H": 512,
+    "K": 512,
+    "dt": 5,
+    "smooth": 9,
+    "peaks": 3,
+    "fps": 30,
+    "format": "mp4",
+    "sanity": "permute_cols",
+    "seed": 123,
+    "runtime_seconds": 135.34318232536316
+  },
+  "git_sha": "67e8924b056e8fff79825f7fe40e0c2b57cdadd9",
+  "files": {
+    "m34_summary.json": "cab1d88f88a7ca8743a55ae1894d1178f3f773552566eff2735524c3e94451e7",
+    "n10e6/keyframe_t000.png": "96e59d0c7d58e0c7b16f4c7733b0430cdbafc169a12be8d1c0f69b3540438161",
+    "n10e6/keyframe_t150.png": "285c1fa56d1485f544607388041d7d4ed6014d2e9f48400f5db94852de3c2dfb",
+    "n10e6/m34_overlay.mp4": "f82cb45155e268581b8c1d563226889a940c2a24f3afdd37fab3744414683b1e",
+    "n1e6/keyframe_t000.png": "6e5ba60ec7f009c801e83fab9bc498b711165e696eef116b3ec5526dae88b1ff",
+    "n1e6/keyframe_t150.png": "29cfe3d0e34b60dadb0d326b1787ca7183a99668262e3c3935cbe65d59497934",
+    "n1e6/m34_overlay.mp4": "32f15ed0b25b15b1ec95f8b95ec9fce45de7855069112c5a45438e52f304fb3f",
+    "n50e6/keyframe_t000.png": "aa64ba60d893411f6f1b9535ceacfc01fa647a1dd9f15c5ff566e00bb193c115",
+    "n50e6/keyframe_t150.png": "a628158a22f4067f9f8b1899cf5b047fdee5765c585495c7ccd29c2f8e25515c",
+    "n50e6/m34_overlay.mp4": "b58ccf7e717d17ccfb76767baeb19de3e06021a421a2282c715da2031dc747d2"
+  }
+}

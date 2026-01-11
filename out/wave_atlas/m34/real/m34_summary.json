@@ -1,0 +1,33 @@
+{
+  "params": {
+    "mode": "values",
+    "weights": "invq",
+    "n_start_list": [
+      1000000,
+      10000000,
+      50000000
+    ],
+    "frames": 300,
+    "n_step": 1,
+    "H": 512,
+    "K": 512,
+    "dt": 5,
+    "smooth": 9,
+    "peaks": 3,
+    "fps": 30,
+    "format": "mp4",
+    "sanity": "none",
+    "seed": 123
+  },
+  "m33_inputs": {
+    "dir": "out/wave_atlas/m33",
+    "tracks_csv": "out/wave_atlas/m33/m33_wavefront_tracks.csv",
+    "summary_csv": "out/wave_atlas/m33/m33_summary_by_nstart.csv"
+  },
+  "runtime_seconds": 131.69117259979248,
+  "videos": {
+    "1000000": "n1e6/m34_overlay.mp4",
+    "10000000": "n10e6/m34_overlay.mp4",
+    "50000000": "n50e6/m34_overlay.mp4"
+  }
+}

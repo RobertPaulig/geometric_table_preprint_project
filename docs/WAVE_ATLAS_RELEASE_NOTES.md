@@ -293,3 +293,11 @@ PDF SHA256: 6EFFD40550CD4FF9B4268FA60B173F1B3BA28F404443F7C23DB55214A95EF2BE
 Key numbers (M33; dt=5, H=512, K=512, smooth=9; values-mode):
 - n_start=1e6: mean dx_profile 0.665, slope_kpeak 0.0508
 - n_start=5e7: mean dx_profile 0.533, slope_kpeak 0.0333
+
+Wave Atlas v1.26 Release Notes
+
+Tag: wave-atlas-v1.26
+Commit: (tag wave-atlas-v1.26)
+Changes: M34 wavefront overlay video (visual confirmation): MP4 overlays (values-mode heatmap, W=1/q) with k_peak(t) tracks for real vs permute-cols sanity, plus preview grid in TeX. Video SHA256 is recorded in out/wave_atlas/m34/m34_manifest.json.
+PDF size: 4148888 bytes
+PDF SHA256: 0C7E5E28E085C93FE16468C17E9AA93900EED105E4035266B6668B580A83397F
