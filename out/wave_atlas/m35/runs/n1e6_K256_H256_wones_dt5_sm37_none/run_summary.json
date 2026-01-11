@@ -1,0 +1,36 @@
+{
+  "config": {
+    "n_start": 1000000,
+    "K": 256,
+    "H": 256,
+    "weights": "ones",
+    "frames": 600,
+    "n_step": 1,
+    "dt": 5,
+    "smooth": 37,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "sanity": "none"
+  },
+  "result": {
+    "run_id": "n1e6_K256_H256_wones_dt5_sm37_none",
+    "n_start": 1000000,
+    "K": 256,
+    "H": 256,
+    "weights": "ones",
+    "smooth": 37,
+    "dt": 5,
+    "frames": 600,
+    "conf_min": 0.15,
+    "sanity": "none",
+    "runtime_s": 0.29943275451660156,
+    "mean_dx": 0.0,
+    "median_dx": 0.0,
+    "q_eff": NaN,
+    "slope_kpeak": -1.5565364711866094e-17,
+    "track_r2": NaN,
+    "valid_frac": 1.0,
+    "wave_strength": 32.38710283071866,
+    "notes": ""
+  }
+}

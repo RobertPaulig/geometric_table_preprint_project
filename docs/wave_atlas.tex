@@ -1169,4 +1169,35 @@ degrades. The MP4 artifacts are stored under \texttt{out/wave\_atlas/m34/real/} 
 \end{figure}
 
 \clearpage
+\section{M35 Scale sweep (n\_start $\times$ window size $\times$ weights)}
+We run a grid sweep over $n_{\mathrm{start}}$, window sizes ($K$ with $H=K$), and profile weights (invq/log1pq/ones) to test the hypothesis
+that the visually perceived wavefront becomes stronger at larger scales, possibly only under a matching window and weighting regime.
+We quantify both drift (mean\_dx, slope\_kpeak) and visibility via a robust wave\_strength metric (median peak prominence normalized by MAD),
+and select a best configuration (by a visibility score combining wave\_strength, track $R^2$, and valid fraction) for an overlay video.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m35/m35_wave_strength_vs_nstart.png}
+\caption{Wave visibility (wave\_strength) versus $n_{\mathrm{start}}$ for each weighting scheme (best $K$ per weights) (M35).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m35/m35_heatmap_wave_strength.png}
+\caption{Wave strength heatmap over ($K$, weights) for each $n_{\mathrm{start}}$ (M35).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m35/best_overlay/m35_best_preview.png}
+\caption{Best-of tail overlay preview (real vs permute-cols sanity) for the largest available $n_{\mathrm{start}}$ (M35). MP4 files are stored under \texttt{out/wave\_atlas/m35/best\_overlay/}.}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m35/m35_table.tex}
+\caption{Top configuration per $n_{\mathrm{start}}$ by visibility score (M35).}
+\end{table}
+
+\clearpage
 \end{document}
