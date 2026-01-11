@@ -233,15 +233,15 @@ def compute_run(cfg: RunConfig, out_dir: Path, seed: int) -> Tuple[RunResult, Di
     if cfg.sanity == "permute_cols":
         perm = rng.permutation(cfg.K)
 
-    dxs: List[int] = []
+    dxs: List[float] = []
     confs: List[float] = []
     k_peak_series: List[int] = []
     peak_val_series: List[float] = []
     baseline_series: List[float] = []
     mad_series: List[float] = []
 
-    profiles: List[np.ndarray] = []
     profiles_sm: List[np.ndarray] = []
+    z_series: List[float] = []
 
     for t in range(cfg.frames):
         n_top = cfg.n_start + t * cfg.n_step
@@ -250,7 +250,6 @@ def compute_run(cfg: RunConfig, out_dir: Path, seed: int) -> Tuple[RunResult, Di
             prof = prof[perm]
 
         prof_sm = rolling_mean(prof, cfg.smooth)
-        profiles.append(prof)
         profiles_sm.append(prof_sm)
 
         ks, vals = best_peaks(prof_sm, cfg.peaks)
@@ -260,23 +259,33 @@ def compute_run(cfg: RunConfig, out_dir: Path, seed: int) -> Tuple[RunResult, Di
         peak_val_series.append(v0)
         baseline = float(np.median(prof_sm))
         baseline_series.append(baseline)
-        mad_series.append(mad(prof_sm))
+        m = mad(prof_sm)
+        mad_series.append(m)
+        z = float((v0 - baseline) / (m + 1e-9)) if (not math.isnan(v0)) else float("nan")
+        z_series.append(z)
 
         if t >= cfg.dt:
-            shift, peak = phase_corr_shift_1d(profiles_sm[t - cfg.dt], prof_sm)
-            dxs.append(shift)
-            confs.append(peak)
+            # Drift proxy from peak tracking: dk over dt (integer k units)
+            k_prev = k_peak_series[t - cfg.dt]
+            if k0 > 0 and k_prev > 0:
+                dxs.append(float(k0 - k_prev))
+                # confidence proxy from wave prominence (z-score-ish)
+                z_prev = z_series[t - cfg.dt]
+                confs.append(float(min(z, z_prev)))
+            else:
+                dxs.append(float("nan"))
+                confs.append(float("nan"))
 
     dx_arr = np.array(dxs, dtype=np.float64)
     conf_arr = np.array(confs, dtype=np.float64)
-    valid_mask = conf_arr >= float(cfg.conf_min)
+    valid_mask = np.isfinite(dx_arr) & np.isfinite(conf_arr) & (conf_arr >= float(cfg.conf_min))
     valid_frac = float(valid_mask.mean()) if valid_mask.size else 0.0
 
     mean_dx = float(np.mean(dx_arr[valid_mask])) if valid_mask.any() else float("nan")
     median_dx = float(np.median(dx_arr[valid_mask])) if valid_mask.any() else float("nan")
     q_eff = float(cfg.dt) / mean_dx if (not math.isnan(mean_dx) and mean_dx > 0) else float("nan")
 
-    # k_peak slope + r2 (use only frames where we have dx confidence info, i.e. t>=dt)
+    # k_peak slope + r2 (use only frames where we have dt-based deltas, i.e. t>=dt)
     t_idx = np.arange(cfg.dt, cfg.frames, dtype=np.float64)
     k_arr = np.array(k_peak_series[cfg.dt :], dtype=np.float64)
     if valid_mask.any():
@@ -856,4 +865,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
