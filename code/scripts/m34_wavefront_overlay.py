@@ -150,6 +150,8 @@ def render_video_for_nstart(
     import matplotlib.pyplot as plt
 
     frames_dir = out_dir / "frames"
+    if frames_dir.exists():
+        shutil.rmtree(frames_dir)
     frames_dir.mkdir(parents=True, exist_ok=True)
 
     perm = None
@@ -163,46 +165,72 @@ def render_video_for_nstart(
     if args.mode == "values":
         vmax = 0.02
 
+    fig, ax = plt.subplots(figsize=(6.2, 6.2), dpi=110)
+    ax.set_xlabel("k (columns)")
+    ax.set_ylabel("rows (n increasing down)")
+    colors = ["#00d4ff", "#00ff6a", "#ffd200"]
+    vlines = [
+        ax.axvline(
+            x=0,
+            color=colors[i],
+            linewidth=1.2,
+            alpha=0.9,
+            visible=False,
+            label=f"peak{i+1}",
+        )
+        for i in range(min(args.peaks, 3))
+    ]
+
+    mean_dx = float(summary.get("mean_dx", float("nan")))
+    slope = float(summary.get("slope_kpeak", float("nan")))
+    q_eff = float("nan")
+    if mean_dx > 0:
+        q_eff = float(args.dt) / float(mean_dx)
+    txt = f"dt={args.dt}  mean_dx={mean_dx:.3g}  slope={slope:.3g}  q_eff≈{q_eff:.3g}"
+    text_box = ax.text(
+        0.01,
+        0.01,
+        txt,
+        transform=ax.transAxes,
+        fontsize=8.5,
+        color="white",
+        bbox=dict(facecolor="black", alpha=0.45, pad=3),
+    )
+
+    # init with first frame
+    img0 = build_heatmap(args.mode, n_start, args.H, args.K)
+    if perm is not None:
+        img0 = img0[:, perm]
+    im = ax.imshow(img0, aspect="auto", origin="upper", cmap="magma", vmin=0.0, vmax=vmax)
+    ax.legend(loc="upper right", fontsize=8)
+    fig.tight_layout()
+
     for t in range(args.frames):
         n_top = n_start + t * args.n_step
         img = build_heatmap(args.mode, n_top, args.H, args.K)
         if perm is not None:
             img = img[:, perm]
-
-        fig, ax = plt.subplots(figsize=(6.2, 6.2), dpi=140)
-        ax.imshow(img, aspect="auto", origin="upper", cmap="magma", vmin=0.0, vmax=vmax)
+        im.set_data(img)
         ax.set_title(f"M34 overlay ({args.sanity})  n_start={n_start}  t={t}")
-        ax.set_xlabel("k (columns)")
-        ax.set_ylabel("rows (n increasing down)")
 
         peaks_here = tracks.get(t, {})
-        colors = ["#00d4ff", "#00ff6a", "#ffd200"]
-        for pid in range(min(args.peaks, 3)):
+        for pid, vl in enumerate(vlines):
             k_peak = peaks_here.get(pid)
             if k_peak is None or k_peak <= 0:
+                vl.set_visible(False)
                 continue
-            x = k_peak - 1
-            ax.axvline(x=x, color=colors[pid], linewidth=1.2, alpha=0.9, label=f"peak{pid+1}")
-
-        mean_dx = float(summary.get("mean_dx", float("nan")))
-        slope = float(summary.get("slope_kpeak", float("nan")))
-        q_eff = float("nan")
-        if mean_dx > 0:
-            q_eff = float(args.dt) / float(mean_dx)
-        txt = f"dt={args.dt}  mean_dx={mean_dx:.3g}  slope={slope:.3g}  q_eff≈{q_eff:.3g}"
-        ax.text(0.01, 0.01, txt, transform=ax.transAxes, fontsize=8.5, color="white", bbox=dict(facecolor="black", alpha=0.45, pad=3))
-
-        ax.legend(loc="upper right", fontsize=8)
-        fig.tight_layout()
+            vl.set_xdata([k_peak - 1, k_peak - 1])
+            vl.set_visible(True)
 
         frame_path = frames_dir / f"frame_{t:04d}.png"
         fig.savefig(frame_path)
-        plt.close(fig)
 
         if t in key_t:
             kf = out_dir / f"keyframe_t{t:03d}.png"
             shutil.copyfile(frame_path, kf)
             keyframes.append(kf)
+
+    plt.close(fig)
 
     # Encode video
     if args.format == "mp4":
@@ -358,4 +386,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
