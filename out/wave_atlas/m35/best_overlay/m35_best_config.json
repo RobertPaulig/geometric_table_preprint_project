@@ -1,0 +1,19 @@
+{
+  "best_run_id": "n200e6_K1024_H1024_winvq_dt5_sm145_none",
+  "visibility_score": 2.3276550018751476,
+  "config": {
+    "n_start": 200000000,
+    "K": 1024,
+    "H": 1024,
+    "weights": "invq",
+    "frames": 600,
+    "n_step": 1,
+    "dt": 5,
+    "smooth": 145,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "sanity": "none"
+  },
+  "real_video": "best_overlay/real/m35_best_overlay_tail.mp4",
+  "sanity_video": "best_overlay/sanity/m35_best_overlay_tail.mp4"
+}

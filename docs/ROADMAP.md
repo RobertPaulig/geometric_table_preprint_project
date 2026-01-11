@@ -937,3 +937,37 @@ PYTHONPATH=code python code/scripts/m34_wavefront_overlay.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m34b/sanity_permute_cols
 ```
+
+## M35 - Scale sweep (n_start × K/H × weights)
+Status: Done (tag wave-atlas-v1.27)
+
+**Цель:** проверить гипотезу "волна усиливается на больших масштабах": свип по $n_{\mathrm{start}}$ × окну ($K$ с $H=K$) × весам профиля (invq/log1pq/ones), с метриками дрейфа и "видимости" (wave_strength), плюс best-of overlay (real vs sanity).
+
+**DoD (артефакты):**
+- out/wave_atlas/m35/m35_summary.csv + m35_summary.json
+- out/wave_atlas/m35/m35_runs_manifest.json + m35_manifest.json (sha256 всех ключевых файлов + параметры + git sha)
+- out/wave_atlas/m35/m35_wave_strength_vs_nstart.png
+- out/wave_atlas/m35/m35_mean_dx_vs_nstart.png
+- out/wave_atlas/m35/m35_qeff_vs_nstart.png
+- out/wave_atlas/m35/m35_heatmap_wave_strength.png
+- out/wave_atlas/m35/m35_track_r2.png
+- out/wave_atlas/m35/m35_table.tex
+- out/wave_atlas/m35/best_overlay/* (mp4 real+sanity + preview)
+- wave_atlas.tex: раздел M35 + \clearpage
+
+**Команда:**
+```bash
+PYTHONPATH=code python code/scripts/m35_scale_sweep.py \
+  --n-start-list 1000000,10000000,50000000,200000000 \
+  --K-list 256,512,1024 \
+  --H-policy matchK \
+  --weights invq,log1pq,ones \
+  --frames 600 --n-step 1 \
+  --dt 5 \
+  --smooth-policy auto \
+  --peaks 3 \
+  --conf-min 0.15 \
+  --sanity one_per_nstart \
+  --seed 123 \
+  --out-dir out/wave_atlas/m35
+```

@@ -1,0 +1,36 @@
+{
+  "config": {
+    "n_start": 10000000,
+    "K": 512,
+    "H": 512,
+    "weights": "invq",
+    "frames": 600,
+    "n_step": 1,
+    "dt": 5,
+    "smooth": 73,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "sanity": "none"
+  },
+  "result": {
+    "run_id": "n10e6_K512_H512_winvq_dt5_sm73_none",
+    "n_start": 10000000,
+    "K": 512,
+    "H": 512,
+    "weights": "invq",
+    "smooth": 73,
+    "dt": 5,
+    "frames": 600,
+    "conf_min": 0.15,
+    "sanity": "none",
+    "runtime_s": 0.7108826637268066,
+    "mean_dx": -0.20672268907563024,
+    "median_dx": 0.0,
+    "q_eff": NaN,
+    "slope_kpeak": 0.08305951626125362,
+    "track_r2": 0.028139179428674943,
+    "valid_frac": 1.0,
+    "wave_strength": 4.123603589380846,
+    "notes": ""
+  }
+}

@@ -309,3 +309,11 @@ Commit: (tag wave-atlas-v1.26.1)
 Changes: M34b docs+viz-only patch: replace vertical peak markers with an in-frame tail track overlay so the wavefront appears as a diagonal trajectory; still uses M33 tracks (no recomputation). Updated TeX preview to use out/wave_atlas/m34b/m34_preview_grid.png. Video SHA256 is recorded in out/wave_atlas/m34b/m34_manifest.json.
 PDF size: 4273751 bytes
 PDF SHA256: 98550076AE0B9B93D275649C2236BA530312E7E415346C220AE1F63B023230B0
+
+Wave Atlas v1.27 Release Notes
+
+Tag: wave-atlas-v1.27
+Commit: (tag wave-atlas-v1.27)
+Changes: M35 scale sweep (n_start × K/H × weights): drift+visibility metrics (wave_strength, track R^2, q_eff proxy), summary tables/plots, and best-of tail overlay (real vs permute-cols sanity) + TeX section and figures.
+PDF size: 4417935 bytes
+PDF SHA256: 0EE304B7E69BDC448FC8326A752C3C4040E375A71AB9DE9DCDC4BFF70971F720
