@@ -317,3 +317,13 @@ Commit: (tag wave-atlas-v1.27)
 Changes: M35 scale sweep (n_start × K/H × weights): drift+visibility metrics (wave_strength, track R^2, q_eff proxy), summary tables/plots, and best-of tail overlay (real vs permute-cols sanity) + TeX section and figures.
 PDF size: 4417935 bytes
 PDF SHA256: 0EE304B7E69BDC448FC8326A752C3C4040E375A71AB9DE9DCDC4BFF70971F720
+
+Wave Atlas v1.27.1 Release Notes
+
+Tag: wave-atlas-v1.27.1
+Commit: (tag wave-atlas-v1.27.1)
+Changes: M36 docs+analysis patch from M35 summary: best config by n_start, simple scaling fit for wave_strength, and TeX section/figures; no new M35 sweep regenerated.
+PDF size: 4472381 bytes
+PDF SHA256: 32C590537F0070AE9B8F83DC0723AC6D54B80EB4FCF3EEE77E875ECF14007716
+Key numbers (M36; best-per-n_start fit):
+- wave_strength ~ a + b ln(n_start): b = -0.020, R^2 = 0.022
