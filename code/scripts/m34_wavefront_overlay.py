@@ -305,6 +305,26 @@ def make_preview_grid(
     return out_path
 
 
+def maybe_make_preview_grid(parent_dir: Path, n_starts: List[int]) -> Path | None:
+    real_root = parent_dir / "real"
+    sanity_root = parent_dir / "sanity_permute_cols"
+    if not real_root.exists() or not sanity_root.exists():
+        return None
+
+    real_dirs = {n0: (real_root / f"n{n0//1000000}e6") for n0 in n_starts}
+    sanity_dirs = {n0: (sanity_root / f"n{n0//1000000}e6") for n0 in n_starts}
+
+    def has_any_keyframe(d: Path) -> bool:
+        return (d / "keyframe_t150.png").exists() or (d / "keyframe_t000.png").exists()
+
+    if not all(d.exists() and has_any_keyframe(d) for d in real_dirs.values()):
+        return None
+    if not all(d.exists() and has_any_keyframe(d) for d in sanity_dirs.values()):
+        return None
+
+    return make_preview_grid(out_root=parent_dir, n_starts=n_starts, real_dirs=real_dirs, sanity_dirs=sanity_dirs)
+
+
 def main() -> None:
     args = parse_args()
     m33_dir = Path(args.m33_dir)
@@ -369,12 +389,7 @@ def main() -> None:
     }
     (out_root / "m34_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
-    # only build preview grid for the real run; sanity run uses same keyframe names in its own tree
-    preview_path = None
-    if args.sanity == "none":
-        sanity_root = out_root.parent / "sanity_permute_cols"
-        sanity_dirs = {n0: (sanity_root / per_n_dirs[n0].name) for n0 in n_starts}
-        preview_path = make_preview_grid(out_root=out_root.parent, n_starts=n_starts, real_dirs=per_n_dirs, sanity_dirs=sanity_dirs)
+    preview_path = maybe_make_preview_grid(out_root.parent, n_starts)
 
     write_manifest(out_root, params={**summary["params"], "runtime_seconds": runtime_s})
     if preview_path is not None:
