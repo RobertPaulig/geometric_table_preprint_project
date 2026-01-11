@@ -813,3 +813,47 @@ PYTHONPATH=code python code/scripts/m32_scroll_flow.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m32/sanity_permute_cols
 ```
+
+## M33 - Wavefront drift (scroll-perceived wave)
+Status: Done (tag wave-atlas-v1.25)
+
+**Цель:** измерить дрейф "гребня/фронта" как его видит глаз при скролле: строим 1D профиль по столбцам $k$ и трекаем $k_{\mathrm{peak}}(t)$;
+оцениваем скорость $\Delta k/\Delta n$ и проверяем sanity `permute_cols`.
+
+**DoD (артефакты):**
+- out/wave_atlas/m33/m33_wavefront_tracks.csv
+- out/wave_atlas/m33/m33_dx_profile.csv
+- out/wave_atlas/m33/m33_summary_by_nstart.csv + m33_summary.json
+- out/wave_atlas/m33/m33_kpeak_vs_t.png
+- out/wave_atlas/m33/m33_dx_profile_vs_t.png
+- out/wave_atlas/m33/m33_drift_vs_nstart.png
+- out/wave_atlas/m33/m33_sanity_compare.png
+- out/wave_atlas/m33/m33_table.tex
+- out/wave_atlas/m33/m33_manifest.json (sha256 каждого файла + параметры + git sha)
+- out/wave_atlas/m33/sanity_permute_cols/* (sanity outputs)
+- wave_atlas.tex: раздел M33 + \clearpage
+
+**Команды:**
+```bash
+# values-mode sweep (W=1/q)
+PYTHONPATH=code python code/scripts/m33_wavefront_drift.py \
+  --mode values \
+  --n-start-list 1000000,10000000,50000000 \
+  --frames 800 --n-step 1 \
+  --window-rows 512 --k-max 512 \
+  --dt 5 --smooth 9 --peaks 3 \
+  --conf-min 0.15 \
+  --sanity none \
+  --out-dir out/wave_atlas/m33
+
+# sanity: permute columns
+PYTHONPATH=code python code/scripts/m33_wavefront_drift.py \
+  --mode values \
+  --n-start-list 1000000,10000000,50000000 \
+  --frames 800 --n-step 1 \
+  --window-rows 512 --k-max 512 \
+  --dt 5 --smooth 9 --peaks 3 \
+  --conf-min 0.15 \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m33/sanity_permute_cols
+```

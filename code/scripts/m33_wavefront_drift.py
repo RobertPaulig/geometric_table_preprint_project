@@ -152,6 +152,21 @@ def topk_peaks(profile: np.ndarray, *, k: int) -> List[Tuple[int, float]]:
     idx = np.argsort(x)[-k:][::-1]
     return [(int(i), float(x[int(i)])) for i in idx]
 
+def _subpixel_peak_pos(x: np.ndarray, idx: int) -> float:
+    n = x.size
+    if idx <= 0 or idx >= n - 1:
+        return float(idx)
+    c_m1 = float(x[idx - 1])
+    c_0 = float(x[idx])
+    c_p1 = float(x[idx + 1])
+    denom = (c_m1 - 2.0 * c_0 + c_p1)
+    if denom == 0.0:
+        return float(idx)
+    frac = 0.5 * (c_m1 - c_p1) / denom
+    if not np.isfinite(frac) or abs(frac) > 1.0:
+        return float(idx)
+    return float(idx) + float(frac)
+
 
 @dataclass(frozen=True)
 class TrackRow:
@@ -160,6 +175,7 @@ class TrackRow:
     n_top: int
     peak_id: int
     k_peak: int
+    k_peak_sub: float
     peak_value: float
 
 
@@ -169,6 +185,8 @@ class DxRow:
     t: int
     dx_profile: float
     corr_peak: float
+    dx_peak: Optional[float]
+    dx_corr: Optional[float]
 
 
 def _assign_peaks(prev: Optional[List[int]], candidates: List[Tuple[int, float]], peaks: int) -> List[Tuple[int, float]]:
@@ -215,13 +233,13 @@ def fit_slope_per_n(xs: List[float], ys: List[float], n_step: int) -> float:
 
 
 def summarize_nstart(dx_rows: List[DxRow], tracks: List[TrackRow], *, conf_min: float, n_step: int) -> Dict[str, object]:
-    valid = [r for r in dx_rows if r.corr_peak >= conf_min]
+    valid = [r for r in dx_rows if (r.corr_peak >= conf_min and np.isfinite(r.dx_profile))]
     valid_frac = float(len(valid) / len(dx_rows)) if dx_rows else float("nan")
     dx_valid = [float(r.dx_profile) for r in valid]
 
     k0 = [r for r in tracks if r.peak_id == 0 and r.k_peak >= 1]
     xs = [float(r.t) for r in k0]
-    ys = [float(r.k_peak) for r in k0]
+    ys = [float(r.k_peak_sub) for r in k0]
     slope = fit_slope_per_n(xs, ys, n_step)
 
     return {
@@ -261,39 +279,129 @@ def run_single_nstart(
     dx_rows: List[DxRow] = []
     tracks: List[TrackRow] = []
     prev_peaks: Optional[List[int]] = None
+    main_peak_idx: List[int] = []
+    main_peak_sub: List[float] = []
 
+    # Pass 1: peak assignment / tracking.
     for t in range(frames):
         n_top = n_start + t * n_step
         cand = topk_peaks(profiles[t], k=max(peaks * 4, peaks))
         assigned = _assign_peaks(prev_peaks, cand, peaks)
         prev_peaks = [k for (k, _v) in assigned]
+        main_peak_idx.append(int(prev_peaks[0]) if prev_peaks and prev_peaks[0] >= 0 else -1)
+        main_peak_sub.append(_subpixel_peak_pos(profiles[t], main_peak_idx[-1]) + 1.0 if main_peak_idx[-1] >= 0 else float("nan"))
         for pid, (k_idx, val) in enumerate(assigned):
             k_peak = int(k_idx) + 1 if k_idx >= 0 else -1
-            tracks.append(TrackRow(n_start=n_start, t=t, n_top=n_top, peak_id=pid, k_peak=k_peak, peak_value=float(val)))
+            k_sub = _subpixel_peak_pos(profiles[t], int(k_idx)) + 1.0 if k_idx >= 0 else float("nan")
+            tracks.append(TrackRow(n_start=n_start, t=t, n_top=n_top, peak_id=pid, k_peak=k_peak, k_peak_sub=float(k_sub), peak_value=float(val)))
 
-        if t + dt < frames:
-            shift, peak = _xcorr_shift_1d(profiles[t], profiles[t + dt])
-            dx_rows.append(DxRow(n_start=n_start, t=t, dx_profile=float(shift), corr_peak=float(peak)))
+    # Pass 2: dx estimates.
+    for t in range(frames - dt):
+        dx_peak: Optional[float] = None
+        if main_peak_idx[t] >= 0 and main_peak_idx[t + dt] >= 0:
+            dx_peak = float((main_peak_idx[t + dt] + 1) - (main_peak_idx[t] + 1))
+
+        dx_profile = float("nan")
+        if np.isfinite(main_peak_sub[t]) and np.isfinite(main_peak_sub[t + dt]):
+            dx_profile = float(main_peak_sub[t + dt] - main_peak_sub[t])
+
+        shift, peak = local_profile_shift(profiles[t], profiles[t + dt], center_idx=main_peak_idx[t], window=129, max_shift=64)
+        dx_rows.append(DxRow(n_start=n_start, t=t, dx_profile=float(dx_profile), corr_peak=float(peak), dx_peak=dx_peak, dx_corr=float(shift)))
 
     return dx_rows, tracks
+
+
+def local_profile_shift(a: np.ndarray, b: np.ndarray, *, center_idx: int, window: int, max_shift: int) -> Tuple[float, float]:
+    if center_idx < 0:
+        return _xcorr_shift_1d(a, b)
+
+    win = int(window)
+    half = win // 2
+    ms = int(max_shift)
+
+    # High-pass: remove long-scale trend to emphasize local "front" structure.
+    hp = 51
+    a_hp = a - _roll_sum(a, hp)
+    b_hp = b - _roll_sum(b, hp)
+
+    def pad_extract(x: np.ndarray, left: int, right: int) -> np.ndarray:
+        l = max(0, left)
+        r = min(x.size, right)
+        seg = x[l:r]
+        if seg.size == 0:
+            return np.zeros((right - left,), dtype=float)
+        if l > left:
+            seg = np.pad(seg, (l - left, 0), mode="edge")
+        if r < right:
+            seg = np.pad(seg, (0, right - r), mode="edge")
+        return seg.astype(np.float64, copy=False)
+
+    a_seg = pad_extract(a_hp, center_idx - half, center_idx - half + win)
+    b_big = pad_extract(b_hp, center_idx - half - ms, center_idx - half + win + ms)
+
+    a0 = a_seg - float(a_seg.mean())
+    norm_a = float(np.linalg.norm(a0))
+    if not np.isfinite(norm_a) or norm_a <= 1e-12:
+        return 0.0, 0.0
+
+    # Dot products for each shift window (b_win · a0).
+    dots = np.correlate(b_big.astype(np.float64, copy=False), a0.astype(np.float64, copy=False), mode="valid")
+    if dots.size != 2 * ms + 1:
+        return _xcorr_shift_1d(a, b)
+
+    # Normalize per-window using demeaned window norm computed from sums/sumsq.
+    csum = np.cumsum(np.pad(b_big, (1, 0), mode="constant"))
+    csum2 = np.cumsum(np.pad(b_big * b_big, (1, 0), mode="constant"))
+    norms = np.empty_like(dots, dtype=np.float64)
+    for i in range(dots.size):
+        start = i
+        end = i + win
+        s = float(csum[end] - csum[start])
+        s2 = float(csum2[end] - csum2[start])
+        mean = s / float(win)
+        var = max(0.0, (s2 / float(win)) - mean * mean)
+        norms[i] = math.sqrt(var * float(win))
+
+    denom = (norm_a * norms) + 1e-12
+    scores = dots / denom
+    best_i = int(np.argmax(scores))
+    best_score = float(scores[best_i])
+    shift = float(best_i - ms)
+    if 0 < best_i < (scores.size - 1):
+        c_m1 = float(scores[best_i - 1])
+        c_0 = float(scores[best_i])
+        c_p1 = float(scores[best_i + 1])
+        denom_p = (c_m1 - 2.0 * c_0 + c_p1)
+        if denom_p != 0.0:
+            frac = 0.5 * (c_m1 - c_p1) / denom_p
+            if abs(frac) <= 1.0:
+                shift += float(frac)
+    return shift, best_score
 
 
 def write_tracks_csv(path: Path, rows: List[TrackRow]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["n_start", "t", "n_top", "peak_id", "k_peak", "peak_value"])
+        w.writerow(["n_start", "t", "n_top", "peak_id", "k_peak", "k_peak_sub", "peak_value"])
         for r in rows:
-            w.writerow([r.n_start, r.t, r.n_top, r.peak_id, r.k_peak, f"{r.peak_value:.8g}"])
+            w.writerow([r.n_start, r.t, r.n_top, r.peak_id, r.k_peak, f"{r.k_peak_sub:.8g}", f"{r.peak_value:.8g}"])
 
 
 def write_dx_csv(path: Path, rows: List[DxRow]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["n_start", "t", "dx_profile", "corr_peak"])
+        w.writerow(["n_start", "t", "dx_profile", "corr_peak", "dx_peak", "dx_corr"])
         for r in rows:
-            w.writerow([r.n_start, r.t, f"{r.dx_profile:.8g}", f"{r.corr_peak:.8g}"])
+            w.writerow([
+                r.n_start,
+                r.t,
+                f"{r.dx_profile:.8g}",
+                f"{r.corr_peak:.8g}",
+                "" if r.dx_peak is None else f"{r.dx_peak:.8g}",
+                "" if r.dx_corr is None else f"{r.dx_corr:.8g}",
+            ])
 
 
 def write_summary_by_nstart_csv(path: Path, rows: List[Dict[str, object]]) -> None:
@@ -315,11 +423,11 @@ def make_plots(out_dir: Path, *, tracks: List[TrackRow], dx_rows: List[DxRow], s
     for n0 in n_starts:
         pts = [r for r in tracks if r.n_start == n0 and r.peak_id == 0 and r.k_peak >= 1]
         ts = [r.t for r in pts]
-        ks = [r.k_peak for r in pts]
+        ks = [r.k_peak_sub for r in pts]
         ax.plot(ts, ks, linewidth=0.9, label=f"n_start={n0}")
-    ax.set_title("k_peak(t) for main peak (peak_id=0)")
+    ax.set_title("k_peak(t) for main peak (subpixel)")
     ax.set_xlabel("t")
-    ax.set_ylabel("k_peak")
+    ax.set_ylabel("k_peak (subpixel)")
     ax.legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(out_dir / "m33_kpeak_vs_t.png", dpi=160)
@@ -332,7 +440,7 @@ def make_plots(out_dir: Path, *, tracks: List[TrackRow], dx_rows: List[DxRow], s
         dx = [r.dx_profile for r in pts]
         ax.plot(ts, dx, linewidth=0.8, label=f"n_start={n0}")
     ax.axhline(0.0, color="black", linewidth=0.7, alpha=0.5)
-    ax.set_title("dx_profile(t) from 1D cross-correlation")
+    ax.set_title("dx_profile(t) from peak drift (subpixel)")
     ax.set_xlabel("t")
     ax.set_ylabel("dx_profile (columns)")
     ax.legend(fontsize=8)
@@ -370,15 +478,15 @@ def make_sanity_compare(parent_out: Path, real_summary: List[Dict[str, object]],
 
     fig, ax = plt.subplots(figsize=(8.5, 3.8))
     xs = n_starts
-    y_real = [by_n_real[n]["median_dx"] for n in xs]
-    y_san = [by_n_san[n]["median_dx"] for n in xs]
-    ax.plot(xs, y_real, marker="o", linewidth=1.0, label="real median dx")
-    ax.plot(xs, y_san, marker="o", linewidth=1.0, label="permute_cols median dx")
+    y_real = [by_n_real[n]["mean_dx"] for n in xs]
+    y_san = [by_n_san[n]["mean_dx"] for n in xs]
+    ax.plot(xs, y_real, marker="o", linewidth=1.0, label="real mean dx")
+    ax.plot(xs, y_san, marker="o", linewidth=1.0, label="permute_cols mean dx")
     ax.set_xscale("log")
     ax.axhline(0.0, color="black", linewidth=0.7, alpha=0.5)
     ax.set_xlabel("n_start (log)")
-    ax.set_ylabel("median dx_profile")
-    ax.set_title("sanity compare: median dx_profile vs n_start")
+    ax.set_ylabel("mean dx_profile")
+    ax.set_title("sanity compare: mean dx_profile vs n_start")
     ax.legend(fontsize=9)
     fig.tight_layout()
     fig.savefig(parent_out / "m33_sanity_compare.png", dpi=160)
@@ -392,19 +500,19 @@ def write_table_tex(path: Path, real_rows: List[Dict[str, object]], sanity_rows:
 
     lines: List[str] = []
     lines.append("\\begin{tabular}{rrrrrr}\\hline")
-    lines.append("n\\_start & valid & med dx & slope $\\Delta k/\\Delta n$ & sanity med dx & sanity valid \\\\ \\hline")
+    lines.append("n\\_start & valid & mean dx & slope $\\Delta k/\\Delta n$ & sanity mean dx & sanity valid \\\\ \\hline")
     for n0 in n_starts:
         r = by_n_real[n0]
         s = by_n_san.get(n0)
-        med = r.get("median_dx", float("nan"))
+        mean_dx = r.get("mean_dx", float("nan"))
         sl = r.get("slope_kpeak", float("nan"))
         vf = r.get("valid_frac", float("nan"))
         if s is None:
-            lines.append(f"{n0} & {vf:.3g} & {med:.3g} & {sl:.3g} &  &  \\\\")
+            lines.append(f"{n0} & {vf:.3g} & {mean_dx:.3g} & {sl:.3g} &  &  \\\\")
         else:
-            med_s = s.get("median_dx", float("nan"))
+            mean_s = s.get("mean_dx", float("nan"))
             vf_s = s.get("valid_frac", float("nan"))
-            lines.append(f"{n0} & {vf:.3g} & {med:.3g} & {sl:.3g} & {med_s:.3g} & {vf_s:.3g} \\\\")
+            lines.append(f"{n0} & {vf:.3g} & {mean_dx:.3g} & {sl:.3g} & {mean_s:.3g} & {vf_s:.3g} \\\\")
     lines.append("\\hline\\end{tabular}")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -479,6 +587,7 @@ def main() -> None:
                 for r in csv.DictReader(f):
                     real_rows.append({
                         "n_start": int(r["n_start"]),
+                        "mean_dx": float(r["mean_dx"]) if r["mean_dx"] else float("nan"),
                         "median_dx": float(r["median_dx"]) if r["median_dx"] else float("nan"),
                         "valid_frac": float(r["valid_frac"]) if r["valid_frac"] else float("nan"),
                         "slope_kpeak": float(r["slope_kpeak"]) if r["slope_kpeak"] else float("nan"),
@@ -500,4 +609,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

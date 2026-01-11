@@ -1,0 +1,31 @@
+{
+  "params": {
+    "mode": "values",
+    "n_start_list": [
+      1000000,
+      10000000,
+      50000000
+    ],
+    "frames": 800,
+    "n_step": 1,
+    "window_rows": 512,
+    "k_max": 512,
+    "dt": 5,
+    "smooth": 9,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "sanity": "permute_cols",
+    "seed": 123,
+    "runtime_seconds": 6.614073753356934
+  },
+  "git_sha": "cddbed0d1e93d965f59eb8bea83a129e0417e750",
+  "files": {
+    "m33_drift_vs_nstart.png": "33baf9753aaefd76d57011fadb18fd80b3fa5215acff1adab03882da326bd93e",
+    "m33_dx_profile.csv": "b3abef9eef9c28e474e5c7607195884f90cd6167cde6ac1d345c78cf9d2efcfc",
+    "m33_dx_profile_vs_t.png": "fa0fd4eee45c30c558aa1310f9189c7cb94f356538f0a7e12fbf011d23ea914a",
+    "m33_kpeak_vs_t.png": "1b13956d3c7c75ed6c1d58fa672dfa8dd68bce337d1e3e1d46c1414a5ecb5dd0",
+    "m33_summary.json": "7c99f1744cca5b74550903373eeeade68ae7b289affbf9d2a62d8ad9ae114d61",
+    "m33_summary_by_nstart.csv": "cf5be1d8cb226bb9ae688d6dfdbeb03cbc5b0403ba38f3fa4000382dea3a0ef5",
+    "m33_wavefront_tracks.csv": "79454f63857194b856873503e516cb76dddc442e17bd6e1527cebf603d657e16"
+  }
+}

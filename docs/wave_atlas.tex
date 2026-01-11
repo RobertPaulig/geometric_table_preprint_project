@@ -6,9 +6,9 @@
 \usepackage{hyperref}
 \usepackage{alphalph}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M32)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M33)}
 \author{Working note}
-\date{Wave Atlas v1.24}
+\date{Wave Atlas v1.25}
 
 \begin{document}
 \maketitle
@@ -1123,6 +1123,37 @@ the effective $q$ relation is $\Delta k \approx \Delta n / q$ so $q_{\mathrm{eff
 \centering
 \input{../out/wave_atlas/m32/m32_table.tex}
 \caption{M32 summary (confidence-filtered drift / $q_{\mathrm{eff}}$; real vs sanity).}
+\end{table}
+
+\clearpage
+\section{M33 Wavefront drift (scroll-perceived wave)}
+We measure drift of the visually salient wavefront by tracking peaks of a per-column energy profile.
+For each frame, we form a 1D profile over $k$ by summing per-cell weights (values-mode uses $W=1/q$ for $q=n/k$),
+then track the main peak position $k_{\mathrm{peak}}(t)$ and its slope $\Delta k / \Delta n$.
+We also run a permute-columns sanity check to destroy the coherent structure.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m33/m33_kpeak_vs_t.png}
+\caption{Tracked main wavefront peak position $k_{\mathrm{peak}}(t)$ across frames (M33).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m33/m33_drift_vs_nstart.png}
+\caption{Wavefront drift summary versus $n_{\mathrm{start}}$ (M33).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m33/m33_sanity_compare.png}
+\caption{Sanity compare (real vs permute\_cols): mean dx\_profile vs $n_{\mathrm{start}}$ (M33).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m33/m33_table.tex}
+\caption{M33 summary by $n_{\mathrm{start}}$ (mean dx\_profile and drift slope; real vs sanity).}
 \end{table}
 
 \clearpage
