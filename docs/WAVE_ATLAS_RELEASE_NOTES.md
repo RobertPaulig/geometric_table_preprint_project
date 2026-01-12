@@ -327,3 +327,14 @@ PDF size: 4472381 bytes
 PDF SHA256: 32C590537F0070AE9B8F83DC0723AC6D54B80EB4FCF3EEE77E875ECF14007716
 Key numbers (M36; best-per-n_start fit):
 - wave_strength ~ a + b ln(n_start): b = -0.020, R^2 = 0.022
+
+Wave Atlas v1.28 Release Notes
+
+Tag: wave-atlas-v1.28
+Commit: (tag wave-atlas-v1.28)
+Changes: M37 comoving window (camera rides the wavefront): k-band around k_c ≈ (n_t+H/2)/q0 with tail overlays, sweep over q0 and n_start, preview grid, best overlay MP4 (real vs permute-cols sanity) + TeX section and manifest.
+PDF size: 4932855 bytes
+PDF SHA256: 4DA446C5244076E14E464D86CFAE6C1BB11CF4CDC61CE42E3D7E3B328BD7BC6E
+Key numbers (M37; best at n_start=200e6, q0=12, H=512, W=1024):
+- real: mean_dx 0.424 (q_eff≈11.8), track_r2 0.998, visibility_score 5.17
+- sanity (permute_cols): track_r2 4.43e-4, visibility_score 0.105

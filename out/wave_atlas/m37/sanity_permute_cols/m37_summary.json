@@ -1,0 +1,23 @@
+{
+  "params": {
+    "n_start_list": "1000000,50000000,200000000",
+    "q0_list": "8,10,12",
+    "H": 512,
+    "W": 1024,
+    "frames": 300,
+    "n_step": 1,
+    "dt": 5,
+    "smooth": 9,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "mode": "values",
+    "weights": "invq",
+    "fps": 30,
+    "format": "mp4",
+    "sanity": "permute_cols",
+    "seed": 123,
+    "out_dir": "out/wave_atlas/m37/sanity_permute_cols"
+  },
+  "git_sha": "694ee6fc66d6b60bd5f67f06da2db8802e15ec37",
+  "n_runs": 9
+}

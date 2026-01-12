@@ -1224,4 +1224,17 @@ A simple fit of best-per-$n_{\mathrm{start}}$ wave\_strength versus $\ln(n_{\mat
 \end{table}
 
 \clearpage
+\section{M37 Comoving window (camera rides the wavefront)}
+To test whether the wave remains visually detectable at large $n$ even when a fixed $k\in[1,K]$ view fails (M35/M36), we use a comoving window:
+for each frame with top row $n_t$, we center a narrow $k$-band of width $W$ around $k_c \approx (n_t + H/2)/q_0$, so the ``camera'' follows a chosen wave class $q_0$.
+We then measure drift/visibility as in M33/M34b, and compare against a permute-columns sanity where coherent tracks degrade.
+In this run, the best configuration for the largest tested $n_{\mathrm{start}}$ is $q_0=12$ with $(H,W)=(512,1024)$; MP4 overlays are saved under \texttt{out/wave\_atlas/m37/best\_overlay/}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\linewidth]{../out/wave_atlas/m37/m37_preview_grid.png}
+\caption{Comoving-window preview grid: real vs permute-cols sanity for each $(n_{\mathrm{start}}, q_0)$ (M37).}
+\end{figure}
+
+\clearpage
 \end{document}
