@@ -6,9 +6,9 @@
 \usepackage{hyperref}
 \usepackage{alphalph}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M41)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M42)}
 \author{Working note}
-\date{Wave Atlas v1.32}
+\date{Wave Atlas v1.32.1}
 
 \begin{document}
 \maketitle
@@ -1353,6 +1353,29 @@ Permuting columns destroys the peak structure and stability, serving as a sanity
 \centering
 \input{../out/wave_atlas/m41/m41_table.tex}
 \caption{Best $(q_0,dt)$ per $n_{\mathrm{start}}$ under the peakiness criterion (M41).}
+\end{table}
+
+\clearpage
+\section{M42 Angle $\leftrightarrow q$ consistency (bias check)}
+M42 checks the consistency between (i) the $\Delta k$-based estimate $q_{\mathrm{dx}}$ (with auto-selected $dt$) and (ii) the angle-based estimate $q_{\theta}=\tan(\theta_{\mathrm{sub}})$ from M41.
+Because the mapping $\theta\mapsto q$ is extremely sensitive near vertical, even a sub-degree angular offset can translate into several $q$ units; we therefore report both $\Delta\theta$ and $\Delta q$.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m42/m42_q_from_theta_vs_qeff.png}
+\caption{$q_{\theta}$ versus $q_{\mathrm{dx}}$ across the M41 sweep (M42).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m42/m42_delta_q_by_nstart.png}
+\caption{Distribution of $\Delta q=q_{\mathrm{dx}}-q_{\theta}$ by $n_{\mathrm{start}}$ across the M41 sweep (M42).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m42/m42_table.tex}
+\caption{Consistency summary at the M41 best settings (M42).}
 \end{table}
 
 \clearpage
