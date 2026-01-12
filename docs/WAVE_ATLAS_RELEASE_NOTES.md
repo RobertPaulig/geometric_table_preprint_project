@@ -360,3 +360,14 @@ PDF SHA256: A642857E56AEE1D1394161368240FC8F7CA7915E4330FA71B909F5FE1B5410C6
 Key numbers (M39; q0-grid 6..40, R^2 guard 0.95):
 - n_start=200e6 best q0=38: real mean_dx 0.136 (q_eff~36.9), track_r2 0.984, visibility_score 10.10 (interior maximum)
 - sanity (permute_cols) at q0=38: track_r2 6.02e-4, visibility_score 0.142
+
+Wave Atlas v1.31 Release Notes
+
+Tag: wave-atlas-v1.31
+Commit: (tag wave-atlas-v1.31)
+Changes: M40 angle-based camera for near-vertical comoving waves: scan score(theta) in a narrow angular range (Radon/Hough-lite) with bootstrap CI, and run a dt-sweep to show that larger dt stabilizes the dx-based estimator; includes sanity (permute-cols), TeX section, and manifest.
+PDF size: 5451261 bytes
+PDF SHA256: E49B6A2D43A1B392FF45025BADD5C65141AEC6A0291171CBC3963056D1512430
+Key numbers (M40; n_start=200e6, q0=38, theta-grid 88..90 step 0.02, bootstrap 200):
+- real: theta*=88.2 deg (angle_score_peak 10.88); dx-based q_eff tightens with dt (dt=5: 36.9 [28.9,49.2] → dt=40: 38.0 [37.1,39.0])
+- sanity (permute_cols): score(theta) flattens (angle_score_peak 0.316) and theta* becomes unstable (CI spans 88.02..90.0)

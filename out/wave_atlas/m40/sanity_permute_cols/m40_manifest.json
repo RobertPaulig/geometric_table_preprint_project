@@ -1,0 +1,33 @@
+{
+  "params": {
+    "n_start": 200000000,
+    "q0": 38,
+    "H": 512,
+    "W": 1024,
+    "frames": 300,
+    "n_step": 1,
+    "mode": "values",
+    "weights": "invq",
+    "theta_range_deg": "88,90",
+    "theta_step_deg": 0.02,
+    "dt_list": "5,10,20,40",
+    "smooth": 9,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "bootstrap": 200,
+    "sanity": "permute_cols",
+    "seed": 123,
+    "out_dir": "out/wave_atlas/m40/sanity_permute_cols",
+    "runtime_s": 3.469730854034424
+  },
+  "git_sha": "e36036b10cb8affc28b77fff31a642afcd456112",
+  "files": {
+    "m40_angle_ci.png": "19df6deedc4dad2fb82204e0b8b3f8299a42bc76f9dc6025c1010380009332fc",
+    "m40_angle_vs_dt.csv": "3c22dc668a6c818e58daf5df1673539fbbed1d685e0e67020c4e17c4904d9231",
+    "m40_compare_dx_vs_angle.png": "5a1a3562b28d9473027bd73fa13b6f897f2f32a208c7210821f7e0fdff02961e",
+    "m40_summary.json": "002f6911113b8ec61f171696ac1ac46ec009998711d726b847115da695168599",
+    "m40_table.tex": "2e39e020cb9720a72db67265296ae42ad55b2c77f88f063b5eb3137afcb2a7f9",
+    "m40_theta_score_curve_dt40.png": "d0bb0daaae35946ad1c29154c6bfa8579004b10b84fae5ed0efc92f8cf7114d6",
+    "m40_theta_score_curve_dt5.png": "f6b35f87eb4bea7a9c8c9c320079d846f94fcb8100b0927febc6b6c9f4d51892"
+  }
+}
