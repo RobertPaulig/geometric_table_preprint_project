@@ -1169,3 +1169,54 @@ PYTHONPATH=code python code/scripts/m40_angle_scan.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m40/sanity_permute_cols
 ```
+
+## M41 - Angle auto-camera (peakiness + sub-degree refinement + auto dt)
+Status: Done (tag wave-atlas-v1.32)
+
+**Цель:** сделать авто-камеру более физической и устойчивой в режиме почти вертикального фронта: выбирать $(q_0,dt)$ по ``остроте'' углового профиля score$(\theta)$ (peakiness), автоматически подбирать $dt$ так, чтобы ожидаемый горизонтальный сдвиг был порядка $\approx 0.8$ пикселя (меньше квантизации), и уточнять $\theta^*$ до суб-градуса (квадратичная интерполяция вокруг argmax + bootstrap CI по кадрам). Sanity: permute\_cols должен разрушать пик/стабильность.
+
+**DoD (артефакты):**
+- out/wave_atlas/m41/m41_q0_sweep.csv
+- out/wave_atlas/m41/m41_best_by_nstart.csv
+- out/wave_atlas/m41/m41_peakiness_heatmap.png
+- out/wave_atlas/m41/m41_best_q0_vs_nstart.png
+- out/wave_atlas/m41/m41_best_score_theta.csv + out/wave_atlas/m41/m41_best_score_theta.png
+- out/wave_atlas/m41/m41_sanity_compare.png
+- out/wave_atlas/m41/m41_table.tex
+- out/wave_atlas/m41/m41_summary.json
+- out/wave_atlas/m41/m41_manifest.json (sha256 всех файлов + параметры + git sha; включает sanity outputs)
+- out/wave_atlas/m41/sanity_permute_cols/* (sanity outputs)
+- wave_atlas.tex: раздел M41 + \clearpage
+
+**Команды:**
+```bash
+# real
+PYTHONPATH=code python code/scripts/m41_angle_auto_camera.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --q0-grid 6,40,1 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --theta-range-deg 78.0,90.0 --theta-step-deg 0.1 \
+  --theta-refine-halfwidth-deg 0.6 --theta-refine-step-deg 0.02 \
+  --target-dx 0.8 --dt-min 5 --dt-max 80 \
+  --smooth 9 --peaks 3 --conf-min 0.15 \
+  --r2-guard 0.95 --bootstrap 200 \
+  --sanity none \
+  --out-dir out/wave_atlas/m41
+
+# sanity
+PYTHONPATH=code python code/scripts/m41_angle_auto_camera.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --q0-grid 6,40,1 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --theta-range-deg 78.0,90.0 --theta-step-deg 0.1 \
+  --theta-refine-halfwidth-deg 0.6 --theta-refine-step-deg 0.02 \
+  --target-dx 0.8 --dt-min 5 --dt-max 80 \
+  --smooth 9 --peaks 3 --conf-min 0.15 \
+  --r2-guard 0.95 --bootstrap 200 \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m41/sanity_permute_cols
+```

@@ -1,0 +1,26 @@
+{
+  "params": {
+    "note": "parent includes real + sanity outputs",
+    "sanity_dir": "sanity_permute_cols"
+  },
+  "git_sha": "c78c7d068944eb54be76a8d3526e49ac5f5b44c3",
+  "files": {
+    "m41_best_by_nstart.csv": "d4a33bac89c6047f414a28819266abd1156906033b87eeebfd6a7de299d24068",
+    "m41_best_q0_vs_nstart.png": "11cd09125d191a4411bcd7a5c99ae77bb5cfda4c21c66ed8feb128847fbce581",
+    "m41_best_score_theta.csv": "bea14e7c4d58509e5cfa3b31f79ee48a8970a830628fe1b1c5a8ea601f94502a",
+    "m41_best_score_theta.png": "f432d1bd728f79f4247b7947fa176ccc581700923e513981040aa0c232c0adbb",
+    "m41_peakiness_heatmap.png": "3d5c476b9ba1452eab0ea43b8df013aaf4e8ca94000b97d44789413c5a7d560a",
+    "m41_q0_sweep.csv": "f5b29b099bb680d16f22d2d0c795f7d71ec6fe5385bde7d9713ab99306771675",
+    "m41_sanity_compare.png": "eabb8b0f83af07ea91c8fa922577eb296c4f79436f791f25cc5cfeef8b2617ad",
+    "m41_summary.json": "44e1bfc249bcbb54c0e9936f12816e6c738153f37f11cfe013f78b7b604524ed",
+    "m41_table.tex": "bdb82f45e2d99e6d13cd3271a267136fef1baad2ea9987d4432fdca3540407de",
+    "sanity_permute_cols/m41_best_by_nstart.csv": "a2c7fb033d1298f6e92b510795ab245338a0f7667573bc62a56df36e15feeb90",
+    "sanity_permute_cols/m41_best_q0_vs_nstart.png": "59e7c2e51d92ae227c0ebb810855e870f1444e260a252661d9d84cfde0909e09",
+    "sanity_permute_cols/m41_best_score_theta.csv": "51097af55ee2bc1c93918f0492b55b5cbe980973fb62fd30d65eac24af5d3cc8",
+    "sanity_permute_cols/m41_best_score_theta.png": "db9d6264139072deffd3e0a11379b3ccea083a172e302bca766a5860f6c3fcf8",
+    "sanity_permute_cols/m41_peakiness_heatmap.png": "46545e62148bb5faafa24aba6b5dc40105588873ebca6fd03af072e6289f2501",
+    "sanity_permute_cols/m41_q0_sweep.csv": "71a1a5a47e8326744cc3825019418b41117a2f87abb42a571639270a76e1995f",
+    "sanity_permute_cols/m41_summary.json": "0b8f01d6252ac234b030f32dd1cd9c15caf2019c96f32fda86769176d5be66d6",
+    "sanity_permute_cols/m41_table.tex": "a6c4ac35edde3c582adf96ec0a7775db28f76ef6dafa047dad52c3b0bb11e910"
+  }
+}

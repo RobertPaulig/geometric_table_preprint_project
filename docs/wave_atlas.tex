@@ -6,9 +6,9 @@
 \usepackage{hyperref}
 \usepackage{alphalph}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M40)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M41)}
 \author{Working note}
-\date{Wave Atlas v1.31}
+\date{Wave Atlas v1.32}
 
 \begin{document}
 \maketitle
@@ -1321,6 +1321,38 @@ Permuting columns flattens the angle score and destroys stability, serving as a 
 \centering
 \input{../out/wave_atlas/m40/m40_table.tex}
 \caption{Angle-based and $\Delta k$-based estimates versus $dt$ (M40).}
+\end{table}
+
+\clearpage
+\section{M41 Angle auto-camera (peakiness + sub-degree refinement + auto $dt$)}
+M41 upgrades the comoving camera by selecting $(q_0,dt)$ using an angle-based sharpness criterion rather than a drift-based visibility score.
+We define a robust ``peakiness'' statistic for score$(\theta)$ and select $q_0$ by maximizing peakiness with a guard on track stability ($R^2$).
+We also choose $dt$ automatically to target an expected horizontal shift of $\approx 0.8$ pixels, reducing quantization in the near-vertical regime.
+Finally, we refine $\theta^*$ to sub-degree resolution by quadratic interpolation around the coarse argmax and bootstrap over frames to obtain a confidence interval.
+Permuting columns destroys the peak structure and stability, serving as a sanity check.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\linewidth]{../out/wave_atlas/m41/m41_peakiness_heatmap.png}
+\caption{Peakiness heatmap across $(n_{\mathrm{start}}, q_0)$ for the angle-based auto-camera (M41).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m41/m41_best_score_theta.png}
+\caption{Angle score around the selected maximum with sub-degree refinement (M41).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m41/m41_sanity_compare.png}
+\caption{Sanity check: score$(\theta)$ becomes irregular under permute-columns (M41).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m41/m41_table.tex}
+\caption{Best $(q_0,dt)$ per $n_{\mathrm{start}}$ under the peakiness criterion (M41).}
 \end{table}
 
 \clearpage

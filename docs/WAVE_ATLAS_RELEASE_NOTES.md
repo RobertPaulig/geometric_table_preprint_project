@@ -371,3 +371,14 @@ PDF SHA256: E49B6A2D43A1B392FF45025BADD5C65141AEC6A0291171CBC3963056D1512430
 Key numbers (M40; n_start=200e6, q0=38, theta-grid 88..90 step 0.02, bootstrap 200):
 - real: theta*=88.2 deg (angle_score_peak 10.88); dx-based q_eff tightens with dt (dt=5: 36.9 [28.9,49.2] → dt=40: 38.0 [37.1,39.0])
 - sanity (permute_cols): score(theta) flattens (angle_score_peak 0.316) and theta* becomes unstable (CI spans 88.02..90.0)
+
+Wave Atlas v1.32 Release Notes
+
+Tag: wave-atlas-v1.32
+Commit: (tag wave-atlas-v1.32)
+Changes: M41 angle auto-camera: select (q0, dt) via a peakiness criterion on score(theta) with an R^2 stability guard, refine theta* to sub-degree resolution by quadratic interpolation around the argmax with bootstrap CI over frames, and auto-pick dt to target an expected horizontal shift (~0.8 px) to reduce dx quantization; includes sanity (permute-cols), TeX section, and manifest.
+PDF size: 5620739 bytes
+PDF SHA256: 310F6A6531737DA9B2278F9658F3F65691C320577F157BF078C8BC6DBAB0A9B2
+Key numbers (M41; q0-grid 6..40, target_dx 0.8, bootstrap 200):
+- n_start=200e6 best q0=29, dt=23: theta_subdeg 88.335 [88.324,88.347], mean_dx 0.783 (q_eff~29.36), track_r2 0.989, peakiness 25.18
+- sanity (permute_cols): score(theta) becomes irregular and track_r2 collapses (see out/wave_atlas/m41/m41_sanity_compare.png)
