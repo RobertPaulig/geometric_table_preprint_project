@@ -216,7 +216,7 @@ def render_keyframe(
     H, W = img.shape
     fig, ax = plt.subplots(figsize=(7.2, 5.8), dpi=130)
     ax.imshow(img, aspect="auto", origin="upper", cmap="magma", vmin=0.0, vmax=0.02)
-    ax.set_xlabel(f"k index (offset from k_start={k_start})")
+    ax.set_xlabel(f"k index within window (k_start={k_start})")
     ax.set_ylabel("rows (n increasing down)")
     ax.set_title(f"M37 comoving window ({cfg.sanity})  n_start={cfg.n_start}  q0={cfg.q0}  t={t_key}")
 
@@ -230,9 +230,9 @@ def render_keyframe(
             if tt < 0:
                 break
             k_hist = tracks.get(tt, {}).get(pid)
-            if k_hist is None or k_hist <= 0:
+            if k_hist is None or k_hist < 0:
                 continue
-            x = float(k_hist - k_start)
+            x = float(k_hist)
             if 0.0 <= x < float(W):
                 xs.append(x)
                 ys.append(float(y))
@@ -309,9 +309,9 @@ def render_best_overlay_video(
                 if tt < 0:
                     break
                 k_hist = tracks.get(tt, {}).get(pid)
-                if k_hist is None or k_hist <= 0:
+                if k_hist is None or k_hist < 0:
                     continue
-                x = float(k_hist - k_start)
+                x = float(k_hist)
                 if 0.0 <= x < float(cfg.W):
                     xs.append(x)
                     ys.append(float(y))
@@ -522,10 +522,10 @@ def main() -> None:
             if cfg.sanity == "permute_cols":
                 perm = rng.permutation(cfg.W)
 
-            k_peaks0: List[int] = []
+            x_peaks0: List[int] = []
             z_series: List[float] = []
             k_starts: List[int] = []
-            tracks: Dict[int, Dict[int, int]] = {}
+            tracks: Dict[int, Dict[int, int]] = {}  # t -> peak_id -> x_index within window (0..W-1)
 
             for t in range(cfg.frames):
                 n_top = cfg.n_start + t * cfg.n_step
@@ -538,18 +538,13 @@ def main() -> None:
                 prof_sm = rolling_mean(prof, cfg.smooth)
 
                 idx, vals = top_peaks(prof_sm, cfg.peaks)
-                # map peak indices back to absolute k, accounting for permutation
                 peaks_here: Dict[int, int] = {}
                 for pid, i in enumerate(idx[: cfg.peaks]):
-                    if perm is None:
-                        k_abs = k_start + int(i)
-                    else:
-                        k_abs = k_start + int(perm[int(i)])
-                    peaks_here[pid] = int(k_abs)
+                    peaks_here[pid] = int(i)
                 tracks[t] = peaks_here
 
-                k0 = peaks_here.get(0, 0)
-                k_peaks0.append(k0)
+                x0 = peaks_here.get(0, -1)
+                x_peaks0.append(x0)
 
                 peak_val = float(vals[0]) if vals else float("nan")
                 baseline = float(np.median(prof_sm))
@@ -563,9 +558,11 @@ def main() -> None:
             dxs: List[float] = []
             confs: List[float] = []
             for t in range(cfg.dt, cfg.frames):
-                k_now = k_peaks0[t]
-                k_prev = k_peaks0[t - cfg.dt]
-                if k_now > 0 and k_prev > 0 and math.isfinite(z_series[t]) and math.isfinite(z_series[t - cfg.dt]):
+                x_now = x_peaks0[t]
+                x_prev = x_peaks0[t - cfg.dt]
+                if x_now >= 0 and x_prev >= 0 and math.isfinite(z_series[t]) and math.isfinite(z_series[t - cfg.dt]):
+                    k_now = k_starts[t] + int(x_now)
+                    k_prev = k_starts[t - cfg.dt] + int(x_prev)
                     dxs.append(float(k_now - k_prev))
                     confs.append(float(min(z_series[t], z_series[t - cfg.dt])))
                 else:
@@ -581,7 +578,13 @@ def main() -> None:
             q_eff = float(cfg.dt) / mean_dx if (not math.isnan(mean_dx) and mean_dx > 0) else float("nan")
 
             t_idx = np.arange(cfg.dt, cfg.frames, dtype=np.float64)
-            k_arr = np.array(k_peaks0[cfg.dt :], dtype=np.float64)
+            k_arr = np.array(
+                [
+                    (k_starts[t] + int(x_peaks0[t])) if x_peaks0[t] >= 0 else float("nan")
+                    for t in range(cfg.dt, cfg.frames)
+                ],
+                dtype=np.float64,
+            )
             if valid_mask.any():
                 t_fit = t_idx[valid_mask]
                 k_fit = k_arr[valid_mask]
