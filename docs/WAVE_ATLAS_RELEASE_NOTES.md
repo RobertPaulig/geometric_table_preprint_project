@@ -349,3 +349,14 @@ PDF SHA256: BA3E001A035F3DA6C1B59EBE2AD9987966478D511F8EADCC919B764CD747A0C2
 Key numbers (M38; q0-grid 6..20):
 - n_start=200e6 best q0=20: real mean_dx 0.241 (q_eff~20.8), track_r2 0.996, visibility_score 6.75
 - sanity (permute_cols) at q0=20: track_r2 1.74e-4, visibility_score 0.0588
+
+Wave Atlas v1.30 Release Notes
+
+Tag: wave-atlas-v1.30
+Commit: (tag wave-atlas-v1.30)
+Changes: M39 boundary test for auto-camera: extend q0 grid to 6..40 and plot score(q0) to check that the M38 choice is not an upper-grid artifact; includes best-of overlay MP4 at max n_start (real vs permute-cols sanity), TeX section, and manifest.
+PDF size: 5291198 bytes
+PDF SHA256: A642857E56AEE1D1394161368240FC8F7CA7915E4330FA71B909F5FE1B5410C6
+Key numbers (M39; q0-grid 6..40, R^2 guard 0.95):
+- n_start=200e6 best q0=38: real mean_dx 0.136 (q_eff~36.9), track_r2 0.984, visibility_score 10.10 (interior maximum)
+- sanity (permute_cols) at q0=38: track_r2 6.02e-4, visibility_score 0.142

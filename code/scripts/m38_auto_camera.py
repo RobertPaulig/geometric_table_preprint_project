@@ -116,6 +116,27 @@ def n_tag(n: int) -> str:
     return f"n{n}"
 
 
+def n_sci_tag(n: int) -> str:
+    n0 = int(n)
+    if n0 == 0:
+        return "n0"
+    exp = 0
+    m = n0
+    while m % 10 == 0:
+        m //= 10
+        exp += 1
+    return f"n{m}e{exp}"
+
+
+def detect_artifact_prefix(out_dir: Path) -> str:
+    base = out_dir.name
+    if base == "sanity_permute_cols":
+        base = out_dir.parent.name
+    if base.startswith("m") and len(base) >= 2 and base[1].isdigit():
+        return base
+    return "m38"
+
+
 def k_window_for_frame(n_top: int, H: int, W: int, q0: int) -> Tuple[int, int]:
     n_mid = n_top + (H // 2)
     k_c = int(n_mid // q0)
@@ -282,6 +303,7 @@ def render_keyframe(
 def render_best_overlay_video(
     *,
     out_dir: Path,
+    artifact_prefix: str,
     cfg: RunConfig,
     tracks: Dict[int, Dict[int, int]],
     k_starts: List[int],
@@ -356,7 +378,7 @@ def render_best_overlay_video(
         raise RuntimeError("ffmpeg not found; cannot render video")
 
     if format_ == "mp4":
-        out_video = out_dir / "m38_best_overlay_tail.mp4"
+        out_video = out_dir / f"{artifact_prefix}_best_overlay_tail.mp4"
         cmd = [
             "ffmpeg",
             "-y",
@@ -374,7 +396,7 @@ def render_best_overlay_video(
         ]
         subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
-        out_video = out_dir / "m38_best_overlay_tail.gif"
+        out_video = out_dir / f"{artifact_prefix}_best_overlay_tail.gif"
         cmd = [
             "ffmpeg",
             "-y",
@@ -442,6 +464,39 @@ def plot_q0_vs_nstart(*, out_path: Path, best_rows: List[Dict[str, Any]]) -> Non
     plt.close(fig)
 
 
+def plot_score_vs_q0(
+    *,
+    out_path: Path,
+    results: List[RunResult],
+    n_start: int,
+    q0s: List[int],
+    title_prefix: str,
+) -> None:
+    import matplotlib.pyplot as plt
+
+    rows = [r for r in results if int(r.n_start) == int(n_start)]
+    score_by_q0 = {int(r.q0): float(r.visibility_score) for r in rows}
+    r2_by_q0 = {int(r.q0): float(r.track_r2) for r in rows}
+    xs = [int(q) for q in q0s]
+    ys = [float(score_by_q0.get(int(q), float("nan"))) for q in xs]
+    zs = [float(r2_by_q0.get(int(q), float("nan"))) for q in xs]
+
+    fig, ax = plt.subplots(figsize=(7.0, 3.6), dpi=150)
+    ax.plot(xs, ys, marker="o", linewidth=1.5, markersize=3.0, label="visibility_score")
+    ax.set_xlabel("q0")
+    ax.set_ylabel("visibility_score")
+    ax.set_title(f"{title_prefix} score vs q0 ({n_sci_tag(int(n_start))})")
+    ax.grid(True, alpha=0.25)
+
+    ax2 = ax.twinx()
+    ax2.plot(xs, zs, color="#ff8800", alpha=0.65, linewidth=1.2, label="track_r2")
+    ax2.set_ylabel("track_r2")
+
+    fig.tight_layout()
+    fig.savefig(out_path)
+    plt.close(fig)
+
+
 def render_preview_grid(parent_root: Path, n_starts: List[int]) -> Optional[Path]:
     sanity_root = parent_root / "sanity_permute_cols"
     if not sanity_root.exists():
@@ -468,7 +523,8 @@ def render_preview_grid(parent_root: Path, n_starts: List[int]) -> Optional[Path
             ax.set_title(f"{label} {tag}")
 
     fig.tight_layout()
-    out_path = parent_root / "m38_preview_grid.png"
+    prefix = detect_artifact_prefix(parent_root)
+    out_path = parent_root / f"{prefix}_preview_grid.png"
     fig.savefig(out_path)
     plt.close(fig)
     return out_path
@@ -538,6 +594,10 @@ def main() -> None:
     ensure_dir(out_root)
     runs_root = out_root / "runs"
     ensure_dir(runs_root)
+
+    artifact_prefix = detect_artifact_prefix(out_root)
+    is_boundary_test = artifact_prefix == "m39"
+    r2_guard = 0.95 if is_boundary_test else 0.9
 
     n_starts = parse_int_list(args.n_start_list)
     q0s = parse_q0_grid(args.q0_grid)
@@ -657,25 +717,26 @@ def main() -> None:
 
             runtime_s = float(time.time() - started)
 
-            # keyframes
-            t_key = min(150, cfg.frames - 1)
-            for t_k in [0, t_key]:
-                n_top = cfg.n_start + t_k * cfg.n_step
-                k_start = k_starts[t_k]
-                img, _prof = build_values_invq_heatmap_and_profile(n_top=n_top, H=cfg.H, k_start=k_start, W=cfg.W)
-                if perms_by_t is not None:
-                    img = img[:, perms_by_t[t_k]]
-                out_path = run_dir / f"keyframe_t{t_k:03d}.png"
-                render_keyframe(
-                    out_path=out_path,
-                    cfg=cfg,
-                    img=img,
-                    k_start=k_start,
-                    tracks=tracks,
-                    t_key=t_k,
-                    mean_dx=mean_dx,
-                    q_eff=q_eff,
-                )
+            if not is_boundary_test:
+                # keyframes (useful for grid previews; skipped for boundary sweeps to keep output compact)
+                t_key = min(150, cfg.frames - 1)
+                for t_k in [0, t_key]:
+                    n_top = cfg.n_start + t_k * cfg.n_step
+                    k_start = k_starts[t_k]
+                    img, _prof = build_values_invq_heatmap_and_profile(n_top=n_top, H=cfg.H, k_start=k_start, W=cfg.W)
+                    if perms_by_t is not None:
+                        img = img[:, perms_by_t[t_k]]
+                    out_path = run_dir / f"keyframe_t{t_k:03d}.png"
+                    render_keyframe(
+                        out_path=out_path,
+                        cfg=cfg,
+                        img=img,
+                        k_start=k_start,
+                        tracks=tracks,
+                        t_key=t_k,
+                        mean_dx=mean_dx,
+                        q_eff=q_eff,
+                    )
 
             res = RunResult(
                 run_id=rid,
@@ -711,25 +772,25 @@ def main() -> None:
 
     # Write per-run sweep CSV in the invoked out_dir.
     sweep_header = list(asdict(results[0]).keys()) if results else []
-    write_csv(out_root / "m38_q0_sweep.csv", [asdict(r) for r in results], sweep_header)
-    (out_root / "m38_summary.json").write_text(
+    write_csv(out_root / f"{artifact_prefix}_q0_sweep.csv", [asdict(r) for r in results], sweep_header)
+    (out_root / f"{artifact_prefix}_run.json").write_text(
         json.dumps({"params": vars(args), "git_sha": git_sha(), "n_runs": len(results)}, indent=2), encoding="utf-8"
     )
 
     parent_root = out_root if out_root.name != "sanity_permute_cols" else out_root.parent
 
     if args.sanity == "none":
-        # Select best q0 per n_start (guard: track_r2 > 0.9).
+        # Select best q0 per n_start (guard: track_r2 >= r2_guard).
         best_rows: List[Dict[str, Any]] = []
         for n0 in n_starts:
-            cand = [r for r in results if r.n_start == n0 and math.isfinite(r.track_r2) and r.track_r2 >= 0.9]
+            cand = [r for r in results if r.n_start == n0 and math.isfinite(r.track_r2) and r.track_r2 >= r2_guard]
             notes = ""
             if cand:
                 best = max(cand, key=lambda r: r.visibility_score)
             else:
                 cand2 = [r for r in results if r.n_start == n0]
                 best = max(cand2, key=lambda r: r.visibility_score)
-                notes = "no_candidate_passed_r2_guard"
+                notes = f"no_candidate_passed_r2_guard_{r2_guard:.2f}"
             best_rows.append(
                 {
                     "n_start": int(best.n_start),
@@ -746,7 +807,7 @@ def main() -> None:
             )
 
         best_rows = sorted(best_rows, key=lambda r: int(r["n_start"]))
-        best_csv = parent_root / "m38_best_by_nstart.csv"
+        best_csv = parent_root / f"{artifact_prefix}_best_by_nstart.csv"
         write_csv(
             best_csv,
             best_rows,
@@ -765,18 +826,39 @@ def main() -> None:
         )
 
         # Plots (from real sweep).
-        plot_visibility_heatmap(out_path=parent_root / "m38_visibility_heatmap.png", results=results, n_starts=n_starts, q0s=q0s)
-        plot_q0_vs_nstart(out_path=parent_root / "m38_q0_vs_nstart.png", best_rows=best_rows)
+        plot_visibility_heatmap(
+            out_path=parent_root / f"{artifact_prefix}_visibility_heatmap.png",
+            results=results,
+            n_starts=n_starts,
+            q0s=q0s,
+        )
+        plot_q0_vs_nstart(out_path=parent_root / f"{artifact_prefix}_q0_vs_nstart.png", best_rows=best_rows)
+        if is_boundary_test:
+            for n0 in n_starts:
+                plot_score_vs_q0(
+                    out_path=parent_root / f"{artifact_prefix}_score_vs_q0_{n_sci_tag(n0)}.png",
+                    results=results,
+                    n_start=n0,
+                    q0s=q0s,
+                    title_prefix=artifact_prefix,
+                )
 
         # Render best overlay per n_start (real).
+        overlay_targets = [max(n_starts)] if is_boundary_test else [int(r["n_start"]) for r in best_rows]
         for r in best_rows:
             n0 = int(r["n_start"])
+            if n0 not in overlay_targets:
+                continue
             q0 = int(r["best_q0"])
             rid_prefix = f"{n_tag(n0)}_q{q0}_"
             rid = next((res.run_id for res in results if res.run_id.startswith(rid_prefix)), None)
             if rid is None:
                 continue
-            out_dir = parent_root / "best_overlay" / n_tag(n0) / "real"
+            out_dir = (
+                (parent_root / "best_overlay" / "real")
+                if is_boundary_test
+                else (parent_root / "best_overlay" / n_tag(n0) / "real")
+            )
             cfg = RunConfig(
                 n_start=n0,
                 q0=q0,
@@ -794,6 +876,7 @@ def main() -> None:
             )
             render_best_overlay_video(
                 out_dir=out_dir,
+                artifact_prefix=artifact_prefix,
                 cfg=cfg,
                 tracks=per_run_tracks[rid],
                 k_starts=per_run_kstarts[rid],
@@ -804,21 +887,28 @@ def main() -> None:
 
     else:
         # sanity: reuse best q0 per n_start from parent real selection, to get apples-to-apples overlays.
-        best_csv = parent_root / "m38_best_by_nstart.csv"
+        best_csv = parent_root / f"{artifact_prefix}_best_by_nstart.csv"
         if best_csv.exists():
             best_rows = load_csv_rows(best_csv)
             # map (n_start, q0) -> RunResult for sanity table, and render overlays.
             res_by_key: Dict[Tuple[int, int], RunResult] = {(r.n_start, r.q0): r for r in results}
             sanity_for_table: Dict[Tuple[int, int], RunResult] = {}
 
+            overlay_targets = [max(n_starts)] if is_boundary_test else [int(br["n_start"]) for br in best_rows]
             for br in best_rows:
                 n0 = int(br["n_start"])
+                if n0 not in overlay_targets:
+                    continue
                 q0 = int(br["best_q0"])
                 rid_prefix = f"{n_tag(n0)}_q{q0}_"
                 rid = next((res.run_id for res in results if res.run_id.startswith(rid_prefix)), None)
                 if rid is None:
                     continue
-                out_dir = parent_root / "best_overlay" / n_tag(n0) / "sanity"
+                out_dir = (
+                    (parent_root / "best_overlay" / "sanity")
+                    if is_boundary_test
+                    else (parent_root / "best_overlay" / n_tag(n0) / "sanity")
+                )
                 cfg = RunConfig(
                     n_start=n0,
                     q0=q0,
@@ -836,6 +926,7 @@ def main() -> None:
                 )
                 render_best_overlay_video(
                     out_dir=out_dir,
+                    artifact_prefix=artifact_prefix,
                     cfg=cfg,
                     tracks=per_run_tracks[rid],
                     k_starts=per_run_kstarts[rid],
@@ -848,7 +939,8 @@ def main() -> None:
                     sanity_for_table[(n0, q0)] = rres
 
             # Build combined preview grid + TeX table (real + sanity rows).
-            render_preview_grid(parent_root, n_starts=n_starts)
+            if not is_boundary_test:
+                render_preview_grid(parent_root, n_starts=n_starts)
             best_rows_any: List[Dict[str, Any]] = []
             for br in best_rows:
                 # Keep only the numeric columns required by build_table_tex.
@@ -862,14 +954,60 @@ def main() -> None:
                         "visibility_score": float(br["visibility_score"]),
                     }
                 )
-            build_table_tex(out_path=parent_root / "m38_table.tex", best_rows=best_rows_any, sanity_by_key=sanity_for_table)
+            build_table_tex(
+                out_path=parent_root / f"{artifact_prefix}_table.tex",
+                best_rows=best_rows_any,
+                sanity_by_key=sanity_for_table,
+            )
+
+            # Final summary with boundary notes (written to parent root).
+            q0_max = max(int(q) for q in q0s)
+            best_rows_out: List[Dict[str, Any]] = []
+            for br in best_rows:
+                n0 = int(br["n_start"])
+                q0 = int(br["best_q0"])
+                hit_upper = bool(is_boundary_test and q0 == q0_max and float(br.get("track_r2", "nan")) >= r2_guard)
+                best_rows_out.append(
+                    {
+                        "n_start": n0,
+                        "best_q0": q0,
+                        "visibility_score": float(br.get("visibility_score", "nan")),
+                        "track_r2": float(br.get("track_r2", "nan")),
+                        "mean_dx": float(br.get("mean_dx", "nan")),
+                        "q_eff": float(br.get("q_eff", "nan")),
+                        "hit_upper_boundary": hit_upper,
+                        "notes": br.get("notes", ""),
+                    }
+                )
+            (parent_root / f"{artifact_prefix}_summary.json").write_text(
+                json.dumps(
+                    {
+                        "artifact_prefix": artifact_prefix,
+                        "params": vars(args),
+                        "q0_grid": q0s,
+                        "r2_guard": r2_guard,
+                        "boundary_test": is_boundary_test,
+                        "best_by_nstart": best_rows_out,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
 
     # Manifests
-    write_manifest(out_root, params={**vars(args), "runtime_note": "per-run runtimes in runs/*/run_summary.json"}, name="m38_manifest.json")
+    write_manifest(
+        out_root,
+        params={**vars(args), "artifact_prefix": artifact_prefix, "runtime_note": "per-run runtimes in runs/*/run_summary.json"},
+        name=f"{artifact_prefix}_manifest.json",
+    )
     if out_root.name == "sanity_permute_cols":
-        write_manifest(parent_root, params={"note": "parent manifest includes real + sanity outputs"}, name="m38_manifest.json")
+        write_manifest(
+            parent_root,
+            params={"artifact_prefix": artifact_prefix, "note": "parent manifest includes real + sanity outputs"},
+            name=f"{artifact_prefix}_manifest.json",
+        )
 
-    print(f"OK: wrote M38 outputs to {out_root}")
+    print(f"OK: wrote {artifact_prefix} outputs to {out_root}")
 
 
 if __name__ == "__main__":
