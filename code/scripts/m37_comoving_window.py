@@ -264,7 +264,7 @@ def render_best_overlay_video(
     cfg: RunConfig,
     tracks: Dict[int, Dict[int, int]],
     k_starts: List[int],
-    perm: Optional[np.ndarray],
+    perms_by_t: Optional[List[np.ndarray]],
     fps: int,
     format_: str,
 ) -> Path:
@@ -283,8 +283,8 @@ def render_best_overlay_video(
     n_top0 = cfg.n_start
     k_start0, _ = k_window_for_frame(n_top0, cfg.H, cfg.W, cfg.q0)
     img0, _prof0 = build_values_invq_heatmap_and_profile(n_top=n_top0, H=cfg.H, k_start=k_start0, W=cfg.W)
-    if perm is not None:
-        img0 = img0[:, perm]
+    if perms_by_t is not None:
+        img0 = img0[:, perms_by_t[0]]
     im = ax.imshow(img0, aspect="auto", origin="upper", cmap="magma", vmin=0.0, vmax=0.02)
     ax.legend(loc="upper right", fontsize=8)
     ax.set_xlabel("k index (within window)")
@@ -296,8 +296,8 @@ def render_best_overlay_video(
         n_top = cfg.n_start + t * cfg.n_step
         k_start = k_starts[t]
         img, _prof = build_values_invq_heatmap_and_profile(n_top=n_top, H=cfg.H, k_start=k_start, W=cfg.W)
-        if perm is not None:
-            img = img[:, perm]
+        if perms_by_t is not None:
+            img = img[:, perms_by_t[t]]
         im.set_data(img)
         ax.set_title(f"M37 best overlay ({cfg.sanity})  n_start={cfg.n_start}  q0={cfg.q0}  t={t}  k_start={k_start}")
 
@@ -485,7 +485,6 @@ def main() -> None:
     q0_list = parse_int_list(args.q0_list)
 
     seed = int(args.seed)
-    rng = np.random.default_rng(seed)
 
     if args.format == "mp4" and shutil.which("ffmpeg") is None:
         raise RuntimeError("ffmpeg not found; rerun with --format gif")
@@ -493,7 +492,7 @@ def main() -> None:
     results: List[RunResult] = []
     per_run_tracks: Dict[str, Dict[int, Dict[int, int]]] = {}
     per_run_kstarts: Dict[str, List[int]] = {}
-    per_run_perm: Dict[str, Optional[np.ndarray]] = {}
+    per_run_perms: Dict[str, Optional[List[np.ndarray]]] = {}
 
     for n0 in n_starts:
         for q0 in q0_list:
@@ -518,9 +517,10 @@ def main() -> None:
 
             started = time.time()
 
-            perm: Optional[np.ndarray] = None
+            perms_by_t: Optional[List[np.ndarray]] = None
             if cfg.sanity == "permute_cols":
-                perm = rng.permutation(cfg.W)
+                perm_rng = np.random.default_rng(np.random.SeedSequence([seed, cfg.n_start, cfg.q0]))
+                perms_by_t = [perm_rng.permutation(cfg.W) for _ in range(cfg.frames)]
 
             x_peaks0: List[int] = []
             z_series: List[float] = []
@@ -533,8 +533,8 @@ def main() -> None:
                 k_starts.append(k_start)
 
                 prof = build_values_invq_profile(n_top=n_top, H=cfg.H, k_start=k_start, W=cfg.W)
-                if perm is not None:
-                    prof = prof[perm]
+                if perms_by_t is not None:
+                    prof = prof[perms_by_t[t]]
                 prof_sm = rolling_mean(prof, cfg.smooth)
 
                 idx, vals = top_peaks(prof_sm, cfg.peaks)
@@ -608,8 +608,8 @@ def main() -> None:
                 n_top = cfg.n_start + t_k * cfg.n_step
                 k_start = k_starts[t_k]
                 img, _prof = build_values_invq_heatmap_and_profile(n_top=n_top, H=cfg.H, k_start=k_start, W=cfg.W)
-                if perm is not None:
-                    img = img[:, perm]
+                if perms_by_t is not None:
+                    img = img[:, perms_by_t[t_k]]
                 out_path = out_dir / f"keyframe_t{t_k:03d}.png"
                 render_keyframe(
                     out_path=out_path,
@@ -652,7 +652,7 @@ def main() -> None:
             results.append(res)
             per_run_tracks[rid] = tracks
             per_run_kstarts[rid] = k_starts
-            per_run_perm[rid] = perm
+            per_run_perms[rid] = perms_by_t
 
     # write summary
     header = list(asdict(results[0]).keys())
@@ -677,7 +677,7 @@ def main() -> None:
         best_dir.mkdir(parents=True, exist_ok=True)
         tracks = per_run_tracks[best.run_id]
         k_starts = per_run_kstarts[best.run_id]
-        perm = per_run_perm[best.run_id]
+        perms_by_t = per_run_perms[best.run_id]
         cfg = RunConfig(
             n_start=best.n_start,
             q0=best.q0,
@@ -698,7 +698,7 @@ def main() -> None:
             cfg=cfg,
             tracks=tracks,
             k_starts=k_starts,
-            perm=perm,
+            perms_by_t=perms_by_t,
             fps=int(args.fps),
             format_=args.format,
         )
@@ -719,7 +719,7 @@ def main() -> None:
                 best_dir.mkdir(parents=True, exist_ok=True)
                 tracks = per_run_tracks[best_run_id]
                 k_starts = per_run_kstarts[best_run_id]
-                perm = per_run_perm[best_run_id]
+                perms_by_t = per_run_perms[best_run_id]
                 cfg = RunConfig(
                     n_start=best_n,
                     q0=best_q0,
@@ -740,7 +740,7 @@ def main() -> None:
                     cfg=cfg,
                     tracks=tracks,
                     k_starts=k_starts,
-                    perm=perm,
+                    perms_by_t=perms_by_t,
                     fps=int(args.fps),
                     format_=args.format,
                 )
