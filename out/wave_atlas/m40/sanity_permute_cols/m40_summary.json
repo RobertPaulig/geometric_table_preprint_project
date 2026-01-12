@@ -1,0 +1,35 @@
+{
+  "params": {
+    "n_start": 200000000,
+    "q0": 38,
+    "H": 512,
+    "W": 1024,
+    "frames": 300,
+    "n_step": 1,
+    "mode": "values",
+    "weights": "invq",
+    "theta_range_deg": "88,90",
+    "theta_step_deg": 0.02,
+    "dt_list": "5,10,20,40",
+    "smooth": 9,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "bootstrap": 200,
+    "sanity": "permute_cols",
+    "seed": 123,
+    "out_dir": "out/wave_atlas/m40/sanity_permute_cols"
+  },
+  "git_sha": "e36036b10cb8affc28b77fff31a642afcd456112",
+  "runtime_s": 3.469730854034424,
+  "theta_star_deg": 90.0,
+  "theta_ci_deg": [
+    88.02,
+    90.0
+  ],
+  "angle_score_peak": 0.31578947603702545,
+  "q_eff_angle": 1.633123935319537e+16,
+  "q_eff_angle_ci": [
+    28.925742290080255,
+    1.633123935319537e+16
+  ]
+}

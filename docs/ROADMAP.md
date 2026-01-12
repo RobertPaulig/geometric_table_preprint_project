@@ -1122,3 +1122,50 @@ PYTHONPATH=code python code/scripts/m38_auto_camera.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m39/sanity_permute_cols
 ```
+
+## M40 - Angle-based camera (polar scan near vertical) + adaptive dt
+Status: Done (tag wave-atlas-v1.31)
+
+**Цель:** на больших $q_0$ измерять наклон почти вертикальной ``волны'' через угловой скан (Radon/Hough-lite), а не через малый $\Delta k$ в пикселях; отдельно показать, что увеличение $dt$ делает $\Delta k$-оценку устойчивее. Sanity: permute\_cols должен разрушать пик по углу/стабильность.
+
+**DoD (артефакты):**
+- out/wave_atlas/m40/m40_angle_vs_dt.csv
+- out/wave_atlas/m40/m40_theta_score_curve_dt5.png
+- out/wave_atlas/m40/m40_theta_score_curve_dt40.png
+- out/wave_atlas/m40/m40_angle_ci.png
+- out/wave_atlas/m40/m40_compare_dx_vs_angle.png
+- out/wave_atlas/m40/m40_sanity_compare.png
+- out/wave_atlas/m40/m40_table.tex
+- out/wave_atlas/m40/m40_summary.json
+- out/wave_atlas/m40/m40_manifest.json (sha256 всех файлов + параметры + git sha; включает sanity outputs)
+- out/wave_atlas/m40/sanity_permute_cols/* (sanity outputs)
+- wave_atlas.tex: раздел M40 + \clearpage
+
+**Команды:**
+```bash
+# real
+PYTHONPATH=code python code/scripts/m40_angle_scan.py \
+  --n-start 200000000 \
+  --q0 38 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --theta-range-deg 88.0,90.0 --theta-step-deg 0.02 \
+  --dt-list 5,10,20,40 \
+  --bootstrap 200 \
+  --sanity none \
+  --out-dir out/wave_atlas/m40
+
+# sanity
+PYTHONPATH=code python code/scripts/m40_angle_scan.py \
+  --n-start 200000000 \
+  --q0 38 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --theta-range-deg 88.0,90.0 --theta-step-deg 0.02 \
+  --dt-list 5,10,20,40 \
+  --bootstrap 200 \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m40/sanity_permute_cols
+```

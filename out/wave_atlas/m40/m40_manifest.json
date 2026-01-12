@@ -1,0 +1,24 @@
+{
+  "params": {
+    "note": "parent includes real + sanity outputs",
+    "git_sha": "e36036b10cb8affc28b77fff31a642afcd456112"
+  },
+  "git_sha": "e36036b10cb8affc28b77fff31a642afcd456112",
+  "files": {
+    "m40_angle_ci.png": "2e2fb53309b4dd4f1ed572ac1cd96fc5ef03e85f466c6c1ce1c9259b0f8d1bae",
+    "m40_angle_vs_dt.csv": "9adacf377d3fc0ce70b73f6116fbdd85765a3a36055b98461e4ec210b57f26a4",
+    "m40_compare_dx_vs_angle.png": "fd27aee9ccc8aea675e9705fa30f89842c4562ef9188e1ccfc4820538a4f4c19",
+    "m40_sanity_compare.png": "774358d5a8ff84270dec3d960e5fe67fb3f671bb25a3a35aeb7dfc0ae8301475",
+    "m40_summary.json": "344a7b10fc28f62a804d74e8d4b0bdfbcee0d15f6b45e4c24bcacca220ca0a0e",
+    "m40_table.tex": "a3ebaf5bfbf788abda470a6591ac98d0aaa078668ade2d3c152cd87981a6b2c0",
+    "m40_theta_score_curve_dt40.png": "0f873d59d724c0a3885d547d328bfeefe1dfd9c2f229b5c9caa29c6986446da9",
+    "m40_theta_score_curve_dt5.png": "33e4fe56601dc5ab1a0eac23c1fb46148e064c03a0eacd2e41581e5c83481a52",
+    "sanity_permute_cols/m40_angle_ci.png": "19df6deedc4dad2fb82204e0b8b3f8299a42bc76f9dc6025c1010380009332fc",
+    "sanity_permute_cols/m40_angle_vs_dt.csv": "3c22dc668a6c818e58daf5df1673539fbbed1d685e0e67020c4e17c4904d9231",
+    "sanity_permute_cols/m40_compare_dx_vs_angle.png": "5a1a3562b28d9473027bd73fa13b6f897f2f32a208c7210821f7e0fdff02961e",
+    "sanity_permute_cols/m40_summary.json": "002f6911113b8ec61f171696ac1ac46ec009998711d726b847115da695168599",
+    "sanity_permute_cols/m40_table.tex": "2e39e020cb9720a72db67265296ae42ad55b2c77f88f063b5eb3137afcb2a7f9",
+    "sanity_permute_cols/m40_theta_score_curve_dt40.png": "d0bb0daaae35946ad1c29154c6bfa8579004b10b84fae5ed0efc92f8cf7114d6",
+    "sanity_permute_cols/m40_theta_score_curve_dt5.png": "f6b35f87eb4bea7a9c8c9c320079d846f94fcb8100b0927febc6b6c9f4d51892"
+  }
+}

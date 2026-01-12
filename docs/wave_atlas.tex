@@ -6,9 +6,9 @@
 \usepackage{hyperref}
 \usepackage{alphalph}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M33)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M40)}
 \author{Working note}
-\date{Wave Atlas v1.25}
+\date{Wave Atlas v1.31}
 
 \begin{document}
 \maketitle
@@ -1290,6 +1290,37 @@ We render an overlay MP4 for the best configuration at the largest $n_{\mathrm{s
 \centering
 \input{../out/wave_atlas/m39/m39_table.tex}
 \caption{Best $q_0$ per $n_{\mathrm{start}}$ in the extended-grid boundary test (M39).}
+\end{table}
+
+\clearpage
+\section{M40 Angle-based camera (polar scan near vertical)}
+At large $q_0$, the comoving wavefront becomes nearly vertical, so the drift-per-frame can be sub-pixel and $\Delta k$-based estimators become sensitive to discretization.
+M40 adds an angle-based estimator: we scan a narrow grid of angles $\theta$ near vertical, score each angle by a Radon/Hough-lite sum of the inv-$q$ heatmap along a few parallel lines through the window center, and bootstrap over frames to obtain a confidence interval for $\theta^*$ (resolution is limited by the chosen angular step).
+In parallel we sweep $dt\in\{5,10,20,40\}$ for the $\Delta k$-based estimator and show that increasing $dt$ reduces variance, as expected.
+Permuting columns flattens the angle score and destroys stability, serving as a sanity check.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m40/m40_theta_score_curve_dt40.png}
+\caption{Angle score near vertical (M40, $n_{\mathrm{start}}=2\cdot 10^8$, $q_0=38$). The dashed line marks the best $\theta^*$; the dotted line marks the $\theta_{\mathrm{dx}}$ implied by the $dt=40$ drift estimate.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m40/m40_angle_ci.png}
+\caption{Angle estimate (bootstrap CI over frames) and $\Delta k$-based estimate across $dt$ (M40). Larger $dt$ tightens the $\Delta k$ CI in the near-vertical regime.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m40/m40_sanity_compare.png}
+\caption{Sanity check: score$(\theta)$ becomes near-flat under permute-columns (M40).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m40/m40_table.tex}
+\caption{Angle-based and $\Delta k$-based estimates versus $dt$ (M40).}
 \end{table}
 
 \clearpage
