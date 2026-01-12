@@ -1,0 +1,40 @@
+{
+  "config": {
+    "n_start": 1000000,
+    "q0": 17,
+    "H": 512,
+    "W": 1024,
+    "frames": 300,
+    "n_step": 1,
+    "dt": 5,
+    "smooth": 9,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "mode": "values",
+    "weights": "invq",
+    "sanity": "permute_cols"
+  },
+  "result": {
+    "run_id": "n1e6_q17_H512_W1024_invq_dt5_sm9_permute_cols",
+    "n_start": 1000000,
+    "q0": 17,
+    "H": 512,
+    "W": 1024,
+    "weights": "invq",
+    "dt": 5,
+    "smooth": 9,
+    "frames": 300,
+    "conf_min": 0.15,
+    "sanity": "permute_cols",
+    "runtime_s": 0.19242453575134277,
+    "mean_dx": 0.6,
+    "median_dx": 10.0,
+    "q_eff": 8.333333333333334,
+    "slope_kpeak": -0.11382809651583656,
+    "track_r2": 0.0015613033385184494,
+    "valid_frac": 1.0,
+    "wave_strength": 4.192927704687962,
+    "visibility_score": 0.16567654088063305,
+    "notes": ""
+  }
+}

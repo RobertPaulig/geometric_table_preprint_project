@@ -1268,4 +1268,29 @@ MP4 overlays are saved under \texttt{out/wave\_atlas/m38/best\_overlay/}.
 \end{table}
 
 \clearpage
+\section{M39 Boundary test (is $q_0$ stuck at the grid ceiling?)}
+M39 tests whether the M38 selection is an artifact of the finite search range by extending the $q_0$ grid to $6\ldots40$.
+For each $n_{\mathrm{start}}$ we select the best $q_0$ by the same visibility score, with a fixed guard $R^2\ge 0.95$ to avoid unstable tracks.
+In this run, the maximum occurs at an interior value ($q_0=38$), i.e. the best choice is not stuck at the upper boundary $q_0=40$.
+We render an overlay MP4 for the best configuration at the largest $n_{\mathrm{start}}$ and compare against permute-columns sanity; MP4 files are stored under \texttt{out/wave\_atlas/m39/best\_overlay/}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m39/m39_score_vs_q0_n2e8.png}
+\caption{Boundary test: visibility score versus $q_0$ at $n_{\mathrm{start}}=2\cdot 10^8$ (M39).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\linewidth]{../out/wave_atlas/m39/m39_visibility_heatmap.png}
+\caption{Visibility score heatmap across $(n_{\mathrm{start}}, q_0)$ for the extended grid (M39).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m39/m39_table.tex}
+\caption{Best $q_0$ per $n_{\mathrm{start}}$ in the extended-grid boundary test (M39).}
+\end{table}
+
+\clearpage
 \end{document}

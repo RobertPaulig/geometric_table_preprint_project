@@ -1072,3 +1072,53 @@ PYTHONPATH=code python code/scripts/m38_auto_camera.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m38/sanity_permute_cols
 ```
+
+## M39 - Boundary test for auto-camera (q0 grid 6..40)
+Status: Done (tag wave-atlas-v1.30)
+
+**Цель:** проверить, что выбор $q_0$ из M38 не является артефактом верхней границы сетки: расширить поиск до $q_0\in[6,40]$ и показать, что максимум visibility\_score находится внутри диапазона (или честно зафиксировать упор в потолок).
+
+**Правило выбора best (канон):**
+1) фильтр: $R^2 \ge 0.95$,
+2) среди прошедших: максимум visibility\_score,
+3) если best на $q_0=40$, в summary фиксируем `hit_upper_boundary: true`.
+
+**DoD (артефакты):**
+- out/wave_atlas/m39/m39_q0_sweep.csv
+- out/wave_atlas/m39/m39_best_by_nstart.csv
+- out/wave_atlas/m39/m39_summary.json (включая boundary verdict)
+- out/wave_atlas/m39/m39_visibility_heatmap.png
+- out/wave_atlas/m39/m39_score_vs_q0_n1e6.png
+- out/wave_atlas/m39/m39_score_vs_q0_n5e7.png
+- out/wave_atlas/m39/m39_score_vs_q0_n2e8.png
+- out/wave_atlas/m39/best_overlay/real/m39_best_overlay_tail.mp4 + keyframes
+- out/wave_atlas/m39/best_overlay/sanity/m39_best_overlay_tail.mp4 + keyframes
+- out/wave_atlas/m39/m39_table.tex
+- out/wave_atlas/m39/m39_manifest.json (sha256 всех файлов + параметры + git sha; включает sanity outputs)
+- out/wave_atlas/m39/sanity_permute_cols/* (sanity outputs)
+- wave_atlas.tex: раздел M39 + \clearpage
+
+**Команды:**
+```bash
+# real
+PYTHONPATH=code python code/scripts/m38_auto_camera.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --q0-grid 6,40,1 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --dt 5 --smooth 9 \
+  --sanity none \
+  --out-dir out/wave_atlas/m39
+
+# sanity
+PYTHONPATH=code python code/scripts/m38_auto_camera.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --q0-grid 6,40,1 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --dt 5 --smooth 9 \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m39/sanity_permute_cols
+```
