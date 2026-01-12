@@ -1220,3 +1220,25 @@ PYTHONPATH=code python code/scripts/m41_angle_auto_camera.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m41/sanity_permute_cols
 ```
+
+## M42 - Angle↔q consistency (bias check)
+Status: Done (tag wave-atlas-v1.32.1)
+
+**Цель:** проверить согласованность оценок ``эффективного q'' из M41: $q_{\mathrm{dx}}$ (из $\Delta k$ при авто-выбранном $dt$) и $q_{\theta}=\tan(\theta_{\mathrm{sub}})$ (из углового пика). Зафиксировать $\Delta q$ и $\Delta\theta$, чтобы выявить/исключить систематический bias (центрирование/дискретизация/сглаживание).
+
+**DoD (артефакты):**
+- out/wave_atlas/m42/m42_consistency.csv
+- out/wave_atlas/m42/m42_q_from_theta_vs_qeff.png
+- out/wave_atlas/m42/m42_delta_q_by_nstart.png
+- out/wave_atlas/m42/m42_table.tex
+- out/wave_atlas/m42/m42_summary.json
+- out/wave_atlas/m42/m42_manifest.json (sha256 всех файлов + параметры + git sha)
+- wave_atlas.tex: раздел M42 + \clearpage
+
+**Команда:**
+```bash
+PYTHONPATH=code python code/scripts/m42_angle_q_consistency.py \
+  --m41-dir out/wave_atlas/m41 \
+  --r2-min 0.95 \
+  --out-dir out/wave_atlas/m42
+```

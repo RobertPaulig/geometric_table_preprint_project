@@ -382,3 +382,14 @@ PDF SHA256: 310F6A6531737DA9B2278F9658F3F65691C320577F157BF078C8BC6DBAB0A9B2
 Key numbers (M41; q0-grid 6..40, target_dx 0.8, bootstrap 200):
 - n_start=200e6 best q0=29, dt=23: theta_subdeg 88.335 [88.324,88.347], mean_dx 0.783 (q_eff~29.36), track_r2 0.989, peakiness 25.18
 - sanity (permute_cols): score(theta) becomes irregular and track_r2 collapses (see out/wave_atlas/m41/m41_sanity_compare.png)
+
+Wave Atlas v1.32.1 Release Notes
+
+Tag: wave-atlas-v1.32.1
+Commit: (tag wave-atlas-v1.32.1)
+Changes: M42 docs+analysis-only patch: check consistency between q-from-angle (q_theta = tan(theta_subdeg)) and q-from-dx (q_eff) using the M41 sweep; add plots/table + TeX section and manifest; no M41 runs regenerated.
+PDF size: 5708486 bytes
+PDF SHA256: 37E0E2A5DF23561FAC0D1F9456D0D5F16DAD0B9D86426259C3DDCEE95871CADE
+Key numbers (M42; M41 sweep, filter R^2>=0.95 on real):
+- median delta_theta ~ 0.30 deg across n_start (see out/wave_atlas/m42/m42_summary.json)
+- median delta_q ~ 0.26..0.36 across n_start (see out/wave_atlas/m42/m42_summary.json)
