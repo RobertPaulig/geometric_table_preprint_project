@@ -1237,4 +1237,35 @@ In this run, the best configuration for the largest tested $n_{\mathrm{start}}$ 
 \end{figure}
 
 \clearpage
+\section{M38 Auto-camera (automatic $q_0$ selection)}
+M37 shows that a comoving $k$-window can restore a coherent wavefront track at large $n$, but it still requires choosing $q_0$.
+In M38 we automate this choice: for each $n_{\mathrm{start}}$ we sweep a grid of $q_0$ values and pick the best by a visibility score (peak prominence combined with track $R^2$ and valid fraction).
+We also generate best-of tail overlay MP4s for each $n_{\mathrm{start}}$ and compare against a permute-columns sanity, where coherent tracks degrade.
+MP4 overlays are saved under \texttt{out/wave\_atlas/m38/best\_overlay/}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\linewidth]{../out/wave_atlas/m38/m38_visibility_heatmap.png}
+\caption{Visibility score across the $(n_{\mathrm{start}}, q_0)$ grid (M38).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{../out/wave_atlas/m38/m38_q0_vs_nstart.png}
+\caption{Best selected $q_0$ per $n_{\mathrm{start}}$ (M38).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\linewidth]{../out/wave_atlas/m38/m38_preview_grid.png}
+\caption{Best-of overlay preview grid: real vs permute-cols sanity for each $n_{\mathrm{start}}$ (M38).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m38/m38_table.tex}
+\caption{Auto-selected $q_0$ per $n_{\mathrm{start}}$, with sanity comparison (M38).}
+\end{table}
+
+\clearpage
 \end{document}

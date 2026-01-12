@@ -337,4 +337,15 @@ PDF size: 4932855 bytes
 PDF SHA256: 4DA446C5244076E14E464D86CFAE6C1BB11CF4CDC61CE42E3D7E3B328BD7BC6E
 Key numbers (M37; best at n_start=200e6, q0=12, H=512, W=1024):
 - real: mean_dx 0.424 (q_eff≈11.8), track_r2 0.998, visibility_score 5.17
-- sanity (permute_cols): track_r2 4.43e-4, visibility_score 0.105
+ - sanity (permute_cols): track_r2 4.43e-4, visibility_score 0.105
+
+Wave Atlas v1.29 Release Notes
+
+Tag: wave-atlas-v1.29
+Commit: (tag wave-atlas-v1.29)
+Changes: M38 auto-camera for comoving window: automatic q0 sweep/selection by visibility score with guard on track R^2; best-of tail overlay MP4 per n_start (real vs permute-cols sanity) + TeX section and manifest.
+PDF size: 5201495 bytes
+PDF SHA256: BA3E001A035F3DA6C1B59EBE2AD9987966478D511F8EADCC919B764CD747A0C2
+Key numbers (M38; q0-grid 6..20):
+- n_start=200e6 best q0=20: real mean_dx 0.241 (q_eff~20.8), track_r2 0.996, visibility_score 6.75
+- sanity (permute_cols) at q0=20: track_r2 1.74e-4, visibility_score 0.0588
