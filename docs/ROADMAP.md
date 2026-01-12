@@ -991,3 +991,41 @@ PYTHONPATH=code python code/scripts/m36_scale_law.py \
   --m35-summary-csv out/wave_atlas/m35/m35_summary.csv \
   --out-dir out/wave_atlas/m36
 ```
+
+## M37 - Comoving window (camera rides the wavefront)
+Status: Done (tag wave-atlas-v1.28)
+
+**Цель:** на больших $n$ сделать волну видимой не за счёт роста $K$, а за счёт ``едущего'' окна по $k$ вокруг $k_c\approx (n_t+H/2)/q_0$ (комовинг-камера); сравнить с sanity `permute_cols`.
+
+**DoD (артефакты):**
+- out/wave_atlas/m37/m37_summary.csv + m37_summary.json
+- out/wave_atlas/m37/m37_preview_grid.png (real vs sanity grid)
+- out/wave_atlas/m37/m37_best_config.json
+- out/wave_atlas/m37/best_overlay/real/m37_best_overlay_tail.mp4 + keyframes
+- out/wave_atlas/m37/best_overlay/sanity/m37_best_overlay_tail.mp4 + keyframes
+- out/wave_atlas/m37/m37_manifest.json (sha256 каждого файла + параметры + git sha; включает sanity outputs)
+- out/wave_atlas/m37/sanity_permute_cols/* (sanity outputs)
+- wave_atlas.tex: раздел M37 + \clearpage
+
+**Команды:**
+```bash
+# real
+PYTHONPATH=code python code/scripts/m37_comoving_window.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --q0-list 8,10,12 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --sanity none \
+  --out-dir out/wave_atlas/m37
+
+# sanity
+PYTHONPATH=code python code/scripts/m37_comoving_window.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --q0-list 8,10,12 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m37/sanity_permute_cols
+```
