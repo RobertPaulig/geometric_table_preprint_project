@@ -221,6 +221,7 @@ def render_keyframe(
     ax.set_title(f"M37 comoving window ({cfg.sanity})  n_start={cfg.n_start}  q0={cfg.q0}  t={t_key}")
 
     colors = ["#00d4ff", "#00ff6a", "#ffd200"]
+    any_line = False
     for pid in range(min(cfg.peaks, 3)):
         xs: List[float] = []
         ys: List[float] = []
@@ -237,6 +238,7 @@ def render_keyframe(
                 ys.append(float(y))
         if len(xs) >= 2:
             ax.plot(xs, ys, color=colors[pid], linewidth=1.6, alpha=0.95, label=f"peak{pid+1}")
+            any_line = True
 
     qeff_s = f"{q_eff:.3g}" if (not math.isnan(q_eff)) else "nan"
     txt = f"W={cfg.W}  H={cfg.H}  dt={cfg.dt}  mean_dx={mean_dx:.3g}  q_eff≈{qeff_s}"
@@ -249,7 +251,8 @@ def render_keyframe(
         color="white",
         bbox=dict(facecolor="black", alpha=0.45, pad=3),
     )
-    ax.legend(loc="upper right", fontsize=8)
+    if any_line:
+        ax.legend(loc="upper right", fontsize=8)
     fig.tight_layout()
     fig.savefig(out_path)
     plt.close(fig)
@@ -550,8 +553,10 @@ def main() -> None:
 
                 peak_val = float(vals[0]) if vals else float("nan")
                 baseline = float(np.median(prof_sm))
-                m = mad(prof_sm)
-                z = float((peak_val - baseline) / (m + 1e-9)) if not math.isnan(peak_val) else float("nan")
+                scale = mad(prof_sm)
+                if scale <= 0:
+                    scale = float(np.std(prof_sm))
+                z = float((peak_val - baseline) / (scale + 1e-9)) if not math.isnan(peak_val) else float("nan")
                 z_series.append(z)
 
             # drift from peak0 dk over dt
