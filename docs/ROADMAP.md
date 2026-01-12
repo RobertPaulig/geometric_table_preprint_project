@@ -1029,3 +1029,46 @@ PYTHONPATH=code python code/scripts/m37_comoving_window.py \
   --sanity permute_cols \
   --out-dir out/wave_atlas/m37/sanity_permute_cols
 ```
+
+## M38 - Auto-camera (automatic q0 selection)
+Status: Done (tag wave-atlas-v1.29)
+
+**Цель:** убрать ручной выбор $q_0$ для comoving-камеры: автоматически выбрать лучший $q_0$ из сетки по метрике видимости (wave\_strength + track $R^2$ + valid\_frac), и выдать best-of overlay (real vs permute-cols sanity) на больших $n$.
+
+**DoD (артефакты):**
+- out/wave_atlas/m38/m38_q0_sweep.csv (все $n_{\mathrm{start}}\times q_0$)
+- out/wave_atlas/m38/m38_best_by_nstart.csv (лучший $q_0$ на каждом $n_{\mathrm{start}}$)
+- out/wave_atlas/m38/m38_visibility_heatmap.png
+- out/wave_atlas/m38/m38_q0_vs_nstart.png
+- out/wave_atlas/m38/m38_preview_grid.png (best-of real vs sanity)
+- out/wave_atlas/m38/best_overlay/*/real/m38_best_overlay_tail.mp4 + keyframes
+- out/wave_atlas/m38/best_overlay/*/sanity/m38_best_overlay_tail.mp4 + keyframes
+- out/wave_atlas/m38/m38_table.tex
+- out/wave_atlas/m38/m38_manifest.json (sha256 всех файлов + параметры + git sha; включает sanity outputs)
+- out/wave_atlas/m38/sanity_permute_cols/* (sanity outputs)
+- wave_atlas.tex: раздел M38 + \clearpage
+
+**Команды:**
+```bash
+# real
+PYTHONPATH=code python code/scripts/m38_auto_camera.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --q0-grid 6,20,1 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --dt 5 --smooth 9 \
+  --sanity none \
+  --out-dir out/wave_atlas/m38
+
+# sanity
+PYTHONPATH=code python code/scripts/m38_auto_camera.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --q0-grid 6,20,1 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --dt 5 --smooth 9 \
+  --sanity permute_cols \
+  --out-dir out/wave_atlas/m38/sanity_permute_cols
+```
