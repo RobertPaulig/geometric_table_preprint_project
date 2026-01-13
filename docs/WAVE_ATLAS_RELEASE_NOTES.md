@@ -393,3 +393,14 @@ PDF SHA256: 37E0E2A5DF23561FAC0D1F9456D0D5F16DAD0B9D86426259C3DDCEE95871CADE
 Key numbers (M42; M41 sweep, filter R^2>=0.95 on real):
 - median delta_theta ~ 0.30 deg across n_start (see out/wave_atlas/m42/m42_summary.json)
 - median delta_q ~ 0.26..0.36 across n_start (see out/wave_atlas/m42/m42_summary.json)
+
+Wave Atlas v1.33 Release Notes
+
+Tag: wave-atlas-v1.33
+Commit: (tag wave-atlas-v1.33)
+Changes: M43 measure_wave instrument: one-command wrapper (M41+M42+tail overlay) that runs real+sanity (permute-cols), selects best (q0, dt), reports theta_subdeg and q_eff with bootstrap CI, writes strict PASS/FAIL with fail reasons, and renders MP4 overlays + preview + manifest (sha256 by path).
+PDF size: 5862822 bytes
+PDF SHA256: 9745BCE5BB3DC92BD788332A7C6F6449DAC8FD20999E65C66ABEBC0A657ABEE5
+Key numbers (M43; n_start=200e6, q0-grid 6..40, target_dx 0.8, bootstrap 200):
+- best q0=29, dt=23: theta_subdeg 88.335 [88.324,88.347], q_eff 29.36 [27.82,30.93], pass_overall=true
+- sanity (permute_cols) at q0=29: track_r2 0.0030, peakiness 4.33, pass_sanity=true

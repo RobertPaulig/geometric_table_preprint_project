@@ -1242,3 +1242,37 @@ PYTHONPATH=code python code/scripts/m42_angle_q_consistency.py \
   --r2-min 0.95 \
   --out-dir out/wave_atlas/m42
 ```
+
+## M43 - measure_wave (one-command instrument)
+Status: Done (tag wave-atlas-v1.33)
+
+**Цель:** собрать M41+M42 в одну команду ``measure_wave'': авто-выбор $(q_0,dt)$, оценка $\theta_{\mathrm{sub}}$ и $q_{\mathrm{eff}}$ с CI, обязательный sanity (permute_cols), строгий PASS/FAIL с причинами, плюс tail-overlay MP4 (real+sanity) и preview-картинка.
+
+**DoD (артефакты):**
+- out/wave_atlas/m43/m43_summary.json (pass\_real/pass\_sanity/pass\_overall + fail\_reasons)
+- out/wave_atlas/m43/m43_manifest.json (sha256 по путям)
+- out/wave_atlas/m43/m43_best_by_nstart.csv
+- out/wave_atlas/m43/m43_table.tex
+- out/wave_atlas/m43/m43_preview.png
+- out/wave_atlas/m43/overlay/real/m43_overlay_tail.mp4
+- out/wave_atlas/m43/overlay/sanity/m43_overlay_tail.mp4
+- out/wave_atlas/m43/real/m41/* + out/wave_atlas/m43/real/m42/*
+- out/wave_atlas/m43/sanity/m41/* + out/wave_atlas/m43/sanity/m42/*
+- wave_atlas.tex: раздел M43 + \clearpage
+
+**Команда (канон):**
+```bash
+PYTHONPATH=code python code/scripts/m43_measure_wave.py \
+  --n-start 200000000 \
+  --q0-grid 6,40,1 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --theta-range-deg 78.0,90.0 --theta-step-deg 0.1 \
+  --theta-refine-halfwidth-deg 0.6 --theta-refine-step-deg 0.02 \
+  --target-dx 0.8 --dt-min 5 --dt-max 80 \
+  --smooth 9 --peaks 3 --conf-min 0.15 \
+  --r2-guard 0.95 --bootstrap 200 \
+  --overlay-fps 30 --overlay-format mp4 \
+  --out-dir out/wave_atlas/m43
+```

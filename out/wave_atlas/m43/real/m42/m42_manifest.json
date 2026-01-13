@@ -1,0 +1,14 @@
+{
+  "params": {
+    "m41_dir": "out/wave_atlas/m43/real/m41",
+    "r2_min": 0.95
+  },
+  "git_sha": "8325ac27cea31e195c63fdb22cb0890546250d07",
+  "files": {
+    "m42_consistency.csv": "ec86a78b8151d42fd418c3e5d6db4ad4e42f44df0226c15b3664a5b2c0e13c1e",
+    "m42_delta_q_by_nstart.png": "47a097dc4aa05d2d9565f7f2757fff58ac48854f9a7abb7f4b1e7463dce0eb7e",
+    "m42_q_from_theta_vs_qeff.png": "dfe5013ee3edfdfc602f7c75b95d6846f78eff5c9b714e5aec4b54bb976d6a7d",
+    "m42_summary.json": "16b1c82aab33959ed7bfb4cf63733b3e2d418dfd03411caffb144c1f7f462f23",
+    "m42_table.tex": "c0d006e9a8ca69aad58857567f987fd0196a8fbcfd63ce74a406073d0d6b1b73"
+  }
+}
