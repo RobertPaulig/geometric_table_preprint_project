@@ -205,6 +205,23 @@ def plot_delta_q_by_nstart(
         labels.append(f"{n0:g}")
 
     fig, ax = plt.subplots(figsize=(6.6, 3.6), dpi=150)
+    if not data:
+        ax.text(
+            0.5,
+            0.5,
+            f"No real rows with track_r2 >= {r2_min:.2f}\\n"
+            "(delta_q undefined after filtering)",
+            ha="center",
+            va="center",
+            transform=ax.transAxes,
+            fontsize=10,
+        )
+        ax.set_axis_off()
+        fig.tight_layout()
+        fig.savefig(out_path)
+        plt.close(fig)
+        return
+
     ax.boxplot(data, labels=labels, showfliers=False)
     ax.axhline(0.0, color="#000000", linewidth=1.0, alpha=0.35, linestyle="--")
     ax.set_xlabel("n_start")
