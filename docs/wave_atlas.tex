@@ -6,9 +6,9 @@
 \usepackage{hyperref}
 \usepackage{alphalph}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M42)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M43)}
 \author{Working note}
-\date{Wave Atlas v1.32.1}
+\date{Wave Atlas v1.33}
 
 \begin{document}
 \maketitle
@@ -1376,6 +1376,22 @@ Because the mapping $\theta\mapsto q$ is extremely sensitive near vertical, even
 \centering
 \input{../out/wave_atlas/m42/m42_table.tex}
 \caption{Consistency summary at the M41 best settings (M42).}
+\end{table}
+
+\clearpage
+\section{M43 measure\_wave (one-command instrument)}
+M43 packages M41+M42 into a single command that runs real+sanity, selects the best $(q_0,dt)$, reports $\theta_{\mathrm{sub}}$ and $q_{\mathrm{eff}}$ with confidence intervals, writes a strict PASS/FAIL summary, and renders a tail-overlay preview (MP4s are saved under \texttt{out/wave\_atlas/m43/overlay/}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\linewidth]{../out/wave_atlas/m43/m43_preview.png}
+\caption{M43 preview: tail overlay (real vs permute-cols sanity) with key numbers.}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m43/m43_table.tex}
+\caption{M43 instrument output and PASS/FAIL thresholds (real vs sanity).}
 \end{table}
 
 \clearpage
