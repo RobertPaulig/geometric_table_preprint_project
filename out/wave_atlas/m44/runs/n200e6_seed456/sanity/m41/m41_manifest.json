@@ -1,0 +1,17 @@
+{
+  "params": {
+    "sanity": "permute_cols",
+    "note": "run manifest"
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "files": {
+    "m41_best_by_nstart.csv": "b6342c7bb7fe67e4b07af80659067d9ee4c8713dc779205a0062ca33dc217b0b",
+    "m41_best_q0_vs_nstart.png": "7ad3b2b5da26ac5e72d3171b0f65660ef1dc62cacf7b34097151add6e1c925fc",
+    "m41_best_score_theta.csv": "e6da2c6a49cbaf1f12902b67a677eeeda399b97bdf44b91e1871b7b9dd2b2c17",
+    "m41_best_score_theta.png": "3012cbd8ee7797978ff1eb7fe4b2c7d22f59da46f36970a839645a21d1ad8c27",
+    "m41_peakiness_heatmap.png": "683288e089ca1c057c5f1d9fdd7c531f994528ccb1925af8f7f3270640952196",
+    "m41_q0_sweep.csv": "7eb1029b55b24ca9c034aec49abefecd51c57484023141a577570fb32d82b1bb",
+    "m41_summary.json": "766c23dee84d6ab57fdeb58a20fa8e6f2243c75d27671e62ff78e3e7f0edfa89",
+    "m41_table.tex": "2717dcb6a1060184039f9bee3077037e4ec679fb5d01f1aa825c9b236b3627ab"
+  }
+}

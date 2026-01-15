@@ -1,0 +1,90 @@
+{
+  "params": {
+    "q0_grid": "6,40,1",
+    "H": 512,
+    "W": 1024,
+    "frames": 300,
+    "n_step": 1,
+    "mode": "values",
+    "weights": "invq",
+    "theta_range_deg": "78.0,90.0",
+    "theta_step_deg": 0.1,
+    "theta_refine_halfwidth_deg": 0.6,
+    "theta_refine_step_deg": 0.02,
+    "target_dx": 0.8,
+    "dt_min": 5,
+    "dt_max": 80,
+    "smooth": 9,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "r2_guard": 0.95,
+    "bootstrap": 200,
+    "overlay": "none",
+    "overlay_fps": 30,
+    "overlay_format": "mp4",
+    "seed": 789,
+    "overwrite": 0,
+    "out_dir": "out\\wave_atlas\\m44\\runs\\n200e6_seed789",
+    "n_start_list": "200000000",
+    "layout": {
+      "real_m41": "real/m41",
+      "real_m42": "real/m42",
+      "sanity_m41": "sanity/m41",
+      "sanity_m42": "sanity/m42",
+      "overlay_real": "overlay/real",
+      "overlay_sanity": "overlay/sanity"
+    }
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "runtime_s": 148.61970949172974,
+  "thresholds": {
+    "real": {
+      "track_r2_min": 0.95,
+      "peakiness_min": 10.0
+    },
+    "sanity": {
+      "track_r2_max": 0.1,
+      "peakiness_max": 6.0
+    }
+  },
+  "pass_real": true,
+  "pass_sanity": false,
+  "pass_overall": false,
+  "fail_reasons": [
+    "n_start=200000000: sanity:peakiness>6.0"
+  ],
+  "overlay": {
+    "enabled": false,
+    "n_start": 200000000,
+    "q0": 29,
+    "dt": 23,
+    "real_video": null,
+    "sanity_video": null
+  },
+  "best_by_nstart": [
+    {
+      "n_start": 200000000,
+      "q0_best": 29,
+      "dt_best": 23,
+      "theta_subdeg": 88.33481886364575,
+      "theta_ci_lo": 88.32324923733671,
+      "theta_ci_hi": 88.34529710529546,
+      "q_theta": 34.39844812882203,
+      "q_theta_ci_lo": 34.160963722594424,
+      "q_theta_ci_hi": 34.61639520294774,
+      "q_eff": 29.359447004608295,
+      "q_eff_ci_lo": 27.58008658008658,
+      "q_eff_ci_hi": 31.388120640881823,
+      "track_r2_real": 0.9891047797032724,
+      "peakiness_real": 25.17999943762639,
+      "track_r2_sanity": 8.785634398666975e-05,
+      "peakiness_sanity": 6.333333149666672,
+      "pass_real": true,
+      "pass_sanity": false,
+      "pass_overall": false,
+      "fail_reasons": [
+        "sanity:peakiness>6.0"
+      ]
+    }
+  ]
+}

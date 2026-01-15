@@ -1,0 +1,2 @@
+n_start,q0_best,dt,peakiness,peakiness_score,theta_star,theta_subdeg,theta_ci_lo,theta_ci_hi,theta_dx,q_eff,mean_dx,track_r2,valid_frac,used_r2_guard,hit_boundary
+50000000,15,12,3.399999895639257,0.6552332619374923,84.5,84.54082417682561,84.48657288235954,85.26153846254238,50.518824639171974,1.21390937829294,9.885416666666666,0.03713932992260249,1.0,False,False

@@ -1,0 +1,14 @@
+{
+  "params": {
+    "m41_dir": "out/wave_atlas/m44/overlay_failures/n200e6_seed789/sanity/m41",
+    "r2_min": 0.95
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "files": {
+    "m42_consistency.csv": "bae47b7335843eecb9aa011652630c9503ad64926910ba54c4b7028f82389e8b",
+    "m42_delta_q_by_nstart.png": "2f1d1434eb3441eed15d7032f88a08d6f936eb7c44bea2518a5e8e5f02ed298e",
+    "m42_q_from_theta_vs_qeff.png": "30e8578e2e1f81cbdd9e6bd3600bc42768628da5d28f604b7a434143f5026802",
+    "m42_summary.json": "7dcaefd38c1527cda1929d7dd338df1d66ddab90f4b0b685e95f3678658db3db",
+    "m42_table.tex": "25d6ff361c85445747d7463e22d7cd640ef20b9c36d70dd750e1b672775c2c7e"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "params": {
+    "n_start_list": "1000000",
+    "q0_grid": "6,40,1",
+    "H": 512,
+    "W": 1024,
+    "frames": 300,
+    "n_step": 1,
+    "mode": "values",
+    "weights": "invq",
+    "theta_range_deg": "78.0,90.0",
+    "theta_step_deg": 0.1,
+    "theta_refine_halfwidth_deg": 0.6,
+    "theta_refine_step_deg": 0.02,
+    "target_dx": 0.8,
+    "dt_min": 5,
+    "dt_max": 80,
+    "smooth": 9,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "r2_guard": 0.95,
+    "bootstrap": 200,
+    "sanity": "permute_cols",
+    "seed": 123,
+    "out_dir": "out/wave_atlas/m44/runs/n1e6_seed123/sanity/m41"
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "runtime_s": 83.32592105865479,
+  "best_by_nstart": [
+    {
+      "n_start": 1000000,
+      "q0_best": 31,
+      "dt": 25,
+      "peakiness": 3.999999876000004,
+      "peakiness_score": 0.4293777450535615,
+      "theta_star": 88.8,
+      "theta_subdeg": 88.77249999993809,
+      "theta_ci_lo": 88.55271505372286,
+      "theta_ci_hi": 89.2022324675615,
+      "theta_dx": 68.8118577688574,
+      "q_eff": 2.5797373358348965,
+      "mean_dx": 9.690909090909091,
+      "track_r2": 0.011522828711120425,
+      "valid_frac": 1.0,
+      "used_r2_guard": false,
+      "hit_boundary": false
+    }
+  ]
+}

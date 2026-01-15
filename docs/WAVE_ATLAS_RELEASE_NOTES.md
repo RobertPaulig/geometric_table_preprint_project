@@ -404,3 +404,13 @@ PDF SHA256: 9745BCE5BB3DC92BD788332A7C6F6449DAC8FD20999E65C66ABEBC0A657ABEE5
 Key numbers (M43; n_start=200e6, q0-grid 6..40, target_dx 0.8, bootstrap 200):
 - best q0=29, dt=23: theta_subdeg 88.335 [88.324,88.347], q_eff 29.36 [27.82,30.93], pass_overall=true
 - sanity (permute_cols) at q0=29: track_r2 0.0030, peakiness 4.33, pass_sanity=true
+
+Wave Atlas v1.33.1 Release Notes
+
+Tag: wave-atlas-v1.33.1
+Commit: (tag wave-atlas-v1.33.1)
+Changes: M44 repeatability panel (patch): run the M43 instrument across a 3×3 grid n_start×seed, summarize PASS/FAIL and parameter stability (q0, dt, theta CI) as a compact panel (CSV + plots + TeX table); render overlay MP4 only for the reference run (n_start=200e6, seed=123), and allow overlays for failures under out/wave_atlas/m44/overlay_failures/.
+PDF size: 5920418 bytes
+PDF SHA256: 859CF91A65932EAD48938C10B1EE38ADAFB1ACEBED136B5D426A4A1DC53FF9CE
+Key numbers (M44; n_start={1e6,50e6,200e6}, seeds={123,456,789}):
+- pass_overall: 8/9 (FAIL at n_start=200e6, seed=789 due to sanity peakiness > 6)

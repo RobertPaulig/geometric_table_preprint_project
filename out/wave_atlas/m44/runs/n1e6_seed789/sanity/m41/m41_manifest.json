@@ -1,0 +1,17 @@
+{
+  "params": {
+    "sanity": "permute_cols",
+    "note": "run manifest"
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "files": {
+    "m41_best_by_nstart.csv": "0cac958584b750e1eab7e4aee6cbbbf11e19b2ba337932e491fef23a4b83bcef",
+    "m41_best_q0_vs_nstart.png": "4a92a5e5ac0cb3d9c6ba2e1078a13651c8bf7f800e4a10cdbd4fae2b2259cd42",
+    "m41_best_score_theta.csv": "db504a1cb551f8ad9e0b01ea8aba5460f8fd5f9b31a111b08d81aea303507ab1",
+    "m41_best_score_theta.png": "26aef9b600f762b9b018d31c5c2b297c1520dff0e7e70a1b13d00d0a838581bf",
+    "m41_peakiness_heatmap.png": "a19d2409c003441693d5399dc7e66efa5e263161fb7f4eb68f094a2aea473013",
+    "m41_q0_sweep.csv": "a838c39c85e5fb741168af1a4c3a7d37513d3860368d33266ba2c8a11a5f84b4",
+    "m41_summary.json": "22bff5e92864728b2012d34ddd9610abf1fdcb564c9691dd27226af3d57611db",
+    "m41_table.tex": "de777c7af849b4301fed4451b7074264da1754342640a8069a751a3cb440e741"
+  }
+}

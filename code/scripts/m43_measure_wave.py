@@ -331,6 +331,7 @@ def main() -> None:
     p.add_argument("--conf-min", type=float, default=0.15)
     p.add_argument("--r2-guard", type=float, default=0.95)
     p.add_argument("--bootstrap", type=int, default=200)
+    p.add_argument("--overlay", type=str, default="auto", choices=["auto", "none"])
     p.add_argument("--overlay-fps", type=int, default=30)
     p.add_argument("--overlay-format", type=str, default="mp4", choices=["mp4", "gif"])
     p.add_argument("--seed", type=int, default=123)
@@ -534,7 +535,7 @@ def main() -> None:
     pass_sanity_all = all(bool(r["pass_sanity"]) for r in results) if results else False
     pass_overall_all = bool(pass_real_all and pass_sanity_all)
 
-    # 4) Overlay mp4 for the largest n_start
+    # 4) Overlay mp4 for the largest n_start (optional)
     n_overlay = int(max(n_starts))
     row_overlay = next((r for r in results if int(r["n_start"]) == n_overlay), None)
     if row_overlay is None:
@@ -542,72 +543,10 @@ def main() -> None:
     q0_overlay = int(row_overlay["q0_best"])
     dt_overlay = int(row_overlay["dt_best"])
 
-    tmp_overlay_root = out_root / "_tmp_overlay"
-    if tmp_overlay_root.exists():
-        shutil.rmtree(tmp_overlay_root)
-    ensure_dir(tmp_overlay_root)
-
-    m37_common = [
-        "--n-start-list",
-        str(int(n_overlay)),
-        "--q0-list",
-        str(int(q0_overlay)),
-        "--H",
-        str(int(args.H)),
-        "--W",
-        str(int(args.W)),
-        "--frames",
-        str(int(args.frames)),
-        "--n-step",
-        str(int(args.n_step)),
-        "--dt",
-        str(int(dt_overlay)),
-        "--smooth",
-        str(int(args.smooth)),
-        "--peaks",
-        str(int(args.peaks)),
-        "--conf-min",
-        str(float(args.conf_min)),
-        "--mode",
-        str(args.mode),
-        "--weights",
-        str(args.weights),
-        "--fps",
-        str(int(args.overlay_fps)),
-        "--format",
-        str(args.overlay_format),
-        "--seed",
-        str(int(args.seed)),
-    ]
-
-    run_cmd(python_cmd("code/scripts/m37_comoving_window.py", [*m37_common, "--sanity", "none", "--out-dir", str(tmp_overlay_root)]), env=env)
-    run_cmd(
-        python_cmd(
-            "code/scripts/m37_comoving_window.py",
-            [*m37_common, "--sanity", "permute_cols", "--out-dir", str(tmp_overlay_root / "sanity_permute_cols")],
-        ),
-        env=env,
-    )
-
-    real_best_dir = tmp_overlay_root / "best_overlay" / "real"
-    sanity_best_dir = tmp_overlay_root / "best_overlay" / "sanity"
     ext = "mp4" if args.overlay_format == "mp4" else "gif"
-    real_vid = real_best_dir / f"m37_best_overlay_tail.{ext}"
-    sanity_vid = sanity_best_dir / f"m37_best_overlay_tail.{ext}"
-    if not real_vid.exists() or not sanity_vid.exists():
-        raise FileNotFoundError("Missing overlay videos from M37 best_overlay")
-
-    out_real_vid = overlay_real_dir / f"m43_overlay_tail.{ext}"
-    out_sanity_vid = overlay_sanity_dir / f"m43_overlay_tail.{ext}"
-    shutil.copyfile(real_vid, out_real_vid)
-    shutil.copyfile(sanity_vid, out_sanity_vid)
-
-    # preview from keyframe t=150 (fallback t=000)
-    real_key = real_best_dir / "keyframe_t150.png"
-    sanity_key = sanity_best_dir / "keyframe_t150.png"
-    if not real_key.exists() or not sanity_key.exists():
-        real_key = real_best_dir / "keyframe_t000.png"
-        sanity_key = sanity_best_dir / "keyframe_t000.png"
+    overlay_enabled = bool(args.overlay == "auto")
+    out_real_vid: Optional[Path] = None
+    out_sanity_vid: Optional[Path] = None
 
     preview_path = out_root / "m43_preview.png"
     sub_real = (
@@ -620,15 +559,97 @@ def main() -> None:
         f"eval@q0={q0_overlay}\n"
         f"R2={row_overlay['track_r2_sanity']:.3f}  peakiness={row_overlay['peakiness_sanity']:.2f}  pass={row_overlay['pass_sanity']}"
     )
-    make_preview(
-        out_path=preview_path,
-        real_img_path=real_key,
-        sanity_img_path=sanity_key,
-        title="M43 measure_wave preview",
-        subtitle_real=sub_real,
-        subtitle_sanity=sub_sanity,
-    )
-    shutil.rmtree(tmp_overlay_root)
+
+    if overlay_enabled:
+        tmp_overlay_root = out_root / "_tmp_overlay"
+        if tmp_overlay_root.exists():
+            shutil.rmtree(tmp_overlay_root)
+        ensure_dir(tmp_overlay_root)
+
+        m37_common = [
+            "--n-start-list",
+            str(int(n_overlay)),
+            "--q0-list",
+            str(int(q0_overlay)),
+            "--H",
+            str(int(args.H)),
+            "--W",
+            str(int(args.W)),
+            "--frames",
+            str(int(args.frames)),
+            "--n-step",
+            str(int(args.n_step)),
+            "--dt",
+            str(int(dt_overlay)),
+            "--smooth",
+            str(int(args.smooth)),
+            "--peaks",
+            str(int(args.peaks)),
+            "--conf-min",
+            str(float(args.conf_min)),
+            "--mode",
+            str(args.mode),
+            "--weights",
+            str(args.weights),
+            "--fps",
+            str(int(args.overlay_fps)),
+            "--format",
+            str(args.overlay_format),
+            "--seed",
+            str(int(args.seed)),
+        ]
+
+        run_cmd(
+            python_cmd("code/scripts/m37_comoving_window.py", [*m37_common, "--sanity", "none", "--out-dir", str(tmp_overlay_root)]),
+            env=env,
+        )
+        run_cmd(
+            python_cmd(
+                "code/scripts/m37_comoving_window.py",
+                [*m37_common, "--sanity", "permute_cols", "--out-dir", str(tmp_overlay_root / "sanity_permute_cols")],
+            ),
+            env=env,
+        )
+
+        real_best_dir = tmp_overlay_root / "best_overlay" / "real"
+        sanity_best_dir = tmp_overlay_root / "best_overlay" / "sanity"
+        real_vid = real_best_dir / f"m37_best_overlay_tail.{ext}"
+        sanity_vid = sanity_best_dir / f"m37_best_overlay_tail.{ext}"
+        if not real_vid.exists() or not sanity_vid.exists():
+            raise FileNotFoundError("Missing overlay videos from M37 best_overlay")
+
+        out_real_vid = overlay_real_dir / f"m43_overlay_tail.{ext}"
+        out_sanity_vid = overlay_sanity_dir / f"m43_overlay_tail.{ext}"
+        shutil.copyfile(real_vid, out_real_vid)
+        shutil.copyfile(sanity_vid, out_sanity_vid)
+
+        # preview from keyframe t=150 (fallback t=000)
+        real_key = real_best_dir / "keyframe_t150.png"
+        sanity_key = sanity_best_dir / "keyframe_t150.png"
+        if not real_key.exists() or not sanity_key.exists():
+            real_key = real_best_dir / "keyframe_t000.png"
+            sanity_key = sanity_best_dir / "keyframe_t000.png"
+        make_preview(
+            out_path=preview_path,
+            real_img_path=real_key,
+            sanity_img_path=sanity_key,
+            title="M43 measure_wave preview",
+            subtitle_real=sub_real,
+            subtitle_sanity=sub_sanity,
+        )
+        shutil.rmtree(tmp_overlay_root)
+    else:
+        # Lightweight preview: show score(theta) plots instead of an overlay keyframe.
+        real_img = real_m41_dir / "m41_best_score_theta.png"
+        sanity_img = sanity_m41_dir / "m41_best_score_theta.png"
+        make_preview(
+            out_path=preview_path,
+            real_img_path=real_img,
+            sanity_img_path=sanity_img,
+            title="M43 measure_wave (overlay disabled)",
+            subtitle_real=sub_real,
+            subtitle_sanity=sub_sanity,
+        )
 
     build_table_tex(out_root / "m43_table.tex", results)
     write_best_csv(out_root / "m43_best_by_nstart.csv", results)
@@ -657,11 +678,12 @@ def main() -> None:
         "pass_overall": bool(pass_overall_all),
         "fail_reasons": fail_reasons_all,
         "overlay": {
+            "enabled": bool(overlay_enabled),
             "n_start": int(n_overlay),
             "q0": int(q0_overlay),
             "dt": int(dt_overlay),
-            "real_video": str(out_real_vid.relative_to(out_root)).replace("\\", "/"),
-            "sanity_video": str(out_sanity_vid.relative_to(out_root)).replace("\\", "/"),
+            "real_video": str(out_real_vid.relative_to(out_root)).replace("\\", "/") if out_real_vid else None,
+            "sanity_video": str(out_sanity_vid.relative_to(out_root)).replace("\\", "/") if out_sanity_vid else None,
         },
         "best_by_nstart": results,
     }

@@ -1,0 +1,14 @@
+{
+  "params": {
+    "m41_dir": "out/wave_atlas/m44/runs/n200e6_seed789/real/m41",
+    "r2_min": 0.95
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "files": {
+    "m42_consistency.csv": "ec86a78b8151d42fd418c3e5d6db4ad4e42f44df0226c15b3664a5b2c0e13c1e",
+    "m42_delta_q_by_nstart.png": "47a097dc4aa05d2d9565f7f2757fff58ac48854f9a7abb7f4b1e7463dce0eb7e",
+    "m42_q_from_theta_vs_qeff.png": "dfe5013ee3edfdfc602f7c75b95d6846f78eff5c9b714e5aec4b54bb976d6a7d",
+    "m42_summary.json": "f6b8b5d45845b97a02508d5b5e69dd316ce3c2577103f289f0e26d27d49ebe3b",
+    "m42_table.tex": "a31c14cc04453f0237e23fe300964705344f635c1ad300822420b45edcc32e15"
+  }
+}
