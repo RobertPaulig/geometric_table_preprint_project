@@ -1276,3 +1276,38 @@ PYTHONPATH=code python code/scripts/m43_measure_wave.py \
   --overlay-fps 30 --overlay-format mp4 \
   --out-dir out/wave_atlas/m43
 ```
+
+## M44 - Repeatability panel (n_start × seed)
+Status: Done (tag wave-atlas-v1.33.1)
+
+**Цель:** проверить стабильность прибора M43 на небольшой сетке `n_start × seed`: PASS/FAIL, выбранные `(q0, dt)`, и устойчивость угла с CI. Каждый прогон = real + sanity (permute_cols) с теми же порогами; mp4 рендерим только для эталонного `(n_start=200e6, seed=123)`; для фейлов разрешены mp4 в `out/wave_atlas/m44/overlay_failures/`.
+
+**DoD (артефакты):**
+- out/wave_atlas/m44/m44_pass_matrix.csv
+- out/wave_atlas/m44/m44_metrics_panel.csv
+- out/wave_atlas/m44/m44_pass_heatmap.png
+- out/wave_atlas/m44/m44_theta_ci_by_nstart.png
+- out/wave_atlas/m44/m44_q0_dt_scatter.png
+- out/wave_atlas/m44/m44_peakiness_boxplot.png
+- out/wave_atlas/m44/m44_table.tex
+- out/wave_atlas/m44/m44_summary.json
+- out/wave_atlas/m44/m44_manifest.json (sha256 по путям)
+- out/wave_atlas/m44/runs/n*_seed*/... (артефакты M43 per-run)
+
+**Команда (канон):**
+```bash
+PYTHONPATH=code python code/scripts/m44_repeatability_panel.py \
+  --n-start-list 1000000,50000000,200000000 \
+  --seeds 123,456,789 \
+  --q0-grid 6,40,1 \
+  --H 512 --W 1024 \
+  --frames 300 --n-step 1 \
+  --mode values --weights invq \
+  --theta-range-deg 78.0,90.0 --theta-step-deg 0.1 \
+  --theta-refine-halfwidth-deg 0.6 --theta-refine-step-deg 0.02 \
+  --target-dx 0.8 --dt-min 5 --dt-max 80 \
+  --smooth 9 --peaks 3 --conf-min 0.15 \
+  --r2-guard 0.95 --bootstrap 200 \
+  --overlay-fps 30 --overlay-format mp4 \
+  --out-dir out/wave_atlas/m44
+```

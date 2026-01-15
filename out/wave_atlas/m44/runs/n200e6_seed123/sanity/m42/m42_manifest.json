@@ -1,0 +1,14 @@
+{
+  "params": {
+    "m41_dir": "out/wave_atlas/m44/runs/n200e6_seed123/sanity/m41",
+    "r2_min": 0.95
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "files": {
+    "m42_consistency.csv": "e1273ecc4b5bda0498b96a0c58919ec22f4c79a3f83b336bbdae69a7d7b7c61d",
+    "m42_delta_q_by_nstart.png": "2f1d1434eb3441eed15d7032f88a08d6f936eb7c44bea2518a5e8e5f02ed298e",
+    "m42_q_from_theta_vs_qeff.png": "06079c1fe58f167697512427a733db298d1f4e06517e77733fbecb72760cb592",
+    "m42_summary.json": "f1956a6a267dceef9e4fa4b69085c816e4ce4bc8585dc175adcea7a7737281d5",
+    "m42_table.tex": "5b603d0c392b294d2d9989d0d0ebedf7f0b1de4f33038015929a9a191aa34b63"
+  }
+}

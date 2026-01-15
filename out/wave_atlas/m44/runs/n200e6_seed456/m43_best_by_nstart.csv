@@ -1,0 +1,2 @@
+n_start,q0_best,dt_best,theta_subdeg,theta_ci_lo,theta_ci_hi,q_theta,q_theta_ci_lo,q_theta_ci_hi,q_eff,q_eff_ci_lo,q_eff_ci_hi,track_r2_real,peakiness_real,track_r2_sanity,peakiness_sanity,pass_real,pass_sanity,pass_overall,fail_reasons
+200000000,29,23,88.33481886364575,88.32385051176621,88.34800371707162,34.39844812882203,34.17322506571784,34.67314183026082,29.359447004608295,27.939931912204088,31.234238264271227,0.9891047797032724,25.17999943762639,0.00018457934803683962,2.9999999347500013,True,True,True,

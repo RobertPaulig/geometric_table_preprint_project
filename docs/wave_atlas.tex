@@ -6,9 +6,9 @@
 \usepackage{hyperref}
 \usepackage{alphalph}
 
-\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M43)}
+\title{Wave Atlas: Divisibility Waves and Mersenne Navigation (M1--M44)}
 \author{Working note}
-\date{Wave Atlas v1.33}
+\date{Wave Atlas v1.33.1}
 
 \begin{document}
 \maketitle
@@ -1392,6 +1392,28 @@ M43 packages M41+M42 into a single command that runs real+sanity, selects the be
 \centering
 \input{../out/wave_atlas/m43/m43_table.tex}
 \caption{M43 instrument output and PASS/FAIL thresholds (real vs sanity).}
+\end{table}
+
+\clearpage
+\section{M44 Repeatability panel (grid over $n_{\mathrm{start}}$ and seed)}
+M44 runs the M43 instrument on a small grid of $(n_{\mathrm{start}}, \mathrm{seed})$ to check stability of PASS/FAIL and the selected $(q_0,dt)$. To keep artifacts compact, only the reference run $(n_{\mathrm{start}}=200\mathrm{e}6,\ \mathrm{seed}=123)$ renders an overlay MP4; other runs disable overlay, and failures (if any) may be rendered under \texttt{out/wave\_atlas/m44/overlay\_failures/}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.92\linewidth]{../out/wave_atlas/m44/m44_pass_heatmap.png}
+\caption{PASS matrix for the M43 instrument across the M44 grid.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../out/wave_atlas/m44/m44_theta_ci_by_nstart.png}
+\caption{Angle estimates with bootstrap confidence intervals across seeds (M44).}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\input{../out/wave_atlas/m44/m44_table.tex}
+\caption{M44 panel: PASS/FAIL and selected parameters per run.}
 \end{table}
 
 \clearpage

@@ -1,0 +1,86 @@
+{
+  "params": {
+    "q0_grid": "6,40,1",
+    "H": 512,
+    "W": 1024,
+    "frames": 300,
+    "n_step": 1,
+    "mode": "values",
+    "weights": "invq",
+    "theta_range_deg": "78.0,90.0",
+    "theta_step_deg": 0.1,
+    "theta_refine_halfwidth_deg": 0.6,
+    "theta_refine_step_deg": 0.02,
+    "target_dx": 0.8,
+    "dt_min": 5,
+    "dt_max": 80,
+    "smooth": 9,
+    "peaks": 3,
+    "conf_min": 0.15,
+    "r2_guard": 0.95,
+    "bootstrap": 200,
+    "overlay": "none",
+    "overlay_fps": 30,
+    "overlay_format": "mp4",
+    "seed": 123,
+    "overwrite": 0,
+    "out_dir": "out\\wave_atlas\\m44\\runs\\n1e6_seed123",
+    "n_start_list": "1000000",
+    "layout": {
+      "real_m41": "real/m41",
+      "real_m42": "real/m42",
+      "sanity_m41": "sanity/m41",
+      "sanity_m42": "sanity/m42",
+      "overlay_real": "overlay/real",
+      "overlay_sanity": "overlay/sanity"
+    }
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "runtime_s": 156.47352480888367,
+  "thresholds": {
+    "real": {
+      "track_r2_min": 0.95,
+      "peakiness_min": 10.0
+    },
+    "sanity": {
+      "track_r2_max": 0.1,
+      "peakiness_max": 6.0
+    }
+  },
+  "pass_real": true,
+  "pass_sanity": true,
+  "pass_overall": true,
+  "fail_reasons": [],
+  "overlay": {
+    "enabled": false,
+    "n_start": 1000000,
+    "q0": 31,
+    "dt": 25,
+    "real_video": null,
+    "sanity_video": null
+  },
+  "best_by_nstart": [
+    {
+      "n_start": 1000000,
+      "q0_best": 31,
+      "dt_best": 25,
+      "theta_subdeg": 87.83314074685775,
+      "theta_ci_lo": 87.81942144701745,
+      "theta_ci_hi": 87.85164675559432,
+      "q_theta": 26.429248138285274,
+      "q_theta_ci_lo": 26.262807062612108,
+      "q_theta_ci_hi": 26.657127132288895,
+      "q_eff": 30.96846846846847,
+      "q_eff_ci_lo": 29.506437768240342,
+      "q_eff_ci_hi": 32.58293838862559,
+      "track_r2_real": 0.9874606302817344,
+      "peakiness_real": 25.533328692385773,
+      "track_r2_sanity": 0.011522828711120425,
+      "peakiness_sanity": 3.999999876000004,
+      "pass_real": true,
+      "pass_sanity": true,
+      "pass_overall": true,
+      "fail_reasons": []
+    }
+  ]
+}

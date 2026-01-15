@@ -1,0 +1,27 @@
+{
+  "params": {
+    "m41_dir": "out/wave_atlas/m44/runs/n50e6_seed456/sanity/m41",
+    "r2_min": 0.95,
+    "note": "q_from_theta uses q = tan(theta_subdeg); theta is measured from x-axis (vertical=90deg)."
+  },
+  "git_sha": "4448952bfb7420ac71d9925e7aa6f9f98ddd486b",
+  "runtime_s": 1.0041401386260986,
+  "per_n_start": {
+    "50000000": {
+      "delta_q": {
+        "n": 0,
+        "median": NaN,
+        "mad": NaN,
+        "p10": NaN,
+        "p90": NaN
+      },
+      "delta_theta_deg": {
+        "n": 0,
+        "median": NaN,
+        "mad": NaN,
+        "p10": NaN,
+        "p90": NaN
+      }
+    }
+  }
+}
